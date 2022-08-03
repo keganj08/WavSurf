@@ -1,4 +1,8 @@
 document.getElementById('loginLink').addEventListener('click', e => {
+    
+    e.preventDefault();
+    alert('clicked me...');
+
 
     fetch('http://127.0.0.1:3001/login', {
         method: 'POST'

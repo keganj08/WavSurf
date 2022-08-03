@@ -1,65 +1,102 @@
 'use strict';
 
-function buildPage(rootId) {
+class ContentCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.data = {
+            title: props.title,
+            author: props.author,
+            id: "contentCard_" + props.id,
+        }
+    }
 
-    const root = ReactDOM.createRoot(
-        document.getElementById(rootId)
-    );
-    
-    // Prepare content cards
-    let buffer = [];
-    
-    for(var i=0; i<12; i++) {
-        var title = 'Sound ' + i;
-        var author = 'Kegan';
-        var id = 'soundCard_' + i;
-        var key = 'soundCard_' + i;
-    
-        buffer.push(
-            <article id={id} className="contentCard" key={key}>
-                <h2>{title}</h2>
+    render() {
+        return (
+            <article id={this.data.id} className="contentCard">
+                <h2>{this.data.title}</h2>
                 <div className="soundImage"></div>
-                <p>by <a href="/">{author}</a></p>
+                <p>by <a href="/">{this.data.author}</a></p>
             </article>
         );
     }
+}
 
-    // Prepare the page
-    var component = 
-        <div class="wrapper">
-            <header class="pageHeader">
-            <img id="logo" src="res/logo.svg"></img>
-            
-            <nav>
-                <a id="loginLink" href="/login.html">Log in</a>
-            </nav>
-            </header>
+class MainContent extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
-            <main class="main">
+    render() {
+        return (
+            <main className="main">
 
-                <section class="outerContentWrapper" id="contentWrapper_dropBox">
+                <section className="outerContentWrapper" id="contentWrapper_dropBox">
                     <h1>Upload Sound File</h1>
-                    <div class="contentBlock" id="dropbox">
+                    <div className="contentBlock" id="dropbox">
 
                     </div>
                 </section>
 
-                <section class="outerContentWrapper" id="contentWrapper_hot">
+                <section className="outerContentWrapper" id="contentWrapper_hot">
                     <h1>Popular Sounds</h1>
                     <div className='contentBlock' id='hot'>
-                            {buffer}
+                        <ContentCard title="Sound 1" author="John" id={0} />
+                        <ContentCard title="Sound 2" author="Mary" id={1} />
+                        <ContentCard title="Sound 3" author="John" id={2} />
+                        <ContentCard title="Sound 4" author="Anna" id={3} />
                     </div>
 
                 </section>
 
             </main>
-
-            <footer class="pageFooter">
-
-            </footer>
-        </div>;
-    
-    root.render(component);
+        )
+    }
 }
 
-buildPage('root');
+class Page extends React.Component {
+    render() {
+        return (
+            <div className="page">
+                <header className="pageHeader">
+                    <img id="logo" src="res/logo.svg"></img>
+                    
+                    <nav>
+                        <a id="loginLink" onClick={login} href="/">Log in</a>
+                    </nav>
+                </header>
+
+                <MainContent />
+
+                <footer className="pageFooter">
+
+                </footer>
+            </div>
+        );
+    }
+}
+
+function login(e) {
+    e.preventDefault();
+
+    fetch('http://127.0.0.1:3001/login', {
+        method: 'POST'
+        
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error(`HTTP error: ${response.status}`)
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.log(error);
+    })
+
+    alert('Sent request... Check consoles');
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Page/>);
