@@ -7,6 +7,7 @@ const port = 3001;
 
 // Load the SDK for JavaScript
 var AWS = require('aws-sdk');
+const { EMRServerless } = require('aws-sdk');
 AWS.config.update({region: 'us-east-2'});
 
 

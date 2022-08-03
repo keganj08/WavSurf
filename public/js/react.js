@@ -1,14 +1,15 @@
 'use strict';
 
-function buildScrollPanel(rootId) {
+function buildPage(rootId) {
 
+    // Prepare content cards
     const root = ReactDOM.createRoot(
         document.getElementById(rootId)
     );
     
     let buffer = [];
     
-    for(var i=0; i<16; i++) {
+    for(var i=0; i<12; i++) {
         var title = 'Sound ' + i;
         var author = 'Kegan';
         var id = 'soundCard_' + i;
@@ -22,41 +23,45 @@ function buildScrollPanel(rootId) {
             </article>
         );
     }
-    var component = 
-        <section className='contentBlock'>
-            {buffer}
-        </section>;
 
-    root.render(component);
+    // Generate the page
+    var page = 
+        <div class="wrapper">
+            <header class="pageHeader">
+            <img id="logo" src="res/logo.svg"></img>
+            
+            <nav>
+                <a id="loginLink" href="/login.html">Log in</a>
+            </nav>
+            </header>
+
+            <main class="main">
+
+                <section class="outerContentWrapper" id="contentWrapper_dropBox">
+                    <h1>Upload Sound File</h1>
+                    <div class="innerContentWrapper" id="dropbox">
+
+                    </div>
+                </section>
+
+                <section class="outerContentWrapper" id="contentWrapper_hot">
+                    <h1>Popular Sounds</h1>
+                    <div class="innerContentWrapper" id="hot">
+                        <section className='contentBlock'>
+                            {buffer}
+                        </section>
+                    </div>
+
+                </section>
+
+            </main>
+
+            <footer class="pageFooter">
+
+            </footer>
+        </div>;
+    
+    root.render(page);
 }
 
-buildScrollPanel('hot');
-
-
-
-/*
-const e = React.createElement;
-
-class LikeButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { liked: false };
-  }
-
-  render() {
-    if (this.state.liked) {
-      return 'You liked this.';
-    }
-
-    return e(
-      'button',
-      { onClick: () => this.setState({ liked: true }) },
-      'Like'
-    );
-  }
-}
-
-const domContainer = document.querySelector('#like_button_container');
-const root = ReactDOM.createRoot(domContainer);
-root.render(e(LikeButton));
-*/
+buildPage('root');
