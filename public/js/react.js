@@ -2,11 +2,11 @@
 
 function buildPage(rootId) {
 
-    // Prepare content cards
     const root = ReactDOM.createRoot(
         document.getElementById(rootId)
     );
     
+    // Prepare content cards
     let buffer = [];
     
     for(var i=0; i<12; i++) {
@@ -24,8 +24,8 @@ function buildPage(rootId) {
         );
     }
 
-    // Generate the page
-    var page = 
+    // Prepare the page
+    var component = 
         <div class="wrapper">
             <header class="pageHeader">
             <img id="logo" src="res/logo.svg"></img>
@@ -39,17 +39,15 @@ function buildPage(rootId) {
 
                 <section class="outerContentWrapper" id="contentWrapper_dropBox">
                     <h1>Upload Sound File</h1>
-                    <div class="innerContentWrapper" id="dropbox">
+                    <div class="contentBlock" id="dropbox">
 
                     </div>
                 </section>
 
                 <section class="outerContentWrapper" id="contentWrapper_hot">
                     <h1>Popular Sounds</h1>
-                    <div class="innerContentWrapper" id="hot">
-                        <section className='contentBlock'>
+                    <div className='contentBlock' id='hot'>
                             {buffer}
-                        </section>
                     </div>
 
                 </section>
@@ -61,7 +59,7 @@ function buildPage(rootId) {
             </footer>
         </div>;
     
-    root.render(page);
+    root.render(component);
 }
 
 buildPage('root');
