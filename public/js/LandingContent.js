@@ -7,7 +7,7 @@ function LandingContent(props) {
         <main className="main">
 
             <section className="contentWrapper" id="contentWrapper_dropBox">
-                <h1>Upload Sound File</h1>
+                <h1>Upload Sound Files</h1>
                 <DropBox />
             </section>
 
