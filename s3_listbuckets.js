@@ -1,12 +1,14 @@
 // Load the AWS SDK for node.js
 var AWS = require('aws-sdk');
-AWS.config.update({region: 'us-east-2'});
+AWS.config.update({region: 'us-east-1'});
 
 // Create an S3 service object
-s3 = new AWS.S3({apiVersion: '2006-03-1'});
 
-// Call S3 to list the buckets
-s3.listBuckets(function(err, data) {
+function listBuckets() {
+    s3 = new AWS.S3({apiVersion: '2006-03-1'});
+
+    // Call S3 to list the buckets
+    s3.listBuckets(function(err, data) {
     if (err) {
         console.log("Error:", err);
     } else {
@@ -16,4 +18,9 @@ s3.listBuckets(function(err, data) {
             display it before execution finishes.
         */
     }
-});
+    });
+}
+
+listBuckets();
+
+

@@ -1,7 +1,13 @@
 const express = require('express');
 //const path = require('path');
-var routes = require('./routes.js');
+const routes = require('./routes.js');
 var cors = require('cors');
+
+
+//const bucketLister = require('./s3_listbuckets.js');
+const bucketUploader = require('./s3_upload.js');
+
+
 const app = express();
 const port = 3001;
 

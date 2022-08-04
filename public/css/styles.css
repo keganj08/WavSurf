@@ -221,8 +221,13 @@ html, body {
         padding: 0.5rem 1rem;
     }
 
-    .pageHeader #logo {
+    .pageHeader #logoLink {
+        display: inline-block;
         max-width: 50%;
+    }
+
+    .pageHeader #logo {
+        max-width: 100%;
     }
 
     .pageHeader nav {
