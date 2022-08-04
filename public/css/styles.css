@@ -120,10 +120,9 @@ html, body {
     margin-bottom: 0.75rem;
 }
 
-.contentBlock {
+.contentCardGrid {
     position: relative;
     padding: 0;
-    min-height: 5rem;
     height: auto;
     width: 100%;
     display: grid;
@@ -142,7 +141,7 @@ html, body {
     overflow-y: hidden;
     height: 15rem;
     background-color: var(--color-mintCream);
-    box-shadow: 0 0 0.2rem lightgray;
+    /*box-shadow: 0 0 0.2rem lightgray;*/
     padding: 1rem;
     color: var(--color-gunmetal);
     display: flex;
@@ -167,6 +166,47 @@ html, body {
     width: 100%;
     margin: 0.5rem 0;
 }
+
+#dropbox {
+    height: 16rem;
+
+    border: 0.3rem dashed var(--color-gunmetal);
+    background-color: var(--color-mintCream);
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    transition: 0.1s;
+}
+
+#dropbox:hover {
+    cursor: pointer;
+    /*-webkit-filter: brightness(85%);*/
+}
+
+#dropbox:hover, #dropbox.highlighted {
+    border: 0.3rem dashed var(--color-sizzleRed);
+}
+
+.icon {
+    height: 30%;
+    margin: 0.5rem;
+}
+
+#dropbox.highlighted {
+    z-index: 1000;
+    box-shadow: 0 0 0 3000px rgba(0,0,0,0.5);
+    border: 0.3rem dashed var(--color-sizzleRed) !important;
+
+}
+
+#dropbox * {
+    pointer-events: none;
+}
+
+/* MOBILE */
 
 @media (orientation: portrait) {
 
