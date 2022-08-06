@@ -1,18 +1,36 @@
 import express from 'express';
 import { s3Client } from './libs/s3Client.js'; 
 import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
 import s3_upload from './s3_putobject.js';
+import { getSystemErrorMap } from 'util';
 
-const upload = multer({ dest: 'uploads/' });
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname) //Appending extension
+    }
+})
+const upload = multer({ storage: storage });
 
 var router = express.Router();
 
-router.post('/uploadAudio', upload.array('audioFile', 5), function(req, res) {
+router.post('/uploadAudio', upload.array('audioFile', 5), async function(req, res) {
     for(var i=0; i<req.files.length; i++) {
         console.log(req.files[i].path);
-        s3_upload(req.files[i].path);
+        var uploadStatus = await s3_upload(req.files[i].path);
+
+        if(uploadStatus[0] == 1) {
+            fs.unlinkSync('./uploads/' + req.files[i].originalname);
+            console.log('Server knows that upload succeeded, and it deleted its copy of the file.');
+        } else {
+            console.log('Server received S3 upload error:', uploadStatus[1]);
+        }
     }
-    //s3_upload(req.files[0]);
+
     /*var response = {'data' : 'response success'};
     res.send(response);*/
 });
