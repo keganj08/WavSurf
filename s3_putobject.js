@@ -7,10 +7,10 @@ const run = async (uploadParams) => {
     try {
         const data = await s3Client.send(new PutObjectCommand(uploadParams));
         console.log("Success:", data);
-        return [1, data];
+        return 1;
     } catch (err) {
         console.log("Error:", err);
-        return [-1, err];
+        return -1;
     }
 };
 

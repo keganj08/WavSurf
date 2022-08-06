@@ -7,7 +7,7 @@ const app = express();
 const port = 3001;
 
 app.use(cors());
-app.use(express.static('public')); // Serve static pages from /public
+app.use(express.static('public')); // Serve pages from ./public
 app.use('/', router) // Handle requests using router
 
 app.listen(port, () => {
