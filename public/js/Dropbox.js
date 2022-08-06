@@ -7,7 +7,7 @@ function DropBox(props) {
         input.multiple= true;
         input.onchange = (e) => {
             var files = e.target.files;
-            uploadAudio(files);
+            validateAudioFiles(files);
         }
         input.click();
     }
@@ -33,15 +33,27 @@ function DropBox(props) {
 
         console.log(files);
 
-        uploadAudio(files);
+        validateAudioFiles(files);
     }
 
-    function uploadAudio(audioFiles) {
+    function validateAudioFiles(files) {
+        if(files.length < 1 || files.length > 5) {
+            console.log('ERROR: Audio file array is of invalid size.');
+        } else {
+            console.log(typeof (files[0]));
+            uploadAudioFiles(files);
+        }
+    }
+
+    function uploadAudioFiles(files) {
         var formData = new FormData();
 
-        formData.append('audioFile1', audioFiles[0]);
+        for(var i=0; i<files.length; i++) {
+            formData.append('audioFile', files[i]);
+        }
+        //formData.append('audioFile', audioFiles);
 
-        console.log('data in formdata: ', formData.get('audioFile1'));
+        console.log('formData: ', formData);
 
 
         console.log('Client attempting /uploadAudio POST of formdata');
