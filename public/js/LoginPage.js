@@ -1,4 +1,4 @@
-import LoginContent from './LoginContent';
+import LoginContent from './LoginContent.js';
 import { Link } from 'react-router-dom';
 
 function LoginPage(props) {

@@ -4,8 +4,8 @@ import {
     Routes,
     Route,
 } from 'react-router-dom';
-import LandingPage from './LandingPage';
-import LoginPage from './LoginPage';
+import LandingPage from './LandingPage.js';
+import LoginPage from './LoginPage.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -7,11 +7,8 @@ function DropBox(props) {
         input.multiple= true;
         input.onchange = (e) => {
             var files = e.target.files;
-            for(var i=0; i<files.length; i++) {
-                console.log('Loaded', files[i].name);
-            }
+            uploadAudio(files);
         }
-
         input.click();
     }
 
@@ -36,7 +33,34 @@ function DropBox(props) {
 
         console.log(files);
 
-        console.log("Drop!");
+        uploadAudio(files);
+    }
+
+    function uploadAudio(audioFiles) {
+        var formData = new FormData();
+
+        formData.append('audioFile1', audioFiles[0]);
+
+        console.log('data in formdata: ', formData.get('audioFile1'));
+
+
+        console.log('Client attempting /uploadAudio POST of formdata');
+        fetch('http://127.0.0.1:3001/uploadAudio', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`HTTP error: ${response.status}`)
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
 
     return (

@@ -1,4 +1,4 @@
-import LandingContent from './LandingContent';
+import LandingContent from './LandingContent.js';
 import { Link } from 'react-router-dom';
 
 function LandingPage(props) {

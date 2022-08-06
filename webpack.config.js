@@ -1,10 +1,11 @@
-const path = require('path');
+import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
+import path from 'path';
 
-module.exports = {
+export default {
     mode: "development",
     entry: "./public/js/reactApp",
     output: {
-        path: path.resolve(__dirname + "/public/js/"),
+        path: path.resolve(process.cwd() + "/public/js/"),
         filename: "bundle.js",
     },
     module: {

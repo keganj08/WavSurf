@@ -1,5 +1,5 @@
-import DropBox from './Dropbox';
-import ContentCard from './ContentCard';
+import DropBox from './Dropbox.js';
+import ContentCard from './ContentCard.js';
 
 function LandingContent(props) {
 

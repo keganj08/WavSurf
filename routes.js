@@ -1,9 +1,19 @@
-var express = require('express');
+import express from 'express';
+import { s3Client } from './libs/s3Client.js'; 
+import multer from 'multer';
+
+const upload = multer({dest: '/uploads'});
+
 var router = express.Router();
 
-router.post('/listBuckets', function(req, res){
-    console.log('Got list buckets request');
-    listBuckets();
+router.post('/uploadAudio', upload.single('audioFile1'), function(req, res) {
+    console.log(req.file);
+    /*var response = {'data' : 'response success'};
+    res.send(response);*/
+});
+
+router.get('/audio', function(req, res) {
+    // s3 streaming
 });
 
 router.post('/login', function(req, res){
@@ -13,4 +23,4 @@ router.post('/login', function(req, res){
     console.log('  Sent response')
 });
 
-module.exports = router;
+export default router;
