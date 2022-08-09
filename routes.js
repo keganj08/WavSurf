@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
 import s3_upload from './s3_putobject.js';
+const fsPromises = fs.promises;
 
 // Configure multer disk storage 
 var storage = multer.diskStorage({
@@ -25,14 +26,33 @@ router.post('/uploadAudio', upload.array('audioFile', 5), async function(req, re
 
     for(var i=0; i<req.files.length; i++) {
 
-        var uploadStatus = await s3_upload(req.files[i].path);
-        console.log('got uploadStatus in routes.js');
+        var uploadStatus = await s3_upload(req.files[i].path, 'sounds'); // Attempt to push file to S3
+        if(uploadStatus) console.log('got sound uploadStatus in routes.js');
         response.uploadStatuses.push(uploadStatus);
 
-        // If S3 upload was successful, delete the file from temp storage on server
-        if(response.uploadStatuses[i] == 1) { fs.unlinkSync('./uploads/' + req.files[i].originalname); } 
+        fs.unlinkSync('./uploads/' + req.files[i].originalname); // Delete local copy of file
     }
 
+    res.send(response);
+});
+
+router.post('/updateAccount', async function(req, res) {
+    var response = {
+        uploadStatus: 0
+    };
+    // Write the account info file to be uploaded to server
+    var filePath = `./uploads/${req.body.username}.txt`;
+    await fsPromises.writeFile(filePath, `${req.body.password}`, err => {
+        if (err) { 
+            console.error(err);
+        }
+    });
+
+    var uploadStatus = await s3_upload(filePath, 'users'); // Attempt to push file to S3
+    if(uploadStatus) console.log('got account uploadStatus in routes.js');
+    fs.unlinkSync(filePath); // Delete local copy of file
+
+    response.uploadStatus = uploadStatus;
     res.send(response);
 });
 

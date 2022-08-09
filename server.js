@@ -7,6 +7,7 @@ const app = express();
 const port = 3001;
 
 app.use(cors());
+app.use(express.json());
 app.use(express.static('public')); // Serve pages from ./public
 app.use('/', router) // Handle requests using router
 

@@ -8,7 +8,7 @@ function LandingPage(props) {
                 <Link id="logoLink" to="/"> <img id="logo" src="res/logo.svg"></img> </Link>
                 
                 <nav>
-                    <Link id="loginLink" to="/login">Log in</Link>
+                    <Link id="loginLink" to="/login">Sign Up</Link>
                 </nav>
             </header>
 

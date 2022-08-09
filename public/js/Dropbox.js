@@ -53,7 +53,6 @@ function DropBox(props) {
         }
         //formData.append('audioFile', audioFiles);
 
-
         console.log('Client attempting /uploadAudio POST of formdata');
         fetch('/uploadAudio', {
             method: 'POST',
