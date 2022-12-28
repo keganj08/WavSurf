@@ -75,7 +75,7 @@ function DropBox(props) {
     return (
         <article className="dropbox" id="dropbox" onClick={clickHandler} onDrop={dropHandler} onDragOver={dragOverHandler} onDragLeave={dragLeaveHandler}>
             <img id="uploadIcon" className="icon" src="res/uploadIcon.svg"></img>
-            <p>Drop .wav files here or click to browse</p>
+            <p id="dropboxCaption">Drop .wav files here or click to browse</p>
         </article>
     );
 }

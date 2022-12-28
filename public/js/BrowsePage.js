@@ -1,7 +1,7 @@
-import LoginContent from './LoginContent.js';
+import BrowseContent from './BrowseContent.js';
 import { Link } from 'react-router-dom';
 
-function LoginPage(props) {
+function BrowsePage(props) {
 
     return (
         <div className="page">
@@ -9,17 +9,17 @@ function LoginPage(props) {
             <Link id="logoLink" to="/"> <img id="logo" src="res/logo.svg"></img> </Link>
                 
                 <nav>
-                    <Link id="browseLink" className="transparentButton" to="/browse">Browse Sounds</Link>
+                    <Link id="singupLink" to="/login">Log In</Link>
                 </nav>
             </header>
 
-            <LoginContent />
+            <BrowseContent />
 
-            <footer className="pageFooter dark">
+            <footer className="pageFooter">
 
             </footer>
         </div>
     )
 }
 
-export default LoginPage;
+export default BrowsePage;

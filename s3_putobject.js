@@ -3,9 +3,9 @@ import { s3Client } from "./libs/s3Client.js";
 import * as path from "path";
 import * as fs from "fs";
 
-const run = async (uploadParams) => {
+const run = async (reqParams) => {
     try {
-        const data = await s3Client.send(new PutObjectCommand(uploadParams));
+        const data = await s3Client.send(new PutObjectCommand(reqParams));
         console.log("S3 success:", data);
         return 1;
     } catch (err) {
@@ -31,11 +31,11 @@ export default function uploadFile(filePath, destFolder) {
 
     console.log('S3: Uploading ' + filePath + ' into ' + destFolder);
 
-    const uploadParams = {
+    const reqParams = {
         Bucket: "wavsurf-files",
         Key: destFolder + '/' + path.basename(filePath),
         Body: fileBody,
     };
 
-    return run(uploadParams);
+    return run(reqParams);
 }

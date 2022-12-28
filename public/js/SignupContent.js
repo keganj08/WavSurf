@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function LoginContent(props) {
+function SignupContent(props) {
 
     function updateAccount(username, password) {
         var formData = {"username" : String(username), "password" : String(password)};
@@ -29,7 +29,7 @@ function LoginContent(props) {
     }
 
     
-    function LoginForm(props) {
+    function SignupForm(props) {
         const [values, setValues] = useState({
             username: '',
             password: '',
@@ -89,13 +89,13 @@ function LoginContent(props) {
     return (
         <main className="main dark">
 
-            <section className="contentWrapper smallCenteredContentWrapper" id="contentWrapper_Login">
-                <h1>Log In</h1>
-                <LoginForm />
-                <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>
+            <section className="contentWrapper smallCenteredContentWrapper" id="contentWrapper_Signup">
+                <h1>Sign Up</h1>
+                <SignupForm />
+                <p>Already have an account? <Link to="/login" class="textLink">Log in.</Link></p>
             </section>
         </main>
     )
 }
 
-export default LoginContent;
+export default SignupContent;

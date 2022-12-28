@@ -1,11 +1,29 @@
-// Load the AWS SDK for Node.js
-var AWS = require('aws-sdk');
-// Set the region 
-AWS.config.update({region: 'us-east-1'});
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { s3Client } from "./libs/s3Client.js";
+import * as path from "path";
+import * as fs from "fs";
 
-// Create S3 service object
-s3 = new AWS.S3({apiVersion: '2006-03-01'});
+const run = async (reqParams) => {
+    try {
+        const data = await s3Client.send(new ListObjectsV2Command(reqParams))
+        console.log("S3 success");
+        return data;
+    } catch (err) {
+        console.log("S3 error:", err);
+        return -1;
+    }
+};
 
+export default function listFiles(folder) {
+    const reqParams = {
+        Bucket: "wavsurf-files",
+        Prefix: `${folder}/`,
+    }
+
+    return run(reqParams);
+}
+
+/*
 function listObjectsInBucket(bucketName, fileName) {
 
     // Create the parameters for calling listObjects
@@ -22,5 +40,4 @@ function listObjectsInBucket(bucketName, fileName) {
         }
     });
 }
-
-listObjectsInBucket(process.argv[2]);
+*/

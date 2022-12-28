@@ -1,7 +1,7 @@
-import LoginContent from './LoginContent.js';
+import SignupContent from './SignupContent.js';
 import { Link } from 'react-router-dom';
 
-function LoginPage(props) {
+function SignupPage(props) {
 
     return (
         <div className="page">
@@ -13,7 +13,7 @@ function LoginPage(props) {
                 </nav>
             </header>
 
-            <LoginContent />
+            <SignupContent />
 
             <footer className="pageFooter dark">
 
@@ -22,4 +22,4 @@ function LoginPage(props) {
     )
 }
 
-export default LoginPage;
+export default SignupPage;

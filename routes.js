@@ -1,7 +1,9 @@
 import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
+import path from 'path';
 import s3_upload from './s3_putobject.js';
+import s3_list from './s3_listobjects.js';
 const fsPromises = fs.promises;
 
 // Configure multer disk storage 
@@ -16,7 +18,6 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 var router = express.Router();
-
 
 // Handle a request to upload an array of .wav files to S3
 router.post('/uploadAudio', upload.array('audioFile', 5), async function(req, res) {
@@ -61,6 +62,26 @@ router.get('/audio', function(req, res) {
     // s3 streaming
 });
 
+// 
+router.get("/listSounds", async function(req, res) {
+    /* TESTING */
+    //var dbgUsers = await s3_list("users");
+    //console.log(dbgUsers.Contents);
+
+    var dbgSounds = await s3_list("sounds");
+
+    console.log(dbgSounds.Contents);
+    res.send(dbgSounds);
+});
+
+// Send all page routing requests to index, then handle them via React router
+router.get("/*", function(req, res) {
+    res.sendFile(path.resolve(process.cwd() + "/public/index.html"), function(err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+     })
+});
 
 // Handle a request to log in
 router.post('/login', function(req, res){
