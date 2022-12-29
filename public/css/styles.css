@@ -53,6 +53,7 @@ html, body {
     font-weight: 400;
     font-size: 1.2rem;
     z-index: 2000;
+    box-shadow: 0 0rem 0.25rem 0.25rem rgba(0,0,0,0.25);
 }
 
 .pageHeader * {
@@ -98,12 +99,16 @@ html, body {
     color: var(--color-sizzleRed);
 }
 
-/*
-.pageHeader nav a:active {
-    background-color: var(--color-dreamRed);
-    color: var(--color-mintCream);
+#logoLink img {
+    transition: opacity 0.5s, visibility 0.5s;
 }
-*/
+
+#logoLink:hover #logo {
+
+    opacity: 1;
+    visibility: visible;
+
+}
 
 .pageFooter {
     bottom: 0;
@@ -115,7 +120,7 @@ html, body {
 /* MAIN AREA */
 
 .main {
-    background-color: white;
+    background-color: var(--color-mintCream);
     min-height: calc(100vh - 2*var(--pageHeaderHeight));
     width: 100%;
     color: var(--color-gunmetal);
@@ -164,7 +169,7 @@ html, body {
     width: 100%;
     height: auto;
     position: relative;
-    background-color: white;
+    background-color: var(--color-mintCream);
     padding: 2rem 8rem;
 }
 
@@ -253,9 +258,9 @@ html, body {
 }
 
 .contentCard {    
-    overflow-y: hidden;
+    overflow: hidden;
     height: 15rem;
-    background-color: var(--color-mintCream);
+    background-color: white;
     /*box-shadow: 0 0 0.2rem lightgray;*/
     padding: 1rem;
     color: var(--color-gunmetal);
@@ -263,7 +268,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     /*border: 0.25rem solid var(--color-lightGunmetal);*/
-    box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.1);
+    box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.05);
 
        /*
     height: 10rem;
@@ -288,7 +293,7 @@ html, body {
 #dropbox {
     height: 16rem;
     border: 0.3rem solid var(--color-darkMintCream);
-    background-color: var(--color-mintCream);
+    background-color: white;
     color: var(--color-gunmetal);
     display: flex;
     flex-direction: column;

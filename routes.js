@@ -74,6 +74,14 @@ router.get("/listSounds", async function(req, res) {
     res.send(dbgSounds);
 });
 
+// Handle a request to log in
+router.post('/login', function(req, res){
+    console.log('Got login request');
+    let content = {'data' : 'The server recieved your login request!'};
+    res.send(content)
+    console.log('  Sent response')
+});
+
 // Send all page routing requests to index, then handle them via React router
 router.get("/*", function(req, res) {
     res.sendFile(path.resolve(process.cwd() + "/public/index.html"), function(err) {
@@ -81,14 +89,6 @@ router.get("/*", function(req, res) {
             res.status(500).send(err);
         }
      })
-});
-
-// Handle a request to log in
-router.post('/login', function(req, res){
-    console.log('Got login request');
-    let content = {'data' : 'The server recieved your login request!'};
-    res.send(content)
-    console.log('  Sent response')
 });
 
 export default router;

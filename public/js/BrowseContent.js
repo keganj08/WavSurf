@@ -1,12 +1,19 @@
 import ContentCard from './ContentCard.js';
+import React, { useState, useEffect } from 'react';
 
+/*  MISSION PLAN:
+        Render the ContentCards with a callback, which allows us to wait
+        until we receive their information from the server.      
+*/
 
 function BrowseContent(props) {
+    const [soundFileNames, setSoundFileNames] = useState([]);
+    const [contentCards, setContentCards] = useState([]);
 
-    function getSoundNames(filters) {
+    useEffect(() => {
+        
         console.log('Client attempting /listSounds for Browse page');
         fetch('/listSounds', {
-            /*headers: { 'Content-Type': 'application/json' },*/
             method: 'GET'
         })
         .then(response => {
@@ -16,19 +23,23 @@ function BrowseContent(props) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-            for(var i=0; i<data.length; i++) {
-                console.log(i);
-                console.log(data[i]);
+            /* Get the titles of each sound file */
+            let newSoundFileNames = [];
+
+            for(var i=0; i<data.Contents.length; i++) {
+                if(data.Contents[i].Key.split('sounds/')[1].length !== 0 ) {
+                    newSoundFileNames.push(data.Contents[i].Key.split("sounds/")[1]);
+                }
             }
+
+            setSoundFileNames(newSoundFileNames);
+            setContentCards(newSoundFileNames.map((fileName, index) => <ContentCard title={fileName} author={"Dude " + index} id={index} key={index} />));
         })
         .catch(error => {
             console.log(error);
+            return null;
         })
-
-    }
-
-    getSoundNames();
+    },[])
 
     return (
         <main className="main">
@@ -39,19 +50,8 @@ function BrowseContent(props) {
                 </div>
 
                 <section className="contentWrapper" id="contentWrapper_sounds">
-                    <div className='contentCardGrid' id='hot'>
-                        <ContentCard title="Sound 1" author="John" id={0} />
-                        <ContentCard title="Sound 2" author="Mary" id={1} />
-                        <ContentCard title="Sound 3" author="John" id={2} />
-                        <ContentCard title="Sound 4" author="Anna" id={3} />
-                        <ContentCard title="Sound 1" author="John" id={0} />
-                        <ContentCard title="Sound 2" author="Mary" id={1} />
-                        <ContentCard title="Sound 3" author="John" id={2} />
-                        <ContentCard title="Sound 4" author="Anna" id={3} />
-                        <ContentCard title="Sound 1" author="John" id={0} />
-                        <ContentCard title="Sound 2" author="Mary" id={1} />
-                        <ContentCard title="Sound 3" author="John" id={2} />
-                        <ContentCard title="Sound 4" author="Anna" id={3} />
+                    <div className='contentCardGrid' id='sounds'>
+                        {contentCards}
                     </div>
                 </section>
 
@@ -59,22 +59,6 @@ function BrowseContent(props) {
 
 
         </main>
-
-        /*
-        <main className="main">
-
-            <section className="contentWrapper" id="contentWrapper_hot">
-                <h1>Popular Sounds</h1>
-                <div className='contentCardGrid' id='hot'>
-                    <ContentCard title="Sound 1" author="John" id={0} />
-                    <ContentCard title="Sound 2" author="Mary" id={1} />
-                    <ContentCard title="Sound 3" author="John" id={2} />
-                    <ContentCard title="Sound 4" author="Anna" id={3} />
-                </div>
-            </section>
-
-        </main>
-        */
     )
 }
 
