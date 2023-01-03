@@ -257,37 +257,67 @@ html, body {
     */
 }
 
-.contentCard {    
-    overflow: hidden;
-    height: 15rem;
-    background-color: white;
-    /*box-shadow: 0 0 0.2rem lightgray;*/
-    padding: 1rem;
-    color: var(--color-gunmetal);
+.contentCardWrapper {
+    position: relative;
+    padding: 0;
+    height: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    /*border: 0.25rem solid var(--color-lightGunmetal);*/
+}
+
+.contentCard {    
+    overflow: hidden;
+    height: 3.5rem;
+    background-color: white;
+    padding: 1rem 1rem;
+    color: var(--color-gunmetal);
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: [title-start] 10rem [playBtn-start] 1.5rem [timeBar-start] 1fr [start-time-text] 6rem [author-start] 6rem [downloadBtn-start] 1.5rem;
+    grid-template-areas: "title playBtn timeBar timeText author downloadBtn";
     box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.05);
-
-       /*
-    height: 10rem;
-    flex-basis: 45%;
-    flex-shrink: 1;
-    flex-grow: 1;
-    margin: 1rem;
-    */
+    margin-bottom: 0.75rem;
 }
 
-.contentCard h2 {
-    text-align: center;
-    font-size: 1.25rem;
-}
-
-.soundImage {
+.contentCard * {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     height: 100%;
+}
+
+.soundTitle {
+    grid-area: title;
+    text-align: center;
+}
+
+.soundPlayBox {
+    grid-area: playBtn;
+}
+
+.soundSliderBox {
+    grid-area: timeBar;
+    padding: 0 1.25rem;
+}
+
+.soundSlider {
     width: 100%;
-    margin: 0.5rem 0;
+}
+
+.soundTimeText {
+    grid-area: timeText;
+    justify-content: center;
+}
+
+.soundAuthor {
+    grid-area: author;
+    justify-content: center;
+}
+
+.soundDownloadBox {
+    grid-area: downloadBtn;
 }
 
 #dropbox {
@@ -330,6 +360,22 @@ html, body {
 #dropbox * {
     pointer-events: none;
 }
+
+/* Font Icons */
+
+.iconButton {
+    color: var(--color-gunmetal);
+    transition: all 0.1s linear;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+}
+
+.iconButton:hover {
+    color: var(--color-sizzleRed);
+    cursor: pointer;
+}
+
 
 /* MOBILE */
 

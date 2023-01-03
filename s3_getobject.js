@@ -33,5 +33,3 @@ export const run = async () => {
     }
 };
 run();
-
-//"/https://wavsurf-files.s3.amazonaws.com/sounds/crash.wav"

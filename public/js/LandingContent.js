@@ -53,12 +53,7 @@ function LandingContent(props) {
 
                 <section className="contentWrapper" id="contentWrapper_hot">
                     <h1>Popular Sounds</h1>
-                    <div className='contentCardGrid' id='hot'>
-                        <ContentCard title="Sound 1" author="John" id={0} />
-                        <ContentCard title="Sound 2" author="Mary" id={1} />
-                        <ContentCard title="Sound 3" author="John" id={2} />
-                        <ContentCard title="Sound 4" author="Anna" id={3} />
-                    </div>
+
                 </section>
 
             </div>
@@ -69,3 +64,14 @@ function LandingContent(props) {
 }
 
 export default LandingContent;
+
+/*
+
+                    <div className='contentCardGrid' id='hot'>
+                        <ContentCard title="Sound 1" author="John" id={0} />
+                        <ContentCard title="Sound 2" author="Mary" id={1} />
+                        <ContentCard title="Sound 3" author="John" id={2} />
+                        <ContentCard title="Sound 4" author="Anna" id={3} />
+                    </div>
+
+*/

@@ -50,7 +50,7 @@ function BrowseContent(props) {
                 </div>
 
                 <section className="contentWrapper" id="contentWrapper_sounds">
-                    <div className='contentCardGrid' id='sounds'>
+                    <div className='contentCardWrapper' id='sounds'>
                         {contentCards}
                     </div>
                 </section>

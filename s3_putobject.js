@@ -35,6 +35,9 @@ export default function uploadFile(filePath, destFolder) {
         Bucket: "wavsurf-files",
         Key: destFolder + '/' + path.basename(filePath),
         Body: fileBody,
+        Metadata: {
+            "attempt": "some-data",
+        },
     };
 
     return run(reqParams);
