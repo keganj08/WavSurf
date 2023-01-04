@@ -11,6 +11,7 @@ import BrowsePage from './BrowsePage.js';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faDownload, faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import Cookies from 'js-cookie';
 
 library.add(faDownload, faPlay, faPause)
 

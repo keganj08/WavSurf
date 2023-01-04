@@ -1,14 +1,11 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "./libs/s3Client.js";
+import * as path from "path";
+import * as fs from "fs";
 
 var key = process.argv[2];
 
-export const bucketParams = {
-    Bucket: "wavsurf-files",
-    Key: key,
-};
-
-export const run = async () => {
+const run = async (reqParams) => {
     try {
         // Helper function to convert a ReadableStream to a string
         const streamToString = (stream) =>
@@ -20,16 +17,28 @@ export const run = async () => {
             });
         
         // Get the object from the S3 bucket
-        const data = await s3Client.send(new GetObjectCommand(bucketParams));
+        const data = await s3Client.send(new GetObjectCommand(reqParams));
 
-        // Convert the objecct's ReadableStream to a string
+        // Convert the object's ReadableStream to a string
         const bodyContents = await streamToString(data.Body);
-        console.log(data.Body);
-        console.log(bodyContents);
+        //console.log(data.Body);
+        //console.log(bodyContents);
         return bodyContents;
         
     } catch (err) {
         console.log("Error:", err);
     }
 };
-run();
+
+export default function getObject(fileName, folder) {
+    
+    console.log('S3: Retrieving ' + folder + '/' + fileName);
+
+    let reqParams = {
+        Bucket: "wavsurf-files",
+        Key: folder + '/' + fileName,
+    };
+
+    return(run(reqParams));
+};
+

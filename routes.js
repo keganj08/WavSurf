@@ -4,6 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import s3_upload from './s3_putobject.js';
 import s3_list from './s3_listobjects.js';
+import s3_get from './s3_getobject.js';
+import { accessTokens } from "./accessTokens.js";
+import { generateToken } from "./accessTokens.js";
 const fsPromises = fs.promises;
 
 // Configure multer disk storage 
@@ -15,9 +18,9 @@ var storage = multer.diskStorage({
         cb(null, file.originalname)
     }
 })
-const upload = multer({ storage: storage });
 
-var router = express.Router();
+const upload = multer({ storage: storage });
+const router = express.Router();
 
 // Handle a request to upload an array of .wav files to S3
 router.post('/uploadAudio', upload.array('audioFile', 5), async function(req, res) {
@@ -27,6 +30,7 @@ router.post('/uploadAudio', upload.array('audioFile', 5), async function(req, re
 
     for(var i=0; i<req.files.length; i++) {
 
+        console.log("PATH: " + req.files[i].path);
         var uploadStatus = await s3_upload(req.files[i].path, 'sounds'); // Attempt to push file to S3
         if(uploadStatus) console.log('got sound uploadStatus in routes.js');
         response.uploadStatuses.push(uploadStatus);
@@ -70,16 +74,23 @@ router.get("/listSounds", async function(req, res) {
 
     var dbgSounds = await s3_list("sounds");
 
-    console.log(dbgSounds.Contents);
     res.send(dbgSounds);
 });
 
 // Handle a request to log in
-router.post('/login', function(req, res){
-    console.log('Got login request');
-    let content = {'data' : 'The server recieved your login request!'};
-    res.send(content)
-    console.log('  Sent response')
+router.post('/login', async function(req, res){
+    console.log("Got login request: " + req.body.username + ", " + req.body.password);
+    let response = {"loginSuccess" : false, "accessToken" : null};
+
+    let fileName = req.body.username + ".txt";
+    let userPass = await s3_get(fileName, "users");
+
+    if(userPass === req.body.password) {
+        response.loginSuccess = true;
+        response.accessToken = generateToken(req.body.username);
+    }
+
+    res.send(response);
 });
 
 // Send all page routing requests to index, then handle them via React router

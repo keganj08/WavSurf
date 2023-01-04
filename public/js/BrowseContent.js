@@ -50,6 +50,7 @@ function BrowseContent(props) {
                 </div>
 
                 <section className="contentWrapper" id="contentWrapper_sounds">
+                    <h1>Search Sounds</h1>
                     <div className='contentCardWrapper' id='sounds'>
                         {contentCards}
                     </div>

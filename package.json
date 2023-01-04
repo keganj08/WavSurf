@@ -12,6 +12,7 @@
         "@uppy/core": "^2.3.2",
         "@uppy/react": "^2.2.2",
         "babel-loader": "^8.2.5",
+        "js-cookie": "^3.0.1",
         "mariadb": "^3.0.2",
         "multer": "^1.4.5-lts.1",
         "node-polyfill-webpack-plugin": "^2.0.1",

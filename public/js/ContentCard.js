@@ -55,7 +55,6 @@ function ContentCard(props) {
             } else {
                 setCurrentTime(audio.current.currentTime);
                 setCurrentTimeText(formatTime(audio.current.currentTime));
-                console.log(audio.current.duration);
             }
         }, [100]);
     }
@@ -64,23 +63,24 @@ function ContentCard(props) {
 
     function formatTime(rawTime) {
         let minutes = (String)(Math.floor(rawTime / 60)).padStart(1, "0");
-        let seconds = (String)(Math.ceil(rawTime - (minutes*60))).padStart(2, "0");
+        let seconds = (String)((rawTime % 60).toFixed(0)).padStart(2, "0");
         return(minutes + ":" + seconds);
     }
 
     function onScrub(value) {
-      clearInterval(interval.current);
-      audio.current.currentTime = value;
-      setCurrentTime(audio.current.currentTime);
-      setCurrentTimeText(formatTime(audio.current.currentTime));
+        clearInterval(interval.current);
+        audio.current.currentTime = value;
+        setCurrentTime(audio.current.currentTime);
+        setCurrentTimeText(formatTime(audio.current.currentTime));
     }
     
     const onScrubEnd = () => {
-      // If not already playing, start
-      if (!isPlaying) {
-        setIsPlaying(true);
-      }
-      startTimer();
+        console.log("Fired onScrubEnd...");
+        // If not already playing, start
+        if (!isPlaying) {
+            setIsPlaying(true);
+        }
+        startTimer();
     }
 
     let playIcon;
@@ -88,8 +88,7 @@ function ContentCard(props) {
         playIcon = <FontAwesomeIcon icon="fa-solid fa-play" />
     } else {
         playIcon = <FontAwesomeIcon icon="fa-solid fa-pause" />
-    }
-        
+    }        
 
     return (
         <article id={props.id} className="contentCard">
@@ -103,10 +102,11 @@ function ContentCard(props) {
                     type="range" 
                     className="soundSlider" 
                     onChange={(e) => onScrub(e.target.value)}
-                    onMouseUp={onScrubEnd}
+                    onPointerUp={onScrubEnd}
+                    onTouchEnd={onScrubEnd}
                     onKeyUp={onScrubEnd}
                     value={currentTime} 
-                    step={audio.current.duration ? audio.current.duration/1000.0 : 1}
+                    step={audio.current.duration ? audio.current.duration/2500.0 : 1}
                     min="0"
                     max={audio.current.duration ? audio.current.duration : `${durationText}`}
                 />
@@ -114,19 +114,14 @@ function ContentCard(props) {
             <span className="soundTimeText">
                 {currentTimeText}/{durationText}
             </span>
-            <span className="soundAuthor">by <a href="/">{props.author}</a></span>
+            <span className="soundAuthor">By: <a className="authorLink" href="/">{props.author}</a></span>
             <span className="soundDownloadBox">
-                <FontAwesomeIcon className="iconButton" icon="fa-solid fa-download" />
+                <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.title}>
+                    <FontAwesomeIcon className="iconButton" icon="fa-solid fa-download" />
+                </a>
             </span>
         </article>
     );
 }
 
 export default ContentCard;
-
-/*                     
-
-                <audio controls>
-                    <source src={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.title} type="audio/wav"></source>
-                </audio>
-*/

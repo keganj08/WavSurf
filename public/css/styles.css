@@ -28,6 +28,16 @@ html, body {
     font-size: 16px;
 } 
 
+/* GENERAL */
+
+a, a:visited {
+    color: var(--color-lightGunmetal);
+}
+
+a:hover, a:active {
+    color: var(--color-sizzleRed);
+}
+
 /* PAGE HEADER & FOOTER */
 
 .pageHeader, .pageFooter, .main {
@@ -53,7 +63,7 @@ html, body {
     font-weight: 400;
     font-size: 1.2rem;
     z-index: 2000;
-    box-shadow: 0 0rem 0.25rem 0.25rem rgba(0,0,0,0.25);
+    /*box-shadow: 0 0rem 0.25rem 0.25rem rgba(0,0,0,0.25);*/
 }
 
 .pageHeader * {
@@ -120,7 +130,7 @@ html, body {
 /* MAIN AREA */
 
 .main {
-    background-color: var(--color-mintCream);
+    background-color: white;
     min-height: calc(100vh - 2*var(--pageHeaderHeight));
     width: 100%;
     color: var(--color-gunmetal);
@@ -169,7 +179,7 @@ html, body {
     width: 100%;
     height: auto;
     position: relative;
-    background-color: var(--color-mintCream);
+    background-color: white;
     padding: 2rem 8rem;
 }
 
@@ -184,7 +194,7 @@ html, body {
 }
 
 .contentWrapper article {
-    border-radius: 1rem;
+    /*border-radius: 1rem;*/
 }
 
 .smallCenteredContentWrapper {
@@ -195,7 +205,7 @@ html, body {
     padding: 2rem;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 10px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 1rem 1rem rgba(0,0,0,0.1);
     background-color: var(--color-mintCream);
 }
 
@@ -264,20 +274,25 @@ html, body {
     width: 100%;
     display: flex;
     flex-direction: column;
+    /*background-color: white;
+    box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.05);
+    border-radius: 1rem;*/
 }
 
 .contentCard {    
     overflow: hidden;
-    height: 3.5rem;
-    background-color: white;
-    padding: 1rem 1rem;
+    height: auto;
+    padding: 1.2rem 1.5rem;
     color: var(--color-gunmetal);
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: [title-start] 10rem [playBtn-start] 1.5rem [timeBar-start] 1fr [start-time-text] 6rem [author-start] 6rem [downloadBtn-start] 1.5rem;
-    grid-template-areas: "title playBtn timeBar timeText author downloadBtn";
-    box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.05);
-    margin-bottom: 0.75rem;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: [playBtn-start] auto [timeBar-start] 1fr [timeText-start] auto [downloadBtn-start] auto;
+    grid-template-areas:    "title title author author"
+                            "playBtn timeBar timeText downloadBtn";
+    row-gap: 0.5rem;
+    background-color: var(--color-mintCream);
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .contentCard * {
@@ -291,6 +306,7 @@ html, body {
 .soundTitle {
     grid-area: title;
     text-align: center;
+    align-items: start;
 }
 
 .soundPlayBox {
@@ -299,7 +315,7 @@ html, body {
 
 .soundSliderBox {
     grid-area: timeBar;
-    padding: 0 1.25rem;
+    padding: 0 0.75rem;
 }
 
 .soundSlider {
@@ -309,21 +325,27 @@ html, body {
 .soundTimeText {
     grid-area: timeText;
     justify-content: center;
+    padding: 0 1rem;
 }
 
-.soundAuthor {
+.soundAuthor, .soundAuthor * {
     grid-area: author;
-    justify-content: center;
+    justify-content: right;
+    align-items: start;
 }
 
 .soundDownloadBox {
     grid-area: downloadBtn;
 }
 
+.authorLink {
+    margin-left: 0.2rem;
+}
+
 #dropbox {
     height: 16rem;
     border: 0.3rem solid var(--color-darkMintCream);
-    background-color: white;
+    background-color: var(--color-mintCream);
     color: var(--color-gunmetal);
     display: flex;
     flex-direction: column;
@@ -333,6 +355,7 @@ html, body {
     transition: background-color 0.1s linear, border-color 0.1s linear;
     transition: all 0.1s linear;
     z-index: 500;
+    border-radius: 1rem;
 }
 
 #dropbox:hover {
@@ -369,6 +392,8 @@ html, body {
     padding: 0;
     border: none;
     background-color: transparent;
+    height: 1.5rem;
+    width: 1.5rem;
 }
 
 .iconButton:hover {
@@ -376,6 +401,48 @@ html, body {
     cursor: pointer;
 }
 
+/* RANGE INPUT */
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* Accounting for most browsers, including Firefox */
+
+/* Most browsers */
+input[type="range"]::-webkit-slider-runnable-track {
+    background: var(--color-darkMintCream);
+    height: 0.3rem;
+    border-radius: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background-color: var(--color-gunmetal);
+    margin-top: -0.35rem;
+    border-radius: 50%;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-track {
+    background: var(--color-darkMintCream);
+    height: 0.3rem;
+    border-radius: 0.5rem;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none;
+    height: 1rem;
+    width: 1rem;
+    background-color: var(--color-gunmetal);
+    border-radius: 50%;
+}
 
 /* MOBILE */
 

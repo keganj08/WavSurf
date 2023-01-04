@@ -6,10 +6,8 @@ function LoginContent(props) {
     function updateAccount(username, password) {
         var formData = {"username" : String(username), "password" : String(password)};
 
-        console.log(formData.username, formData.password);
-
-        console.log('Client attempting /updateAccount POST of formdata');
-        fetch('/updateAccount', {
+        console.log('Client attempting /login POST of formdata');
+        fetch('/login', {
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',
             body: JSON.stringify(formData)
