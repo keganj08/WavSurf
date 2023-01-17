@@ -88,6 +88,7 @@ router.post('/login', async function(req, res){
     if(userPass === req.body.password) {
         response.loginSuccess = true;
         response.accessToken = generateToken(req.body.username);
+        console.log(accessTokens);
     }
 
     res.send(response);

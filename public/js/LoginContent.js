@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function LoginContent(props) {
+
+    const navigate = useNavigate();
 
     function updateAccount(username, password) {
         var formData = {"username" : String(username), "password" : String(password)};
@@ -19,7 +22,17 @@ function LoginContent(props) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            if(data.loginSuccess) {
+                Cookies.remove("accessToken");
+                Cookies.remove("sessionUsername");
+                Cookies.set("accessToken", data.accessToken, {sameSite: 'none', secure: true});
+                Cookies.set("sessionUsername", username, {sameSite: 'none', secure: true});
+                navigate("/");
+                console.log(Cookies.get("accessToken") + ", " + Cookies.get("sessionUsername"));
+            } else {
+                // Password or username was incorrect.
+            }
+
         })
         .catch(error => {
             console.log(error);

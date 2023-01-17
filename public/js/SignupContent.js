@@ -92,7 +92,7 @@ function SignupContent(props) {
             <section className="contentWrapper smallCenteredContentWrapper" id="contentWrapper_Signup">
                 <h1>Sign Up</h1>
                 <SignupForm />
-                <p>Already have an account? <Link to="/login" class="textLink">Log in.</Link></p>
+                <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
             </section>
         </main>
     )
