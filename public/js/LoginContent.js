@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 function LoginContent(props) {
-
+    const [loginResult, setLoginResult] = useState(0); // 0 = Default, 1 = Success, -1 = Client error, -2 = Server error
     const navigate = useNavigate();
 
     function updateAccount(username, password) {
@@ -17,12 +17,14 @@ function LoginContent(props) {
         })
         .then(response => {
             if(!response.ok){
+                setLoginResult(-2);
                 throw new Error(`HTTP error: ${response.status}`)
             }
             return response.json();
         })
         .then(data => {
             if(data.loginSuccess) {
+                setLoginResult(1);
                 Cookies.remove("accessToken");
                 Cookies.remove("sessionUsername");
                 Cookies.set("accessToken", data.accessToken, {sameSite: 'none', secure: true});
@@ -30,7 +32,8 @@ function LoginContent(props) {
                 navigate("/");
                 console.log(Cookies.get("accessToken") + ", " + Cookies.get("sessionUsername"));
             } else {
-                // Password or username was incorrect.
+                console.log("Failure.");
+                setLoginResult(-1);
             }
 
         })
@@ -70,28 +73,27 @@ function LoginContent(props) {
 
         return (
             <form onSubmit={handleSubmit}>
-                <label>
-                    <input 
-                        id = "newAccountUsername"
-                        type = "text"
-                        placeholder = "Username"
-                        value = {values.username} 
-                        onChange={handleUsernameInputChange} 
-                    />
-                </label>
-                <label>
-                    <input 
-                        id = "newAccountPassword"
-                        type = "password" 
-                        placeholder = "Password"
-                        value = {values.password} 
-                        onChange = {handlePasswordInputChange}
-                    />
-                </label>
+
+                <input 
+                    id = "newAccountUsername"
+                    type = "text"
+                    placeholder = "Username"
+                    value = {values.username} 
+                    onChange={handleUsernameInputChange} 
+                />
+                <input 
+                    id = "newAccountPassword"
+                    type = "password" 
+                    placeholder = "Password"
+                    value = {values.password} 
+                    onChange = {handlePasswordInputChange}
+                />
+                {loginResult == -1 && <span className="errorMsg">Incorrect username or password. Try again</span>}
+                {loginResult == -2 && <span className="errorMsg">A server error occurred. Try again</span>}
                 <input 
                     id = "newAccountSubmit"
                     type = "submit" 
-                    value = "Sign Up"
+                    value = "Log In"
                 />
             </form>
         );

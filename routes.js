@@ -5,8 +5,9 @@ import path from 'path';
 import s3_upload from './s3_putobject.js';
 import s3_list from './s3_listobjects.js';
 import s3_get from './s3_getobject.js';
-import { accessTokens } from "./accessTokens.js";
+import { accessTokens, tokenLength, usernameMinLength, passwordMinLength} from "./accessTokens.js";
 import { generateToken } from "./accessTokens.js";
+import e from 'express';
 const fsPromises = fs.promises;
 
 // Configure multer disk storage 
@@ -78,20 +79,38 @@ router.get("/listSounds", async function(req, res) {
 });
 
 // Handle a request to log in
-router.post('/login', async function(req, res){
+router.post("/login", async function(req, res){
     console.log("Got login request: " + req.body.username + ", " + req.body.password);
     let response = {"loginSuccess" : false, "accessToken" : null};
 
-    let fileName = req.body.username + ".txt";
-    let userPass = await s3_get(fileName, "users");
-
-    if(userPass === req.body.password) {
-        response.loginSuccess = true;
-        response.accessToken = generateToken(req.body.username);
-        console.log(accessTokens);
+    if(req.body.username && req.body.password && req.body.username.length >= usernameMinLength && req.body.password.length >= passwordMinLength) {
+        let fileName = req.body.username + ".txt";
+        let userPass = await s3_get(fileName, "users");
+    
+        if(req.body.password === userPass) {
+            response.loginSuccess = true;
+            response.accessToken = generateToken(req.body.username);
+            console.log(accessTokens);
+        }
+    } else {
+        console.log("Invalid login input.");
     }
 
     res.send(response);
+});
+
+router.post("/validateUser", function(req, res) {
+    console.log(req.body);
+    let givenAccessToken = req.body.accessToken;
+    let givenUsername = req.body.username;
+    console.log("Validating login for " + givenAccessToken + ", " + givenUsername + "...");
+    
+    let isValid = false;
+    if(givenUsername && givenAccessToken && givenUsername.length > 0 && givenAccessToken.length == tokenLength) {
+        isValid = (accessTokens[givenUsername] === givenAccessToken);
+    }
+
+    res.send(isValid);
 });
 
 // Send all page routing requests to index, then handle them via React router

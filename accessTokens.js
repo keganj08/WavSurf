@@ -1,6 +1,8 @@
 export const accessTokens = {};
+export const tokenLength = 24;
+export const usernameMinLength = 5;
+export const passwordMinLength = 4;
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()"
-const tokenLength = 24;
 
 export function generateToken(username) {
     let newToken = "";

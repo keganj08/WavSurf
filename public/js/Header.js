@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
-function Header({theme, currentPage}) {
+function Header(props) {
     const route = useLocation().pathname;
 
     return (
@@ -11,11 +12,13 @@ function Header({theme, currentPage}) {
             </Link>
             
             <nav>
-                {route != "/login" && route != "/signup" &&
-                    <Link id="singupLink" to="/login">Log In</Link>}
-
                 {route != "/browse" &&
-                    <Link id="browseLink" className="transparentButton" to="/browse">Browse Sounds</Link>}
+                    <Link id="browseLink" className="navButton transparentButton" to="/browse">Browse Sounds</Link>}
+
+                {!props.isLoggedIn && route != "/login" && route != "/signup" &&
+                    <Link id="singupLink" className="navButton" to="/login">Log In</Link>}
+
+                {props.isLoggedIn && <button className="navButton" onClick={props.logout}>Log Out</button>}
             </nav>
         </header>
     );
