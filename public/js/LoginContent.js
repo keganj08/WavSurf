@@ -101,12 +101,14 @@ function LoginContent(props) {
 
     return (
         <main className="main dark">
+            <div className="contentArea">
+                <section className="contentBox smallCenteredContentWrapper" id="contentWrapper_Login">
+                    <h1>Log In</h1>
+                    <LoginForm />
+                    <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>
+                </section>
+            </div>
 
-            <section className="contentWrapper smallCenteredContentWrapper" id="contentWrapper_Login">
-                <h1>Log In</h1>
-                <LoginForm />
-                <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>
-            </section>
         </main>
     )
 }

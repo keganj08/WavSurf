@@ -89,11 +89,14 @@ function SignupContent(props) {
     return (
         <main className="main dark">
 
-            <section className="contentWrapper smallCenteredContentWrapper" id="contentWrapper_Signup">
-                <h1>Sign Up</h1>
-                <SignupForm />
-                <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
-            </section>
+            <div className="contentArea">
+                <section className="contentBox smallCenteredContentWrapper" id="contentWrapper_Signup">
+                    <h1>Sign Up</h1>
+                    <SignupForm />
+                    <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
+                </section>
+            </div>
+
         </main>
     )
 }

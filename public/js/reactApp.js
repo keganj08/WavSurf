@@ -15,10 +15,10 @@ import Header from './Header.js';
 import Footer from './Footer.js';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faDownload, faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faPlay, faPause, faBars } from '@fortawesome/free-solid-svg-icons'
 import Cookies from 'js-cookie';
 
-library.add(faDownload, faPlay, faPause)
+library.add(faDownload, faPlay, faPause, faBars)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

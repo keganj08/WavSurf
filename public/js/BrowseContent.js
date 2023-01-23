@@ -44,21 +44,24 @@ function BrowseContent(props) {
     return (
         <main className="main">
             <div className="contentArea">
+                <div className="container stack">
 
-                <div className="toolbar">
-                    <span>Filters section</span>
+                    <section className="contentBox centered">
+                        <div className="toolbar">
+                            <span>Filters section</span>
+                        </div>
+                    </section>
+
+
+                    <section className="contentBox">
+                        <h1>Search Sounds</h1>
+                        <div className='contentCardWrapper' id='sounds'>
+                            {contentCards}
+                        </div>
+                    </section>
+
                 </div>
-
-                <section className="contentWrapper" id="contentWrapper_sounds">
-                    <h1>Search Sounds</h1>
-                    <div className='contentCardWrapper' id='sounds'>
-                        {contentCards}
-                    </div>
-                </section>
-
             </div>
-
-
         </main>
     )
 }

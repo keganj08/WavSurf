@@ -1,3 +1,11 @@
+/*
+How to achieve THOSE margins:
+
+max-width: ~ 1280px, or ~ 90rem;
+width: 100%;
+
+*/
+
 /* RESETS & VARIABLES */
 
 :root {
@@ -46,24 +54,45 @@ a:hover, a:active {
 
 .pageHeader, .pageFooter {
     background-color: var(--color-gunmetal);
-    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal)); 
-    width: auto;
+    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal));
+    width: 100%;
+    padding: 0;
+    margin: auto;
 }
 
 .pageHeader {
     position: sticky;
     top: 0;
     display: flex;
+    flex-direction: column;
     justify-content: left;
     align-items: center;
     background-color: var(--color-gunmetal);
-    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal)); 
-    height: var(--pageHeaderHeight);
-    padding: 0.5rem 8rem;
+    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal));
     font-weight: 400;
     font-size: 1.2rem;
     z-index: 2000;
     /*box-shadow: 0 0rem 0.25rem 0.25rem rgba(0,0,0,0.25);*/
+}
+
+#navContainer {
+    height: var(--pageHeaderHeight);
+}
+
+#mobileNavContainer {
+    display: none;    
+    overflow: hidden;
+    transition: height 0.2s linear;
+    background-color: var(--color-gunmetal);
+    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal));
+    padding: 0;
+    padding-bottom: 0.2rem;
+    width: 100%;
+}
+
+.growHeight {
+    height: auto;
+    transition: height 0.2s linear;
 }
 
 .pageHeader * {
@@ -81,8 +110,46 @@ a:hover, a:active {
     margin-left: 1rem;
 }
 
-.pageHeader nav a:link, .pageHeader nav a:visited, .navButton, .navButton a:link, .navButton a:visited {
-    font-size: 1rem;
+.mobileNavButton {
+    display: none;
+}
+
+#mobileNavMenu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-darkMintCream);
+    /*
+    background-color: var(--color-gunmetal);
+    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal));
+    */
+}
+
+#mobileNavMenu Link, #mobileNavMenu a {
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0.5rem 0.2rem;
+    margin: 0.2rem 0;
+    color: var(--color-lightGunmetal);
+    background-color: var(--color-mintCream);
+    border-radius: 0.5rem;
+}
+
+#mobileNavMenu Link:hover, #mobileNavMenu a:hover {
+    background-color: var(--color-sizzleRed);
+    color: var(--color-mintCream);
+    cursor: pointer;
+}
+
+.pageHeader nav .navButton:link, .pageHeader nav .navButton:visited, .navButton, .navButton a:link, .navButton a:visited {
+    font-size: 1.2rem;
     text-decoration: none;
     border: none;
     background-color: var(--color-mintCream);
@@ -95,7 +162,7 @@ a:hover, a:active {
     transition: all 0.1s linear;
 }
 
-.pageHeader nav a:link.transparentButton, .pageHeader nav a:visited.transparentButton {
+.pageHeader nav .navButton:link.transparentButton, .pageHeader nav .navButton:visited.transparentButton {
     background-color: transparent;
     backdrop-filter: brightness(90%);
     color: var(--color-mintCream);
@@ -107,19 +174,8 @@ a:hover, a:active {
     cursor: pointer;
 }
 
-.pageHeader nav a:hover.transparentButton {
+.pageHeader nav .navButton:hover.transparentButton {
     color: var(--color-sizzleRed);
-}
-
-#logoLink img {
-    transition: opacity 0.5s, visibility 0.5s;
-}
-
-#logoLink:hover #logo {
-
-    opacity: 1;
-    visibility: visible;
-
 }
 
 .pageFooter {
@@ -137,32 +193,22 @@ a:hover, a:active {
     width: 100%;
     color: var(--color-gunmetal);
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }
 
 .contentArea {
-    flex-grow: 1;
     height: 100%;
     padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
-.toolbar {
-    background-color: var(--color-mintCream);
-    border: 0.1rem solid var(--color-darkMintCream);
-    border-radius: 1.5rem;
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem;
-    margin: 1rem 0;
-}
+.contentArea:first-of-type {
+    padding-top: 1rem;
+} 
 
-.waveBox {
-    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal)); 
-    color: var(--color-mintCream); 
+.contentArea:last-of-type {
+    padding-bottom: 1rem;
 }
    
 .dark {
@@ -170,32 +216,45 @@ a:hover, a:active {
     background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal)); 
     justify-content: center;
     align-items: center;
+    color: var(--color-mintCream);
 }
 
 /* CONTENT ITEMS */
 
-.contentWrapper {
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    max-width: 80rem;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    background: none;
+    padding: 0.5rem 1rem;
+}
+
+.stack {
+    flex-direction: column;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentBox {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
     height: auto;
     position: relative;
-    background-color: white;
-    padding: 2rem 8rem;
+    background: none;
+    /*padding: 2rem 1rem;*/
 }
 
-.contentWrapper:first-of-type {
-    margin-top: 0;
-    padding-top: 2rem;
-}
-
-.contentWrapper:last-of-type {
-    margin-bottom: 0;
-    padding-bottom: 2rem;
-}
-
-.contentWrapper article {
+.contentBox article {
     /*border-radius: 1rem;*/
 }
 
@@ -209,6 +268,7 @@ a:hover, a:active {
     justify-content: center;
     box-shadow: 0 0 1rem 1rem rgba(0,0,0,0.1);
     background-color: var(--color-mintCream);
+    color: var(--color-gunmetal);
 }
 
 .smallCenteredContentWrapper form {
@@ -248,7 +308,7 @@ a:hover, a:active {
     margin-bottom: 1.75rem;
 }
 
-.contentWrapper h1 {
+.contentBox h1 {
     font-size: 2.25rem;
     margin-bottom: 0.75rem;
 }
@@ -257,6 +317,7 @@ a:hover, a:active {
     margin-bottom: 2rem;
 }
 
+/* BROWSE PAGE */
 
 .contentCardGrid {
     position: relative;
@@ -273,6 +334,17 @@ a:hover, a:active {
     flex-wrap: wrap;
     justify-content: flex-start;
     */
+}
+
+.toolbar {
+    background-color: var(--color-mintCream);
+    border: 0.1rem solid var(--color-darkMintCream);
+    border-radius: 1.5rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    margin: 0 0 1rem 0;
 }
 
 .contentCardWrapper {
@@ -454,17 +526,14 @@ input[type="range"]::-moz-range-thumb {
 
 /* MOBILE */
 
-@media (orientation: portrait) {
-
+@media (max-width: 699.98px) {
+    /*
     :root {
         --pageHeaderHeight: 5rem;
     }
+    */
 
     /* HEADER */
-
-    .pageHeader, .pageFooter {
-        padding: 0.5rem 1rem;
-    }
 
     .pageHeader #logoLink {
         display: inline-block;
@@ -475,8 +544,25 @@ input[type="range"]::-moz-range-thumb {
         max-width: 100%;
     }
 
-    .pageHeader nav {
-        font-size: 1.3rem;
+    .navButton {
+        display: none;
+    }
+
+    #mobileNavContainer {
+        display: block;
+    }
+
+    .mobileNavButton {
+        display: inline-block;
+        color: white;
+        background: none;
+        border: none;
+        transition: all 0.1s linear;
+    }
+
+    .mobileNavButton:hover, .mobileNavButton:active {
+        cursor: pointer;
+        color: var(--color-sizzleRed);
     }
 
     /* CONTENT */
@@ -486,9 +572,9 @@ input[type="range"]::-moz-range-thumb {
         /*min-width: fit-content;*/
     }
 
-    .contentWrapper {
-        padding: 0 2rem;
+    .contentBox {
         align-items: center;
+        transition: align-items 1s linear;
     }
 
     .dropbox {
@@ -496,6 +582,5 @@ input[type="range"]::-moz-range-thumb {
     }
 
     #dropboxCaption {
-        display: none;
     }
 }
