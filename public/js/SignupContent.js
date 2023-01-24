@@ -90,7 +90,7 @@ function SignupContent(props) {
         <main className="main dark">
 
             <div className="contentArea">
-                <section className="contentBox smallCenteredContentWrapper" id="contentWrapper_Signup">
+                <section className="contentBox centeredBox" id="contentWrapper_Signup">
                     <h1>Sign Up</h1>
                     <SignupForm />
                     <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>

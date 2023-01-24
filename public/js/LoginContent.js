@@ -6,7 +6,7 @@ function LoginContent(props) {
     const [loginResult, setLoginResult] = useState(0); // 0 = Default, 1 = Success, -1 = Client error, -2 = Server error
     const navigate = useNavigate();
 
-    function updateAccount(username, password) {
+    function attemptLogin(username, password) {
         var formData = {"username" : String(username), "password" : String(password)};
 
         console.log('Client attempting /login POST of formdata');
@@ -67,7 +67,7 @@ function LoginContent(props) {
         }
         const handleSubmit = (event) => {
             event.preventDefault();
-            updateAccount(values.username, values.password);
+            attemptLogin(values.username, values.password);
             setSubmitted(true);
         }
 
@@ -102,7 +102,7 @@ function LoginContent(props) {
     return (
         <main className="main dark">
             <div className="contentArea">
-                <section className="contentBox smallCenteredContentWrapper" id="contentWrapper_Login">
+                <section className="contentBox centeredBox" id="contentWrapper_Login">
                     <h1>Log In</h1>
                     <LoginForm />
                     <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>

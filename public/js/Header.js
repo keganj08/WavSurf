@@ -6,16 +6,6 @@ import Cookies from 'js-cookie';
 
 function Header(props) {
     const route = useLocation().pathname;
-    const [useMobileNav, setUseMobileNav] = useState(false);
-    const [showMobileNavMenu, setShowMobileNavMenu] = useState(false);
-
-    useEffect(() => {
-        setShowMobileNavMenu(false);
-    }, [route]);
-
-    function toggleMobileNavMenu() {
-        setShowMobileNavMenu(!showMobileNavMenu);
-    }
 
     return (
         <header className="pageHeader">
@@ -34,27 +24,59 @@ function Header(props) {
 
                         {props.isLoggedIn && <button className="navButton" onClick={props.logout}>Log Out ({Cookies.get("sessionUsername")})</button>}
                         
-                        <button className="mobileNavButton" onClick={() => toggleMobileNavMenu()}>
-                            <FontAwesomeIcon icon="fa-solid fa-bars" />
-                        </button>
                     </nav>
             </div>
-
-            {showMobileNavMenu && <div id="mobileNavContainer" className="container">
-                <nav id="mobileNavMenu">
-                    {route != "/browse" && 
-                        <Link to="/browse">Browse Sounds</Link>}
-
-                    {!props.isLoggedIn && route != "/login" && route != "/signup" &&
-                        <Link to="/login">Log In</Link>}
-
-                    {props.isLoggedIn && 
-                        <a href="/" onClick={props.logout}>Log Out ({Cookies.get("sessionUsername")})</a>}
-                </nav>
-            </div>}
-
         </header>
     );
 }
 
 export default Header;
+
+
+
+
+
+/*
+const [useMobileNav, setUseMobileNav] = useState(false);
+const [showMobileNavMenu, setShowMobileNavMenu] = useState(false);
+const [mobileNavContainerHeight, setMobileNavContainerHeight] = useState(0);
+
+const ref = React.useRef(null);
+
+useEffect(() => {
+    setShowMobileNavMenu(false);
+}, [route]);
+
+useEffect(() => {
+    if(showMobileNavMenu){
+        setMobileNavContainerHeight(ref.current.offsetHeight);
+    } else {
+        setMobileNavContainerHeight(0);
+    }
+}, [showMobileNavMenu]);
+
+function toggleMobileNavMenu() {
+    setShowMobileNavMenu(!showMobileNavMenu);
+}
+*/
+
+/*
+<div id="mobileNavContainer" className="container" ref={ref} style={{maxHeight: mobileNavContainerHeight}}>
+<nav id="mobileNavMenu">
+    {route != "/browse" && 
+        <Link to="/browse">Browse Sounds</Link>}
+
+    {!props.isLoggedIn && route != "/login" && route != "/signup" &&
+        <Link to="/login">Log In</Link>}
+
+    {props.isLoggedIn && 
+        <a href="/" onClick={props.logout}>Log Out ({Cookies.get("sessionUsername")})</a>}
+</nav>
+</div>
+*/
+
+/*
+                        <button className="mobileNavButton" onClick={() => toggleMobileNavMenu()}>
+                            <FontAwesomeIcon icon="fa-solid fa-bars" />
+                        </button>
+*/

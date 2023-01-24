@@ -1,16 +1,41 @@
 import DropBox from './Dropbox.js';
 import ContentCard from './ContentCard.js';
+import Modal from './Modal.js';
 import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
 
 function LandingContent(props) {
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [uploadData, setUploadData] = useState({
+        file: null,
+        title: "",
+        author: ""
+    });
+
+    function triggerUploadModal(newFile, newAuthor) {
+        console.log("Landing file:");
+        console.log(newFile);
+        setUploadData({file: newFile, title: newFile.name, author: newAuthor});
+        setShowUploadModal(true);
+    }
+
     return (
         <main className="main">
+
+            <Modal 
+                id="soundUploadModal" 
+                showing={showUploadModal} 
+                file={uploadData.file} 
+                title={uploadData.title} 
+                author={uploadData.author} 
+                close={() => setShowUploadModal(false)}
+            />
 
             <section className="contentArea dark">
                 <div className="container">
                     <article className="contentBox">
                         <h1>Upload Sound Files</h1>
-                        <DropBox />
+                        <DropBox triggerModal = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
                     </article>
                     
                 </div>
@@ -35,7 +60,14 @@ function LandingContent(props) {
             <section className="contentArea">
                 <div className="container">
                     <article className="contentBox">
-                        <h1>Popular Sounds</h1>
+                        <h1>Explore Content</h1>
+                        <div className='contsentCardGrid' id='hot'>
+                        <ContentCard title="Sample Sound 1" author="John" id={0} />
+                        <ContentCard title="Sample Sound 2" author="Mary" id={1} />
+                        <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
+                        <ContentCard title="Sample Sound 4" author="Anna" id={3} />
+                    </div>
+
                     </article>
                 </div>
             </section>
@@ -46,13 +78,5 @@ function LandingContent(props) {
 
 export default LandingContent;
 
-/*
 
-                    <div className='contentCardGrid' id='hot'>
-                        <ContentCard title="Sound 1" author="John" id={0} />
-                        <ContentCard title="Sound 2" author="Mary" id={1} />
-                        <ContentCard title="Sound 3" author="John" id={2} />
-                        <ContentCard title="Sound 4" author="Anna" id={3} />
-                    </div>
 
-*/

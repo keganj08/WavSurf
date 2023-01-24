@@ -5,7 +5,7 @@ import {
     Route,
     useLocation,
 } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 
 import LandingContent from './LandingContent.js';
 import SignupContent from './SignupContent.js';
@@ -25,6 +25,10 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const route = useLocation();
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0)
+    });
 
     useEffect(() => {
         console.log({username : Cookies.get("sessionUsername"), accessToken : Cookies.get("accessToken")});

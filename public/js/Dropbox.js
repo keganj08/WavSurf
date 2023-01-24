@@ -1,10 +1,12 @@
+import Cookies from 'js-cookie';
+
 function DropBox(props) {
 
     function clickHandler(e) {
         var input = document.createElement('input');
         input.type = 'file';
         input.accept = '.wav,.WAV';
-        input.multiple= true;
+        input.multiple= false;
         input.onchange = (e) => {
             var files = e.target.files;
             validateAudioFiles(files);
@@ -37,39 +39,14 @@ function DropBox(props) {
     }
 
     function validateAudioFiles(files) {
-        if(files.length < 1 || files.length > 5) {
+        if(files.length != 1) {
             console.log('ERROR: Audio file array is of invalid size.');
         } else {
-            console.log(typeof (files[0]));
-            uploadAudioFiles(files);
+            console.log("Dropbox received:");
+            console.log(files[0]);
+            props.triggerModal(files[0], Cookies.get("sessionUsername"));
+            //uploadAudioFiles(files);
         }
-    }
-
-    function uploadAudioFiles(files) {
-        var formData = new FormData();
-
-        for(var i=0; i<files.length; i++) {
-            formData.append('audioFile', files[i]);
-        }
-        //formData.append('audioFile', audioFiles);
-
-        console.log('Client attempting /uploadAudio POST of formdata');
-        fetch('/uploadAudio', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if(!response.ok){
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => {
-            console.log(error);
-        })
     }
 
     return (

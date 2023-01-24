@@ -33,7 +33,7 @@ function BrowseContent(props) {
             }
 
             setSoundFileNames(newSoundFileNames);
-            setContentCards(newSoundFileNames.map((fileName, index) => <ContentCard title={fileName} author={"Dude " + index} id={index} key={index} />));
+            setContentCards(newSoundFileNames.map((fileName, index) => <ContentCard title={fileName} author={"Anonymous"} id={index} key={index} />));
         })
         .catch(error => {
             console.log(error);
@@ -46,15 +46,11 @@ function BrowseContent(props) {
             <div className="contentArea">
                 <div className="container stack">
 
-                    <section className="contentBox centered">
-                        <div className="toolbar">
-                            <span>Filters section</span>
-                        </div>
-                    </section>
+
 
 
                     <section className="contentBox">
-                        <h1>Search Sounds</h1>
+                        <h1>Browse Sounds</h1>
                         <div className='contentCardWrapper' id='sounds'>
                             {contentCards}
                         </div>
@@ -65,5 +61,13 @@ function BrowseContent(props) {
         </main>
     )
 }
+
+/* PUT THIS BACK
+                    <section className="contentBox centered">
+                        <div className="toolbar">
+                            <span>Filters section</span>
+                        </div>
+                    </section>
+*/
 
 export default BrowseContent;
