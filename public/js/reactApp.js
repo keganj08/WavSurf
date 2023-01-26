@@ -65,10 +65,10 @@ function App() {
         <React.Fragment>
             <Header isLoggedIn = {isLoggedIn} logout = {logout} />
             <Routes>
-                <Route path="/" element={<LandingContent />} />
-                <Route path="signup" element={<SignupContent />} />
-                <Route path="login" element={<LoginContent />} />
-                <Route path="browse" element={<BrowseContent />} />
+                <Route path="/"      element={<LandingContent isLoggedIn={isLoggedIn}/>} />
+                <Route path="signup" element={<SignupContent  isLoggedIn={isLoggedIn}/>} />
+                <Route path="login"  element={<LoginContent   isLoggedIn={isLoggedIn}/>} />
+                <Route path="browse" element={<BrowseContent  isLoggedIn={isLoggedIn}/>} />
             </Routes>
             <Footer />
         </React.Fragment>

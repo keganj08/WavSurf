@@ -1,6 +1,6 @@
 import DropBox from './Dropbox.js';
 import ContentCard from './ContentCard.js';
-import Modal from './Modal.js';
+import UploadModal from './UploadModal.js';
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -8,26 +8,25 @@ function LandingContent(props) {
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadData, setUploadData] = useState({
         file: null,
-        title: "",
-        author: ""
+        title: ""
     });
 
-    function triggerUploadModal(newFile, newAuthor) {
-        console.log("Landing file:");
-        console.log(newFile);
-        setUploadData({file: newFile, title: newFile.name, author: newAuthor});
+    console.log("Logged in: " + props.isLoggedIn);
+
+    function triggerUploadModal(newFile) {
+        setUploadData({file: newFile, title: newFile.name});
         setShowUploadModal(true);
     }
 
     return (
         <main className="main">
 
-            <Modal 
+            <UploadModal 
                 id="soundUploadModal" 
                 showing={showUploadModal} 
                 file={uploadData.file} 
-                title={uploadData.title} 
-                author={uploadData.author} 
+                title={uploadData.title}
+                isLoggedIn={props.isLoggedIn}
                 close={() => setShowUploadModal(false)}
             />
 
@@ -35,7 +34,7 @@ function LandingContent(props) {
                 <div className="container">
                     <article className="contentBox">
                         <h1>Upload Sound Files</h1>
-                        <DropBox triggerModal = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
+                        <DropBox triggerUploadModal = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
                     </article>
                     
                 </div>
@@ -59,16 +58,7 @@ function LandingContent(props) {
                 
             <section className="contentArea">
                 <div className="container">
-                    <article className="contentBox">
-                        <h1>Explore Content</h1>
-                        <div className='contsentCardGrid' id='hot'>
-                        <ContentCard title="Sample Sound 1" author="John" id={0} />
-                        <ContentCard title="Sample Sound 2" author="Mary" id={1} />
-                        <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
-                        <ContentCard title="Sample Sound 4" author="Anna" id={3} />
-                    </div>
 
-                    </article>
                 </div>
             </section>
 
@@ -80,3 +70,15 @@ export default LandingContent;
 
 
 
+/*
+                    <article className="contentBox">
+                        <h1>Explore Content</h1>
+                        <div className='contentCardGrid' id='hot'>
+                            <ContentCard title="Sample Sound 1" author="John" id={0} />
+                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
+                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
+                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
+                        </div>
+
+                    </article>
+*/

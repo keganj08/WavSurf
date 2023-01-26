@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 
 function DropBox(props) {
-
     function clickHandler(e) {
         var input = document.createElement('input');
         input.type = 'file';
@@ -33,8 +32,6 @@ function DropBox(props) {
         let dt = e.dataTransfer;
         let files = dt.files;
 
-        console.log(files);
-
         validateAudioFiles(files);
     }
 
@@ -42,10 +39,7 @@ function DropBox(props) {
         if(files.length != 1) {
             console.log('ERROR: Audio file array is of invalid size.');
         } else {
-            console.log("Dropbox received:");
-            console.log(files[0]);
-            props.triggerModal(files[0], Cookies.get("sessionUsername"));
-            //uploadAudioFiles(files);
+            props.triggerUploadModal(files[0]);
         }
     }
 

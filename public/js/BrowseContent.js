@@ -24,16 +24,32 @@ function BrowseContent(props) {
         })
         .then(data => {
             /* Get the titles of each sound file */
-            let newSoundFileNames = [];
+            let soundFiles = [];
 
             for(var i=0; i<data.Contents.length; i++) {
-                if(data.Contents[i].Key.split('sounds/')[1].length !== 0 ) {
-                    newSoundFileNames.push(data.Contents[i].Key.split("sounds/")[1]);
+
+                if(data.Contents[i].Key.indexOf("sounds/") != -1) {
+                    let authorPath = data.Contents[i].Key.split('sounds/')[1];
+                    if(authorPath.indexOf("/") !=  -1) {
+                        console.log(authorPath);
+                        let title = authorPath.split("/")[1];
+                        let author = authorPath.split("/")[0];
+                        soundFiles.push({title, author});
+                    }
                 }
+
             }
 
-            setSoundFileNames(newSoundFileNames);
-            setContentCards(newSoundFileNames.map((fileName, index) => <ContentCard title={fileName} author={"Anonymous"} id={index} key={index} />));
+            setSoundFileNames(soundFiles);
+            setContentCards(
+                soundFiles.map((fileData, index) => 
+                <ContentCard 
+                    title={fileData.title} 
+                    author={fileData.author} 
+                    id={index} 
+                    key={index} 
+                />
+            ));
         })
         .catch(error => {
             console.log(error);
@@ -45,9 +61,11 @@ function BrowseContent(props) {
         <main className="main">
             <div className="contentArea">
                 <div className="container stack">
-
-
-
+                    <section className="contentBox centered">
+                        <div className="toolbar">
+                            <span>Filters section</span>
+                        </div>
+                    </section>
 
                     <section className="contentBox">
                         <h1>Browse Sounds</h1>
@@ -62,12 +80,6 @@ function BrowseContent(props) {
     )
 }
 
-/* PUT THIS BACK
-                    <section className="contentBox centered">
-                        <div className="toolbar">
-                            <span>Filters section</span>
-                        </div>
-                    </section>
-*/
+
 
 export default BrowseContent;

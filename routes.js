@@ -24,20 +24,16 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 // Handle a request to upload an array of .wav files to S3
-router.post('/uploadAudio', upload.array('audioFile', 5), async function(req, res) {
-    var response = {
-        uploadStatuses: []  // Information on the successfulness of uploading each file; -1 = failure, 1 = success
-    };
+router.post('/uploadAudio', upload.single('audioFile'), async function(req, res) {
+    let response = {};
+    console.log("Upload Audio Request: \n  Filename: " + req.file.path + "\n  Author: " + req.body.author);
 
-    for(var i=0; i<req.files.length; i++) {
+    var uploadSuccess = await s3_upload(req.file.path, 'sounds', req.body.author); // Attempt to push file to S3
+    response.uploadSuccess = uploadSuccess;
 
-        console.log("PATH: " + req.files[i].path);
-        var uploadStatus = await s3_upload(req.files[i].path, 'sounds'); // Attempt to push file to S3
-        if(uploadStatus) console.log('got sound uploadStatus in routes.js');
-        response.uploadStatuses.push(uploadStatus);
+    console.log("  Result: " + uploadSuccess);
 
-        fs.unlinkSync('./uploads/' + req.files[i].originalname); // Delete local copy of file
-    }
+    fs.unlinkSync('./uploads/' + req.file.originalname); // Delete local copy of file
 
     res.send(response);
 });
