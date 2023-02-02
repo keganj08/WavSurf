@@ -33,8 +33,8 @@ router.post('/uploadAudio', upload.single('audioFile'), async function(req, res)
     if(loginValid) {
         uploadSuccess = await s3_upload(req.file.path, 'sounds', req.body.author); // Attempt to push file to S3
         console.log("  Result: " + uploadSuccess);
-        fs.unlinkSync('./uploads/' + req.file.originalname); // Delete local copy of file
     }
+    fs.unlinkSync('./uploads/' + req.file.originalname); // Delete local copy of file
 
     let response = {"loginValid": loginValid, "uploadSuccess": uploadSuccess}
     res.send(response);
