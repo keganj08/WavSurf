@@ -25,16 +25,18 @@ const router = express.Router();
 
 // Handle a request to upload an array of .wav files to S3
 router.post('/uploadAudio', upload.single('audioFile'), async function(req, res) {
-    let response = {};
     console.log("Upload Audio Request: \n  Filename: " + req.file.path + "\n  Author: " + req.body.author);
 
-    var uploadSuccess = await s3_upload(req.file.path, 'sounds', req.body.author); // Attempt to push file to S3
-    response.uploadSuccess = uploadSuccess;
+    let loginValid = validateAccessToken(req.body.author, req.body.accessToken);
+    let uploadSuccess = false;
 
-    console.log("  Result: " + uploadSuccess);
+    if(loginValid) {
+        uploadSuccess = await s3_upload(req.file.path, 'sounds', req.body.author); // Attempt to push file to S3
+        console.log("  Result: " + uploadSuccess);
+        fs.unlinkSync('./uploads/' + req.file.originalname); // Delete local copy of file
+    }
 
-    fs.unlinkSync('./uploads/' + req.file.originalname); // Delete local copy of file
-
+    let response = {"loginValid": loginValid, "uploadSuccess": uploadSuccess}
     res.send(response);
 });
 
@@ -95,16 +97,21 @@ router.post("/login", async function(req, res){
     res.send(response);
 });
 
+function validateAccessToken(username, accessToken) {
+    let isValid = false;
+    if(username && accessToken && username.length > 0 && accessToken.length == tokenLength) {
+        isValid = (accessTokens[username] === accessToken);
+    }
+    return isValid;
+}
+
 router.post("/validateUser", function(req, res) {
     console.log(req.body);
     let givenAccessToken = req.body.accessToken;
     let givenUsername = req.body.username;
     console.log("Validating login for " + givenAccessToken + ", " + givenUsername + "...");
     
-    let isValid = false;
-    if(givenUsername && givenAccessToken && givenUsername.length > 0 && givenAccessToken.length == tokenLength) {
-        isValid = (accessTokens[givenUsername] === givenAccessToken);
-    }
+    let isValid = validateAccessToken(givenUsername, givenAccessToken);
 
     res.send(isValid);
 });

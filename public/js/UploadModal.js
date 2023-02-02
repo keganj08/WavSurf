@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 export default function UploadModal(props) {
+    const [uploadError, setUploadError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("Error");
 
-    function uploadAudioFile(file) {
-        console.log("Author: " + file.author);
-        const newFile = new File([file], file.input + ".wav", {type: file.type});
+    function uploadAudioFile(title, author) {
+        const newFile = new File([props.file], title + ".wav", {type: props.file.type});
 
         var formData = new FormData();
-        formData.append('audioFile', newFile);
-        formData.append('author', file.author);
+        formData.append("audioFile", newFile);
+        formData.append("author", author);
+        formData.append("accessToken", Cookies.get("accessToken"));
 
-        console.log('Client attempting /uploadAudio POST of formdata');
-        //console.log(formData);
-        //console.log(newFile.author);
+        console.log("Client attempting /uploadAudio POST of " + title + " by " + author);
 
         fetch('/uploadAudio', {
             method: 'POST',
@@ -28,7 +28,17 @@ export default function UploadModal(props) {
         .then(data => {
             console.log("Response data: ");
             console.log(data);
-            props.close();
+
+            if(!data.loginValid){
+                setUploadError(true);
+                setErrorMsg("Authentication failed. Please log in again");
+            } else if(!data.uploadSuccess) {
+                setUploadError(true);
+                setErrorMsg("Upload failed. Please try again");
+            } else {
+                setUploadError(false);
+                props.close();
+            }
         })
         .catch(error => {
             console.log("Response error: ");
@@ -71,35 +81,38 @@ export default function UploadModal(props) {
 
         const handleSubmit = (event) => {
             event.preventDefault();
-            props.file.input = values.title;
-            props.file.author = values.author;
-            uploadAudioFile(props.file);
+            uploadAudioFile(values.title, values.author);
             setSubmitted(true);
         }
 
         return (
-            <form onSubmit={handleSubmit}>
-
-                <label>Title:</label>
-                <input 
-                    id = "newUploadTitle"
+            <form class="formGrid" onSubmit={handleSubmit}>
+                
+                <label id="uploadTitleLabel" class="formGridLabel">Title:</label>
+                <input
+                    id = "uploadTitleInput"
+                    class = "formGridInput" 
                     type = "text"
                     placeholder = {props.title.split(".")[0]}
                     value = {values.title} 
                     onChange={handleTitleInputChange} 
                 />
 
-                <label>Author:</label>
+                <label id="uploadAuthorLabel" class="formGridLabel">Author:</label>
                 <input 
-                    id = "newUploadAuthor"
+                    id = "uploadAuthorInput"
+                    class= "formGridInput"
                     type = "text" 
                     placeholder = "Author"
                     value = {values.author}
                     readOnly = {true}
                 />
 
+                {uploadError && <span className="errorMsg">{errorMsg}</span>}
+
                 <input 
-                    id = "newUploadSubmit"
+                    id = "uploadSubmit"
+                    class = "formGridSubmit"
                     type = "submit" 
                     value = "Upload"
                 />

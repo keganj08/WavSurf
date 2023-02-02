@@ -6,7 +6,7 @@ function ContentCard(props) {
     const [currentTime, setCurrentTime] = useState(0);
     const [currentTimeText, setCurrentTimeText] = useState("0:00");
     const [durationText, setDurationText] = useState("0:00");
-    const audio = useRef(new Audio("https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.title));
+    const audio = useRef(new Audio("https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title));
     const interval = useRef(0);
     const isReady = useRef(false);
 
@@ -116,7 +116,7 @@ function ContentCard(props) {
             </span>
             <span className="soundAuthor">By: <a className="authorLink" href="/">{props.author}</a></span>
             <span className="soundDownloadBox">
-                <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.title}>
+                <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title}>
                     <FontAwesomeIcon className="iconButton" icon="fa-solid fa-download" />
                 </a>
             </span>

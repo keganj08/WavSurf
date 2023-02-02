@@ -7,18 +7,18 @@ import {
 } from 'react-router-dom';
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 
-import LandingContent from './LandingContent.js';
-import SignupContent from './SignupContent.js';
-import LoginContent from './LoginContent.js';
-import BrowseContent from './BrowseContent.js';
+import Landing from './Landing.js';
+import Signup from './Signup.js';
+import Login from './Login.js';
+import Browse from './Browse.js';
 import Header from './Header.js';
 import Footer from './Footer.js';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faDownload, faPlay, faPause, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import Cookies from 'js-cookie';
 
-library.add(faDownload, faPlay, faPause, faBars)
+library.add(faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -65,10 +65,10 @@ function App() {
         <React.Fragment>
             <Header isLoggedIn = {isLoggedIn} logout = {logout} />
             <Routes>
-                <Route path="/"      element={<LandingContent isLoggedIn={isLoggedIn}/>} />
-                <Route path="signup" element={<SignupContent  isLoggedIn={isLoggedIn}/>} />
-                <Route path="login"  element={<LoginContent   isLoggedIn={isLoggedIn}/>} />
-                <Route path="browse" element={<BrowseContent  isLoggedIn={isLoggedIn}/>} />
+                <Route path="/"      element={<Landing  isLoggedIn={isLoggedIn}/>} />
+                <Route path="signup" element={<Signup   isLoggedIn={isLoggedIn}/>} />
+                <Route path="login"  element={<Login    isLoggedIn={isLoggedIn}/>} />
+                <Route path="browse" element={<Browse   isLoggedIn={isLoggedIn}/>} />
             </Routes>
             <Footer />
         </React.Fragment>

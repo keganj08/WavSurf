@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function DropBox(props) {
     function clickHandler(e) {
@@ -45,7 +45,7 @@ function DropBox(props) {
 
     return (
         <div className="dropbox" id="dropbox" onClick={clickHandler} onDrop={dropHandler} onDragOver={dragOverHandler} onDragLeave={dragLeaveHandler}>
-            <img id="uploadIcon" className="icon" src="res/uploadIcon.svg"></img>
+            <FontAwesomeIcon id="uploadIcon" className="icon" icon="fa-solid fa-upload" />
             <p id="dropboxCaption">Drop .wav files here or click to browse</p>
         </div>
     );

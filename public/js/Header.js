@@ -12,19 +12,19 @@ function Header(props) {
 
             <div id="navContainer" className="container">
                 <Link id="logo Link" to="/"> 
-                        <img id="logo" src="res/logo.svg"></img> 
-                    </Link>
+                    <img id = "logo" src = "/res/logo.svg"></img> 
+                </Link>
 
-                    <nav className="headerNav">
-                        {route != "/browse" &&
-                            <Link id="browseLink" className="navButton transparentButton" to="/browse">Browse Sounds</Link>}
+                <nav className="headerNav">
+                    {route != "/browse" &&
+                        <Link id="browseLink" className="navButton transparentButton" to="/browse">Browse Sounds</Link>}
 
-                        {!props.isLoggedIn && route != "/login" && route != "/signup" &&
-                            <Link id="singupLink" className="navButton" to="/login">Log In</Link>}
+                    {!props.isLoggedIn && route != "/login" && route != "/signup" &&
+                        <Link id="singupLink" className="navButton" to="/login">Log In</Link>}
 
-                        {props.isLoggedIn && <button className="navButton" onClick={props.logout}>Log Out ({Cookies.get("sessionUsername")})</button>}
-                        
-                    </nav>
+                    {props.isLoggedIn && <button className="navButton" onClick={props.logout}>Log Out ({Cookies.get("sessionUsername")})</button>}
+                    
+                </nav>
             </div>
         </header>
     );
