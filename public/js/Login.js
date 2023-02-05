@@ -3,9 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 export default function LoginContent(props) {
-    const [loginError, setLoginError] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("Error");
-    const [loginResult, setLoginResult] = useState(0); // 0 = Default, 1 = Success, -1 = Client error, -2 = Server error
     const navigate = useNavigate();
 
     function attemptLogin(username, password) {
@@ -19,25 +16,23 @@ export default function LoginContent(props) {
         })
         .then(response => {
             if(!response.ok){
-                setLoginError(true);
-                setErrorMsg("Server error. Please try again");
+                props.toggleMessage("error", "Server error, please try again");
                 throw new Error(`HTTP error: ${response.status}`)
             }
             return response.json();
         })
         .then(data => {
             if(data.loginSuccess) {
-                setLoginError(false);
                 Cookies.remove("accessToken");
                 Cookies.remove("sessionUsername");
                 Cookies.set("accessToken", data.accessToken, {sameSite: 'none', secure: true});
                 Cookies.set("sessionUsername", username, {sameSite: 'none', secure: true});
                 navigate("/");
+                props.toggleMessage("confirm", "You have been successfully logged in");
                 console.log(Cookies.get("accessToken") + ", " + Cookies.get("sessionUsername"));
             } else {
                 console.log("Failure.");
-                setLoginError(true);
-                setErrorMsg("Incorrect username or password");
+                props.toggleMessage("error", "Incorrect username or password");
             }
 
         })
@@ -94,7 +89,6 @@ export default function LoginContent(props) {
                     value = {values.password} 
                     onChange = {handlePasswordInputChange}
                 />
-                {loginError && <span className="errorMsg">{errorMsg}</span>}
                 <input 
                     id = "loginSubmit"
                     className = "formGridSubmit"

@@ -11,7 +11,7 @@ function Header(props) {
         <header className="pageHeader">
 
             <div id="navContainer" className="container">
-                <Link id="logo Link" to="/"> 
+                 <Link id="logo Link" to="/"> 
                     <img id = "logo" src = "/res/logo.svg"></img> 
                 </Link>
 

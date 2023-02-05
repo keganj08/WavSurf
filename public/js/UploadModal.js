@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 export default function UploadModal(props) {
-    const [uploadError, setUploadError] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("Error");
 
     function uploadAudioFile(title, author) {
         const newFile = new File([props.file], title + ".wav", {type: props.file.type});
@@ -30,13 +28,13 @@ export default function UploadModal(props) {
             console.log(data);
 
             if(!data.loginValid){
-                setUploadError(true);
-                setErrorMsg("Authentication failed. Please log in again");
+                props.toggleMessage("error", "Authentication failed, please log in again");
+                props.close();
             } else if(!data.uploadSuccess) {
-                setUploadError(true);
-                setErrorMsg("Upload failed. Please try again");
+                props.toggleMessage("error", "Server upload failed, please try again");
+                props.close();
             } else {
-                setUploadError(false);
+                props.toggleMessage("confirm", "Sound successfully uploaded!");
                 props.close();
             }
         })
@@ -86,33 +84,32 @@ export default function UploadModal(props) {
         }
 
         return (
-            <form class="formGrid" onSubmit={handleSubmit}>
+            <form className="formGrid" onSubmit={handleSubmit}>
                 
-                <label id="uploadTitleLabel" class="formGridLabel">Title:</label>
+                <label id="uploadTitleLabel" className="formGridLabel">Title:</label>
                 <input
                     id = "uploadTitleInput"
-                    class = "formGridInput" 
+                    className = "formGridInput" 
                     type = "text"
                     placeholder = {props.title.split(".")[0]}
                     value = {values.title} 
                     onChange={handleTitleInputChange} 
                 />
 
-                <label id="uploadAuthorLabel" class="formGridLabel">Author:</label>
+                <label id="uploadAuthorLabel" className="formGridLabel">Author:</label>
                 <input 
                     id = "uploadAuthorInput"
-                    class= "formGridInput"
+                    className = "formGridInput"
+                    disabled
                     type = "text" 
                     placeholder = "Author"
                     value = {values.author}
                     readOnly = {true}
                 />
 
-                {uploadError && <span className="errorMsg">{errorMsg}</span>}
-
                 <input 
                     id = "uploadSubmit"
-                    class = "formGridSubmit"
+                    className = "formGridSubmit"
                     type = "submit" 
                     value = "Upload"
                 />

@@ -18,6 +18,9 @@ width: 100%;
     --color-sizzleRed: #F2545B; 
     --color-dreamRed: #A93F55;
 
+    --color-errorRed: #e83535;
+    --color-confirmGreen: #19bd21;
+
     --pageHeaderHeight: 4rem;
 }  
 
@@ -655,6 +658,50 @@ input[type="range"]::-moz-range-thumb {
 
 }
 
+
+.msgModal {
+    display: flex;
+    gap: 0.5rem;
+    position: relative;
+    visibility: visible;
+    align-items: center;
+    position: fixed;
+    z-index: 20;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 15rem;
+    height: 4rem;
+    padding: 0.75rem;
+    background-color: white;
+    font-weight: bold;
+    border-radius: 1.5rem;
+    color: black;
+    border: 0.3rem solid black;
+    box-shadow: 0 0 2rem rgba(0,0,0,0.5);
+    transition: visibility 0s, bottom 0.1s cubic-bezier(0.175, 0.9, 0.3, 1.25);
+}
+
+.collapsed {
+    visibility: hidden;
+    bottom: -5rem;
+    transition: visibility 0.2s, bottom 0.1s ease-in;
+}
+
+.msgModal .msgIcon {
+    height: 100%;
+
+}
+
+.msgError {
+    color: var(--color-errorRed);
+    border-color: var(--color-errorRed);
+}
+
+.msgConfirm {
+    color: var(--color-confirmGreen);
+    border-color: var(--color-confirmGreen); 
+}
 
 /* MOBILE */
 

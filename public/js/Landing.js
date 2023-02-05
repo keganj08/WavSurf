@@ -28,6 +28,7 @@ export default function Landing(props) {
                 title={uploadData.title}
                 isLoggedIn={props.isLoggedIn}
                 close={() => setShowUploadModal(false)}
+                toggleMessage={props.toggleMessage}
             />
 
             <section className="contentArea dark">
@@ -64,20 +65,23 @@ export default function Landing(props) {
                     <article className="contentBox">
                         <h1>Explore Content</h1>
                         <div className='contentCardGrid' id='hot'>
-                            <ContentCard title="Sample Sound 1" author="John" id={0} />
-                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
-                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
-                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
-                            <ContentCard title="Sample Sound 1" author="John" id={0} />
-                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
-                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
-                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
+
                         </div>
 
                     </article>
                 </div>
             </section>
-
         </main>
     )
 }
+
+/*
+                            <ContentCard title="Sample Sound 1" author="John" id={0} />
+                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
+                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
+                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
+                            <ContentCard title="Sample Sound 1" author="John" id={0} />
+                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
+                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
+                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
+*/
