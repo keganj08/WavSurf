@@ -1,4 +1,6 @@
+import Loader from "./Loader.js";
 import EntryForm from "./EntryForm.js";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // SIGNUP: Main content of "/signup" route; Contains form to create an account
