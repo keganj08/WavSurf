@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 export default function Browse(props) {
     const [soundFileNames, setSoundFileNames] = useState([]);
     const [contentCards, setContentCards] = useState([]);
-
+    
     useEffect(() => {
         
         console.log('Client attempting /listSounds for Browse page');

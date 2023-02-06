@@ -15,7 +15,7 @@ export default function MessageModal(props) {
         iconType = "fa-circle-exclamation";
         classes += " msgError";
     } else {
-        iconType = "fa-circle-exclamation";
+        iconType = "fa-circle-info";
     }
 
     return (

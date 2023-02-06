@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import EntryForm from './EntryForm.js';
 import Cookies from 'js-cookie';
 
 export default function UploadModal(props) {
 
-    function uploadAudioFile(title, author) {
-        const newFile = new File([props.file], title + ".wav", {type: props.file.type});
+    function uploadAudioFile(values) {
+        
+        const newFile = new File([props.file], values.title + ".wav", {type: props.file.type});
 
         var formData = new FormData();
         formData.append("audioFile", newFile);
-        formData.append("author", author);
+        formData.append("author", values.author);
         formData.append("accessToken", Cookies.get("accessToken"));
 
-        console.log("Client attempting /uploadAudio POST of " + title + " by " + author);
+        console.log("Client attempting /uploadAudio POST of " + values.title + " by " + values.author);
 
         fetch('/uploadAudio', {
             method: 'POST',
@@ -45,79 +47,12 @@ export default function UploadModal(props) {
         })
     }
 
-    function UploadForm() {
-        const [values, setValues] = useState({
-            title: "",
-            submit: "",
-            author: "",
-        });
-        const [submitted, setSubmitted] = useState(false);
-
-        useEffect(() => {
-            //Update username
-            setValues((values) => ({
-                ...values,
-                author: getUsername(),
-            }));
-        }, []);
-
-        function getUsername() {
-            if(props.isLoggedIn) { 
-                return Cookies.get("sessionUsername");
-            } else {
-                return "Anonymous";
-            }
+    function getUsername() {
+        if(props.isLoggedIn) { 
+            return Cookies.get("sessionUsername");
+        } else {
+            return "Anonymous";
         }
-
-        const handleTitleInputChange = (event) => {
-            event.persist();
-            setValues((values) => ({
-                ...values, // spread operator
-                title: event.target.value,
-            }));
-        }
-
-        const handleSubmit = (event) => {
-            event.preventDefault();
-            uploadAudioFile(values.title, values.author);
-            setSubmitted(true);
-        }
-
-        return (
-            <form className="formGrid" onSubmit={handleSubmit}>
-                
-                <label id="uploadTitleLabel" className="formGridLabel">Title:</label>
-                <input
-                    id = "uploadTitleInput"
-                    className = "formGridInput" 
-                    type = "text"
-                    placeholder = {props.title.split(".")[0]}
-                    value = {values.title} 
-                    onChange={handleTitleInputChange} 
-                />
-
-                <label id="uploadAuthorLabel" className="formGridLabel">Author:</label>
-                <input 
-                    id = "uploadAuthorInput"
-                    className = "formGridInput"
-                    disabled
-                    type = "text" 
-                    placeholder = "Author"
-                    value = {values.author}
-                    readOnly = {true}
-                />
-
-                <input 
-                    id = "uploadSubmit"
-                    className = "formGridSubmit"
-                    type = "submit" 
-                    value = "Upload"
-                />
-                
-                {submitted && <p>Uploading...</p>}
-
-            </form>
-        );
     }
 
     return (
@@ -125,7 +60,26 @@ export default function UploadModal(props) {
             {props.showing && <div className="modalBackground">
                 <div className="contentBox centeredBox wide">
                     <h1>Upload Your Sound</h1>
-                    <UploadForm />
+                    <EntryForm 
+                        fields = {[
+                            {
+                                "title": "title", 
+                                "type": "text",
+                                "showLabel": true,
+                                "readOnly": false
+                            },
+
+                            {
+                                "title": "author", 
+                                "type": "text",
+                                "showLabel": true,
+                                "readOnly": true,
+                                "value": getUsername()
+                            }
+                        ]}
+                        submitText = "Upload"
+                        submitFunction = {(values) => uploadAudioFile(values)}
+                    />
                 </div>
             </div>}
         </React.Fragment>

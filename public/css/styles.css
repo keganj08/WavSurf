@@ -366,6 +366,10 @@ a:hover, a:active {
     padding: 0.25rem;
 }
 
+.formGridInput {
+    grid-column: 2;
+}
+
 .formGrid input[type="text"], .formGrid input[type="password"] {
     border-bottom: 0.2rem solid lightgray;
 }
@@ -403,12 +407,6 @@ a:hover, a:active {
 
 .formGridSubmit {
     grid-column: 1/3;
-}
-
-.errorMsg {
-    grid-column: 1/3;
-    color: var(--color-sizzleRed);
-    font-weight: bold;
 }
 
 .contentBox h1 {

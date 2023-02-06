@@ -16,10 +16,10 @@ import Footer from './Footer.js';
 import MessageModal from './MessageModal.js';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import Cookies from 'js-cookie';
 
-library.add(faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck);
+library.add(faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -31,6 +31,8 @@ function App() {
     const [showMsg, setShowMsg] = useState(false);
     const [msgType, setMsgType] = useState("confirm");
     const [msgContent, setMsgContent] = useState("Foo bar");
+
+    let msgTimeoutId = undefined;
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
@@ -77,18 +79,24 @@ function App() {
     async function logout() {
         Cookies.remove("sessionUsername");
         Cookies.remove("accessToken");
-        setIsLoggedIn(false, toggleMessage("confirm", "You have been logged out"));
+        setIsLoggedIn(false, toggleMessage("info", "You have been logged out"));
     }
 
     function toggleMessage(type, content, length=5000) {
+        
         setShowMsg(true);
         setMsgType(type);
         setMsgContent(content);
+        console.log(length);
 
-        setTimeout(() => {
-            console.log("Dying now");
-            setShowMsg(false);
-        }, length);
+        if(length >= 0) {
+            console.log("length >= 0");
+            msgTimeoutId = setTimeout(() => {
+                console.log("Dying now");
+                setShowMsg(false);
+                msgTimeoutId = undefined;
+            }, length);
+        }
     }
 
     console.log(route != "/" || scrollPosition > 200);
@@ -103,10 +111,10 @@ function App() {
                 toggleMessage={(type, content) => toggleMessage(type, content)}
             />
             <Routes>
-                <Route path="/"      element={<Landing  isLoggedIn={isLoggedIn} toggleMessage={(type, content) => toggleMessage(type, content)}/>} />
-                <Route path="signup" element={<Signup   isLoggedIn={isLoggedIn} toggleMessage={(type, content) => toggleMessage(type, content)}/>} />
-                <Route path="login"  element={<Login    isLoggedIn={isLoggedIn} toggleMessage={(type, content) => toggleMessage(type, content)}/>} />
-                <Route path="browse" element={<Browse   isLoggedIn={isLoggedIn} toggleMessage={(type, content) => toggleMessage(type, content)}/>} />
+                <Route path="/"      element={<Landing isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="signup" element={<Signup  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="login"  element={<Login   isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="browse" element={<Browse  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
             </Routes>
             <Footer />
             <MessageModal showing={showMsg} type={msgType} content={msgContent}></MessageModal>

@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import EntryForm from './EntryForm.js';
 import { Link } from 'react-router-dom';
 
 export default function SignupContent(props) {
 
-    function updateAccount(username, password) {
-        var formData = {"username" : String(username), "password" : String(password)};
+    function updateAccount(values) {
+        var formData = {"username" : String(values.username), "password" : String(values.password)};
 
         console.log(formData.username, formData.password);
 
@@ -28,70 +29,31 @@ export default function SignupContent(props) {
         })
     }
 
-    
-    function SignupForm(props) {
-        const [values, setValues] = useState({
-            username: '',
-            password: '',
-            submit: '',
-        });
-        const [submitted, setSubmitted] = useState(false);
-
-        const handleUsernameInputChange = (event) => {
-            event.persist();
-            setValues((values) => ({
-                ...values, // spread operator
-                username: event.target.value,
-            }));
-        }
-        const handlePasswordInputChange = (event) => {
-            event.persist();
-            setValues((values) => ({
-                ...values, // spread operator
-                password: event.target.value,
-            }));
-        }
-        const handleSubmit = (event) => {
-            event.preventDefault();
-            updateAccount(values.username, values.password);
-            setSubmitted(true);
-        }
-
-        return (
-            <form className="formGrid" onSubmit={handleSubmit}>
-                <input 
-                    id = "newUsernameInput"
-                    className = "formGridInput"
-                    type = "text"
-                    placeholder = "Username"
-                    value = {values.username} 
-                    onChange={handleUsernameInputChange} 
-                />
-                <input 
-                    id = "newPasswordInput"
-                    className = "formGridInput"
-                    type = "password" 
-                    placeholder = "Password"
-                    value = {values.password} 
-                    onChange = {handlePasswordInputChange}
-                />
-                <input 
-                    id = "newAccountSubmit"
-                    className = "formGridSubmit"
-                    type = "submit" 
-                    value = "Sign Up"
-                />
-            </form>
-        );
-    }
-
     return (
         <main className="main dark">
 
             <div className="contentArea">
                 <section className="contentBox centeredBox" id="contentWrapper_Signup">
                     <h1>Sign Up</h1>
-                    <SignupForm />
+                    <EntryForm 
+                        fields = {[
+                            {
+                                "title": "username", 
+                                "type": "text",
+                                "showLabel": false,
+                                "readOnly": false
+                            },
+
+                            {
+                                "title": "password", 
+                                "type": "password",
+                                "showLabel": false,
+                                "readOnly": false
+                            },
+                        ]}
+                        submitText = "Sign Up"
+                        submitFunction = {(values) => updateAccount(values)}
+                    />
                     <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
                 </section>
             </div>
