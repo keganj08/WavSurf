@@ -421,7 +421,7 @@ a:hover, a:active {
 
 /* BROWSE PAGE */
 
-.contentCardGrid {
+.audioCardGrid {
     position: relative;
     padding: 0;
     height: auto;
@@ -481,7 +481,7 @@ a:hover, a:active {
     color: var(--color-gunmetal);
 }
 
-.contentCardWrapper {
+.audioCardWrapper {
     position: relative;
     padding: 0;
     height: auto;
@@ -493,7 +493,7 @@ a:hover, a:active {
     border-radius: 1rem;*/
 }
 
-.contentCard {    
+.audioCard {    
     overflow: hidden;
     height: auto;
     padding: 1.2rem 1.5rem;
@@ -509,15 +509,15 @@ a:hover, a:active {
     margin-bottom: 0rem;
 }
 
-.contentCard:nth-child(odd) {
+.audioCard:nth-child(odd) {
     background-color: var(--color-softGunmetal);
 }
 
-.contentCard:nth-child(even) {
+.audioCard:nth-child(even) {
     border: 0.2rem solid var(--color-softGunmetal);
 }
 
-.contentCard * {
+.audioCard * {
     font-size: 1rem;
     display: flex;
     flex-direction: row;
@@ -624,7 +624,7 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
 }
 
-.contentCard:nth-child(odd) input[type="range"]::-webkit-slider-runnable-track, .contentCard:nth-child(odd) input[type="range"]::-moz-range-track {
+.audioCard:nth-child(odd) input[type="range"]::-webkit-slider-runnable-track, .audioCard:nth-child(odd) input[type="range"]::-moz-range-track {
 
     background: var(--color-burntMintCream);
 }

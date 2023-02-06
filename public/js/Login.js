@@ -1,19 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import EntryForm from './EntryForm.js';
-import Cookies from 'js-cookie';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import EntryForm from "./EntryForm.js";
+import Cookies from "js-cookie";
 
+// LOGIN: Main content of "/login" route; Contains form to log in to an existing account
+    // toggleMessage: A callback function to use MessageModal
 export default function LoginContent(props) {
     const navigate = useNavigate();
 
     function attemptLogin(values) {
-        var formData = {"username" : String(values.username), "password" : String(values.password)};
+        const enteredUsername = values.username;
+        const enteredPassword = values.password;
 
-        console.log('Client attempting /login POST of formdata');
-        fetch('/login', {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify(formData)
+        const uploadData = {"username" : String(enteredUsername), "password" : String(enteredPassword)};
+
+        console.log("Client attempting /login POST");
+        fetch("/login", {
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+            body: JSON.stringify(uploadData)
         })
         .then(response => {
             if(!response.ok){
@@ -26,13 +31,12 @@ export default function LoginContent(props) {
             if(data.loginSuccess) {
                 Cookies.remove("accessToken");
                 Cookies.remove("sessionUsername");
-                Cookies.set("accessToken", data.accessToken, {sameSite: 'none', secure: true});
-                Cookies.set("sessionUsername", values.username, {sameSite: 'none', secure: true});
+                Cookies.set("accessToken", data.accessToken, {sameSite: "none", secure: true});
+                Cookies.set("sessionUsername", values.username, {sameSite: "none", secure: true});
                 navigate("/");
                 props.toggleMessage("confirm", "You have been successfully logged in");
                 console.log(Cookies.get("accessToken") + ", " + Cookies.get("sessionUsername"));
             } else {
-                console.log("Failure.");
                 props.toggleMessage("error", "Incorrect username or password");
             }
 

@@ -1,23 +1,25 @@
-import { useState } from 'react';
-import EntryForm from './EntryForm.js';
-import { Link } from 'react-router-dom';
+import EntryForm from "./EntryForm.js";
+import { Link } from "react-router-dom";
 
+// SIGNUP: Main content of "/signup" route; Contains form to create an account
+    // toggleMessage: A callback function to use MessageModal
 export default function SignupContent(props) {
 
     function updateAccount(values) {
-        var formData = {"username" : String(values.username), "password" : String(values.password)};
+        const enteredUsername = values.username;
+        const enteredPassword = values.password;
 
-        console.log(formData.username, formData.password);
+        const uploadData = {"username" : String(enteredUsername), "password" : String(enteredPassword)};
 
-        console.log('Client attempting /updateAccount POST of formdata');
-        fetch('/updateAccount', {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify(formData)
+        console.log("Client attempting /updateAccount POST");
+        fetch("/updateAccount", {
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+            body: JSON.stringify(uploadData)
         })
         .then(response => {
             if(!response.ok){
-                throw new Error(`HTTP error: ${response.status}`)
+                throw new Error("HTTP error: " + response.status)
             }
             return response.json();
         })

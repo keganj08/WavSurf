@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-// Fields: An array of objects containing information on each input's title, type, initial value, and whether it is readOnly
+// ENTRYFORM: A blueprint for all forms within the app
+    // fields: An array of objects containing information on each input such as title, type, whether it is readOnly, etc.
+    // submitText: The value of the form's submit button
+    // submitFunction: A callback function to be called when the user clicks submit
 export default function EntryForm({fields, submitText, submitFunction}) {
-
-    const [inputValues, setInputValues] = useState({});
+    const [inputValues, setInputValues] = useState({}); 
     const [submitted, setSubmitted] = useState(false);
 
     // Immediately set inputValues of readOnly inputs with predefined values
@@ -18,6 +20,7 @@ export default function EntryForm({fields, submitText, submitFunction}) {
         }
     }, []);
 
+    // Store the users entries in inputValues
     const handleInputChange = (event) => {
         event.persist();
         setInputValues((values) => ({
@@ -26,10 +29,11 @@ export default function EntryForm({fields, submitText, submitFunction}) {
         }));
     }
 
+    // 
     const handleSubmit = (event) => {
         event.preventDefault();
-        submitFunction(inputValues);
         setSubmitted(true);
+        submitFunction(inputValues);
     }
 
     return (

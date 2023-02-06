@@ -1,17 +1,16 @@
-import DropBox from './Dropbox.js';
-import ContentCard from './ContentCard.js';
-import UploadModal from './UploadModal.js';
-import { Link } from 'react-router-dom';
-import React, { useState, useEffect, useRef } from 'react';
+import DropBox from "./Dropbox.js";
+import AudioCard from "./AudioCard.js";
+import UploadModal from "./UploadModal.js";
+import React, { useState } from "react";
 
+// LANDING: Main content of "/" route; Contains upload dropbox and example sound files
+    // toggleMessage: A callback function to use MessageModal
 export default function Landing(props) {
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [uploadData, setUploadData] = useState({
         file: null,
         title: ""
     });
-
-    console.log("Logged in: " + props.isLoggedIn);
 
     function triggerUploadModal(newFile) {
         setUploadData({file: newFile, title: newFile.name});
@@ -38,7 +37,7 @@ export default function Landing(props) {
                         <h2>Find your sound, share your sound.</h2>
                     </div>
                     <div id="landingDropboxBox" className="contentBox">
-                        <DropBox triggerUploadModal = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
+                        <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
                     </div>
                     
                 </div>
@@ -64,8 +63,15 @@ export default function Landing(props) {
                 <div className="container">
                     <article className="contentBox">
                         <h1>Explore Content</h1>
-                        <div className='contentCardGrid' id='hot'>
-
+                        <div className="audioCardGrid" id="hot">
+                        <AudioCard title="Sample Sound 1" author="John" id={0} />
+                            <AudioCard title="Sample Sound 2" author="Mary" id={1} />
+                            <AudioCard title="Sample Sound 3" author="Philbert" id={2} />
+                            <AudioCard title="Sample Sound 4" author="Anna" id={3} />
+                            <AudioCard title="Sample Sound 1" author="John" id={0} />
+                            <AudioCard title="Sample Sound 2" author="Mary" id={1} />
+                            <AudioCard title="Sample Sound 3" author="Philbert" id={2} />
+                            <AudioCard title="Sample Sound 4" author="Anna" id={3} />
                         </div>
 
                     </article>
@@ -75,13 +81,3 @@ export default function Landing(props) {
     )
 }
 
-/*
-                            <ContentCard title="Sample Sound 1" author="John" id={0} />
-                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
-                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
-                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
-                            <ContentCard title="Sample Sound 1" author="John" id={0} />
-                            <ContentCard title="Sample Sound 2" author="Mary" id={1} />
-                            <ContentCard title="Sample Sound 3" author="Philbert" id={2} />
-                            <ContentCard title="Sample Sound 4" author="Anna" id={3} />
-*/

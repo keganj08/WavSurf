@@ -1,16 +1,18 @@
-import ContentCard from './ContentCard.js';
-import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import AudioCard from "./AudioCard.js";
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
+// BROWSE: Main content of "/browse" route; Displays uploaded sound files 
+    // toggleMessage: A callback function to use MessageModal
 export default function Browse(props) {
     const [soundFileNames, setSoundFileNames] = useState([]);
-    const [contentCards, setContentCards] = useState([]);
-    
+    const [audioCards, setAudioCards] = useState([]);
+
     useEffect(() => {
         
-        console.log('Client attempting /listSounds for Browse page');
-        fetch('/listSounds', {
-            method: 'GET'
+        console.log("Client attempting /listSounds for Browse page");
+        fetch("/listSounds", {
+            method: "GET"
         })
         .then(response => {
             if(!response.ok){
@@ -25,7 +27,7 @@ export default function Browse(props) {
             for(var i=0; i<data.Contents.length; i++) {
 
                 if(data.Contents[i].Key.indexOf("sounds/") != -1) {
-                    let authorPath = data.Contents[i].Key.split('sounds/')[1];
+                    let authorPath = data.Contents[i].Key.split("sounds/")[1];
                     if(authorPath.indexOf("/") !=  -1) {
                         let title = authorPath.split("/")[1];
                         let author = authorPath.split("/")[0];
@@ -36,13 +38,13 @@ export default function Browse(props) {
             }
 
             setSoundFileNames(soundFiles);
-            setContentCards(
+            setAudioCards(
                 soundFiles.map((fileData, index) => 
-                <ContentCard 
+                <AudioCard 
                     title={fileData.title} 
                     author={fileData.author} 
-                    id={index} 
-                    key={index} 
+                    id={"audioCard-" + index} 
+                    key={"audioCard-" + index} 
                 />
             ));
         })
@@ -65,8 +67,8 @@ export default function Browse(props) {
                             </div>
                         </div>
 
-                        <div className='contentCardWrapper' id='sounds'>
-                            {contentCards}
+                        <div className="audioCardWrapper" id="sounds">
+                            {audioCards}
                         </div>
                     </section>
 

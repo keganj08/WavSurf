@@ -1,7 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useEffect, useRef } from 'react';
 
-function ContentCard(props) {
+// AUDIOCARD: An interactive element for displaying, playing, and downloading a sound file
+    // title: Audio file title- Must be the same as the file's title on S3
+    // author: Audio file uploader
+export default function AudioCard(props) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [currentTimeText, setCurrentTimeText] = useState("0:00");
@@ -39,9 +42,16 @@ function ContentCard(props) {
         }
     }, [isPlaying]);
 
+    // Initialize time tracker
     audio.current.addEventListener('loadedmetadata', function() {
         setDurationText(formatTime(audio.current.duration));
     });
+
+    function formatTime(rawTime) {
+        let minutes = (String)(Math.floor(rawTime / 60)).padStart(1, "0");
+        let seconds = (String)((rawTime % 60).toFixed(0)).padStart(2, "0");
+        return(minutes + ":" + seconds);
+    }
 
     // On interval while sound is playing, update currentTime 
     function startTimer() {
@@ -61,12 +71,6 @@ function ContentCard(props) {
 
     function handlePlayClick() { setIsPlaying(!isPlaying); }
 
-    function formatTime(rawTime) {
-        let minutes = (String)(Math.floor(rawTime / 60)).padStart(1, "0");
-        let seconds = (String)((rawTime % 60).toFixed(0)).padStart(2, "0");
-        return(minutes + ":" + seconds);
-    }
-
     function onScrub(value) {
         clearInterval(interval.current);
         audio.current.currentTime = value;
@@ -75,7 +79,6 @@ function ContentCard(props) {
     }
     
     const onScrubEnd = () => {
-        console.log("Fired onScrubEnd...");
         // If not already playing, start
         if (!isPlaying) {
             setIsPlaying(true);
@@ -91,7 +94,7 @@ function ContentCard(props) {
     }        
 
     return (
-        <article id={props.id} className="contentCard">
+        <article id={props.id} className="audioCard">
             
             <h2 className="soundTitle">{props.title.split(".wav")[0]}</h2>
             <span className="soundPlayBox">
@@ -123,5 +126,3 @@ function ContentCard(props) {
         </article>
     );
 }
-
-export default ContentCard;

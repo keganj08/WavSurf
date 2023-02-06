@@ -1,23 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import EntryForm from './EntryForm.js';
-import Cookies from 'js-cookie';
+import React, { useState, useEffect } from "react";
+import EntryForm from "./EntryForm.js";
+import Cookies from "js-cookie";
 
+// UPLOADMODAL: A modal for configuring a sound file"s data before uploading it
+    // showing: Boolean
+    // file: File object to be uploaded
+    // Title: Original file title
+    // isLoggedIn: Boolean
+    // close: A callback function to hide the modal
+    // toggleMessage: A callback function to use MessageModal
 export default function UploadModal(props) {
 
+    // Attempt to push a file to S3
     function uploadAudioFile(values) {
-        
-        const newFile = new File([props.file], values.title + ".wav", {type: props.file.type});
+        const originalFile = props.file;
+        const title = values.title;
+        const author = values.author;
 
-        var formData = new FormData();
-        formData.append("audioFile", newFile);
-        formData.append("author", values.author);
-        formData.append("accessToken", Cookies.get("accessToken"));
+        const newFile = new File([originalFile], title + ".wav", {type: originalFile.type});
 
-        console.log("Client attempting /uploadAudio POST of " + values.title + " by " + values.author);
+        let uploadData = new FormData();
+        uploadData.append("audioFile", newFile);
+        uploadData.append("author", author);
+        uploadData.append("accessToken", Cookies.get("accessToken"));
 
-        fetch('/uploadAudio', {
-            method: 'POST',
-            body: formData
+        console.log("Client attempting /uploadAudio POST of " + title + " by " + author);
+
+        fetch("/uploadAudio", {
+            method: "POST",
+            body: uploadData
         })
         .then(response => {
             if(!response.ok){
@@ -26,8 +37,6 @@ export default function UploadModal(props) {
             return response.json();
         })
         .then(data => {
-            console.log("Response data: ");
-            console.log(data);
 
             if(!data.loginValid){
                 props.toggleMessage("error", "Authentication failed, please log in again");
@@ -54,8 +63,6 @@ export default function UploadModal(props) {
             return "Anonymous";
         }
     }
-
-    console.log(props.file);
 
     return (
         <React.Fragment>

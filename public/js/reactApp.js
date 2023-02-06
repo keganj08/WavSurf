@@ -1,27 +1,27 @@
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
 import { 
     BrowserRouter,
     Routes,
     Route,
     useLocation,
-} from 'react-router-dom';
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+} from "react-router-dom";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 
-import Landing from './Landing.js';
-import Signup from './Signup.js';
-import Login from './Login.js';
-import Browse from './Browse.js';
-import Header from './Header.js';
-import Footer from './Footer.js';
-import MessageModal from './MessageModal.js';
+import Landing from "./Landing.js";
+import Signup from "./Signup.js";
+import Login from "./Login.js";
+import Browse from "./Browse.js";
+import Header from "./Header.js";
+import Footer from "./Footer.js";
+import MessageModal from "./MessageModal.js";
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-import Cookies from 'js-cookie';
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+import Cookies from "js-cookie";
 
 library.add(faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo);
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 function App() {
     const [scrollPosition, setScrollPosition] = useState(0);
@@ -40,9 +40,9 @@ function App() {
 
     useEffect(() => {
         console.log({username : Cookies.get("sessionUsername"), accessToken : Cookies.get("accessToken")});
-        fetch('/validateUser', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+        fetch("/validateUser", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({username : Cookies.get("sessionUsername"), accessToken : Cookies.get("accessToken")})
         })
         .then(response => {
@@ -64,16 +64,15 @@ function App() {
     }, [route]);
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener("scroll", handleScroll);
         };
     }, [scrollPosition]);
 
     function handleScroll() { 
         setScrollPosition(window.scrollY)
-        console.log(scrollPosition); 
     };
 
     async function logout() {
@@ -87,20 +86,14 @@ function App() {
         setShowMsg(true);
         setMsgType(type);
         setMsgContent(content);
-        console.log(length);
 
         if(length >= 0) {
-            console.log("length >= 0");
             msgTimeoutId = setTimeout(() => {
-                console.log("Dying now");
                 setShowMsg(false);
                 msgTimeoutId = undefined;
             }, length);
         }
     }
-
-    console.log(route != "/" || scrollPosition > 200);
-    console.log(route);
 
     return (
         <React.Fragment>

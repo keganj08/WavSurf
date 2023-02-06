@@ -1,10 +1,12 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-function DropBox(props) {
+// DROPBOX: Accepts and passes along file input by the user, either by browsing or dragging and dropping
+    // returnFile: A callback function to be used once the file has been receieved
+export default function DropBox(props) {
     function clickHandler(e) {
-        var input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.wav,.WAV';
+        var input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".wav,.WAV";
         input.multiple= false;
         input.onchange = (e) => {
             var files = e.target.files;
@@ -15,19 +17,18 @@ function DropBox(props) {
 
     function dragOverHandler(e) {
         e.preventDefault();
-        e.target.classList.add('highlighted');
-        console.log("Dragover");
+        e.target.classList.add("highlighted");
     }
 
     function dragLeaveHandler(e) {
-        e.target.classList.remove('highlighted');
+        e.target.classList.remove("highlighted");
     }
 
     function dropHandler(e) {
         e.stopPropagation();
         e.preventDefault();
 
-        e.target.classList.remove('highlighted');
+        e.target.classList.remove("highlighted");
 
         let dt = e.dataTransfer;
         let files = dt.files;
@@ -37,9 +38,9 @@ function DropBox(props) {
 
     function validateAudioFiles(files) {
         if(files.length != 1) {
-            console.log('ERROR: Audio file array is of invalid size.');
+            console.log("ERROR: Audio file array is of invalid size.");
         } else {
-            props.triggerUploadModal(files[0]);
+            props.returnFile(files[0]);
         }
     }
 
@@ -50,5 +51,3 @@ function DropBox(props) {
         </div>
     );
 }
-
-export default DropBox;

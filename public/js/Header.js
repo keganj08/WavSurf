@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 
-function Header(props) {
+// HEADER: Displays logo and navigation buttons at the top of every page
+    // isLoggedIn: Boolean
+    // logout: Callback function to log the user out of their account
+export default function Header(props) {
     const route = useLocation().pathname;
 
     return (
@@ -29,8 +30,6 @@ function Header(props) {
         </header>
     );
 }
-
-export default Header;
 
 
 
