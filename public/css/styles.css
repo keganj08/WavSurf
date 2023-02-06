@@ -395,6 +395,7 @@ a:hover, a:active {
 
 .formGridLabel {
     font-weight: bold;
+    grid-column: 1;
 }
 
 #uploadAuthorLabel, #uploadTitleLabel {

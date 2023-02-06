@@ -36,16 +36,26 @@ export default function EntryForm({fields, submitText, submitFunction}) {
         <form className="formGrid" onSubmit={handleSubmit}>
             
             {fields.map((field, i) => (
-                <input 
-                    id = {field.title}
-                    key = {"formInput-" + i}
-                    className = "formGridInput"
-                    type = {field.type}
-                    readOnly = {field.readOnly}
-                    value = {field.value ? field.value : inputValues.id}
-                    placeholder = {field.title} 
-                    onChange = {handleInputChange}
-                /> 
+                <React.Fragment key={"formField-" + i}>
+                    {field.showLabel && 
+                    <label
+                        id = {field.title + "-label"}
+                        className = "formGridLabel"
+                    >
+                        {field.title[0].toUpperCase() + field.title.substring(1) + ":"}
+                    </label>}
+                    
+                    <input 
+                        id = {field.title}
+                        key = {"formInput-" + i}
+                        className = "formGridInput"
+                        type = {field.type}
+                        readOnly = {field.readOnly}
+                        value = {field.value ? field.value : inputValues.id}
+                        placeholder = {field.placeholder ? field.placeholder : field.title[0].toUpperCase() + field.title.substring(1)} 
+                        onChange = {handleInputChange}
+                    /> 
+                </React.Fragment>
             ))}
 
             <input 

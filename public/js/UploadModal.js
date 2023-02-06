@@ -55,6 +55,8 @@ export default function UploadModal(props) {
         }
     }
 
+    console.log(props.file);
+
     return (
         <React.Fragment>
             {props.showing && <div className="modalBackground">
@@ -66,7 +68,8 @@ export default function UploadModal(props) {
                                 "title": "title", 
                                 "type": "text",
                                 "showLabel": true,
-                                "readOnly": false
+                                "readOnly": false,
+                                "placeholder": props.file.name.split(".")[0]
                             },
 
                             {
