@@ -1,3 +1,4 @@
+import Loader from "./Loader.js";
 import React, { useState, useEffect } from "react";
 import EntryForm from "./EntryForm.js";
 import Cookies from "js-cookie";
@@ -10,9 +11,11 @@ import Cookies from "js-cookie";
     // close: A callback function to hide the modal
     // toggleMessage: A callback function to use MessageModal
 export default function UploadModal(props) {
+    const [loading, setLoading] = useState(false);
 
     // Attempt to push a file to S3
     function uploadAudioFile(values) {
+        setLoading(true);
         const originalFile = props.file;
         const title = values.title;
         const author = values.author;
@@ -32,12 +35,14 @@ export default function UploadModal(props) {
         })
         .then(response => {
             if(!response.ok){
+                setLoading(false);
                 throw new Error(`HTTP error: ${response.status}`)
             }
             return response.json();
         })
         .then(data => {
 
+            setLoading(false);
             if(!data.loginValid){
                 props.toggleMessage("error", "Authentication failed, please log in again");
                 props.close();
@@ -50,6 +55,7 @@ export default function UploadModal(props) {
             }
         })
         .catch(error => {
+            setLoading(false);
             console.log("Response error: ");
             console.log(error);
             props.close();
@@ -90,6 +96,7 @@ export default function UploadModal(props) {
                         submitText = "Upload"
                         submitFunction = {(values) => uploadAudioFile(values)}
                     />
+                    {loading && <Loader />}
                 </div>
             </div>}
         </React.Fragment>

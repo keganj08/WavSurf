@@ -1,3 +1,4 @@
+import Loader from "./Loader.js";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import EntryForm from "./EntryForm.js";
@@ -6,9 +7,11 @@ import Cookies from "js-cookie";
 // LOGIN: Main content of "/login" route; Contains form to log in to an existing account
     // toggleMessage: A callback function to use MessageModal
 export default function LoginContent(props) {
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     function attemptLogin(values) {
+        setLoading(true);
         const enteredUsername = values.username;
         const enteredPassword = values.password;
 
@@ -23,6 +26,7 @@ export default function LoginContent(props) {
         .then(response => {
             if(!response.ok){
                 props.toggleMessage("error", "Server error, please try again");
+                setLoading(false);
                 throw new Error(`HTTP error: ${response.status}`)
             }
             return response.json();
@@ -39,9 +43,12 @@ export default function LoginContent(props) {
             } else {
                 props.toggleMessage("error", "Incorrect username or password");
             }
+            setLoading(false);
 
         })
         .catch(error => {
+            props.toggleMessage("error", "Error while trying to contact server");
+            setLoading(false);
             console.log(error);
         })
     }
@@ -71,6 +78,7 @@ export default function LoginContent(props) {
                         submitFunction = {(values) => attemptLogin(values)}
                     />
                     <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>
+                    {loading && <Loader />}
                 </section>
             </div>
 

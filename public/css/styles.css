@@ -43,6 +43,19 @@ html, body {
 
 /* GENERAL */
 
+
+.loadingWrapper {
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loadingSpinner {
+    display: block;
+    height: 2.25rem;
+}
+
 a, a:visited {
     color: var(--color-lightGunmetal);
 }
@@ -488,6 +501,7 @@ a:hover, a:active {
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     /*background-color: white;
     box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.05);
     border-radius: 1rem;*/
@@ -504,9 +518,9 @@ a:hover, a:active {
     grid-template-areas:    "title title author author"
                             "playBtn timeBar timeText downloadBtn";
     row-gap: 0.5rem;
-    /*background-color: var(--color-mintCream);*/
     border-radius: 1rem;
     margin-bottom: 0rem;
+
 }
 
 .audioCard:nth-child(odd) {
@@ -514,7 +528,11 @@ a:hover, a:active {
 }
 
 .audioCard:nth-child(even) {
-    border: 0.2rem solid var(--color-softGunmetal);
+    /*
+    border-left: 0.2rem solid var(--color-softGunmetal);
+    border-right: 0.2rem solid var(--color-softGunmetal);
+    */
+    
 }
 
 .audioCard * {
@@ -563,6 +581,14 @@ a:hover, a:active {
 .authorLink {
     margin-left: 0.2rem;
 }
+
+.audioCard:focus-within {
+    /*border-color: var(--color-lightGunmetal);
+    */
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+    z-index: 3;
+}
+
 
 /* Font Icons */
 

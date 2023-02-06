@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 // SIGNUP: Main content of "/signup" route; Contains form to create an account
     // toggleMessage: A callback function to use MessageModal
 export default function SignupContent(props) {
+    const [loading, setLoading] = useState(false);
 
     function updateAccount(values) {
+        setLoading(true);
         const enteredUsername = values.username;
         const enteredPassword = values.password;
 
@@ -19,14 +21,17 @@ export default function SignupContent(props) {
         })
         .then(response => {
             if(!response.ok){
+                setLoading(false);
                 throw new Error("HTTP error: " + response.status)
             }
             return response.json();
         })
         .then(data => {
+            setLoading(false);
             console.log(data);
         })
         .catch(error => {
+            setLoading(false);
             console.log(error);
         })
     }
@@ -57,6 +62,7 @@ export default function SignupContent(props) {
                         submitFunction = {(values) => updateAccount(values)}
                     />
                     <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
+                    {loading && <Loader />}
                 </section>
             </div>
 

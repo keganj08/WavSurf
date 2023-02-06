@@ -1,3 +1,4 @@
+import Loader from "./Loader.js";
 import AudioCard from "./AudioCard.js";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -5,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 // BROWSE: Main content of "/browse" route; Displays uploaded sound files 
     // toggleMessage: A callback function to use MessageModal
 export default function Browse(props) {
+    const [loading, setLoading] = useState(true);
     const [soundFileNames, setSoundFileNames] = useState([]);
     const [audioCards, setAudioCards] = useState([]);
 
@@ -16,6 +18,8 @@ export default function Browse(props) {
         })
         .then(response => {
             if(!response.ok){
+                setLoading(false);
+                props.toggleMessage("error", "Couldn't reach server");
                 throw new Error(`HTTP error: ${response.status}`)
             }
             return response.json();
@@ -47,9 +51,13 @@ export default function Browse(props) {
                     key={"audioCard-" + index} 
                 />
             ));
+
+            setLoading(false);
         })
         .catch(error => {
             console.log(error);
+            setLoading(false);
+            props.toggleMessage("error", "Error while trying to contact server");
             return null;
         })
     },[])
@@ -68,12 +76,13 @@ export default function Browse(props) {
                         </div>
 
                         <div className="audioCardWrapper" id="sounds">
+
                             {audioCards}
                         </div>
                     </section>
-
                 </div>
             </div>
+            {loading && <Loader />}
         </main>
     )
 }

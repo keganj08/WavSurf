@@ -15,11 +15,14 @@ import Header from "./Header.js";
 import Footer from "./Footer.js";
 import MessageModal from "./MessageModal.js";
 
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons"
 import Cookies from "js-cookie";
 
-library.add(faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, faCircleCheck, faCircleInfo);
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faCircleNotch, faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, 
+    faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+
+library.add(faCircleNotch, faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, 
+    faCircleCheck, faCircleInfo);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
