@@ -388,6 +388,9 @@ a:hover, a:active {
 }
 
 .formGrid input[type="submit"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
     background-color: var(--color-gunmetal);
     border: none;

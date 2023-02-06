@@ -22,16 +22,19 @@ export default function SignupContent(props) {
         .then(response => {
             if(!response.ok){
                 setLoading(false);
+                props.toggleMessage("error", "Server error, please try again");
                 throw new Error("HTTP error: " + response.status)
             }
             return response.json();
         })
         .then(data => {
             setLoading(false);
+            props.toggleMessage("info", "Received response from server");
             console.log(data);
         })
         .catch(error => {
             setLoading(false);
+            props.toggleMessage("error", "Error while trying to contact server");
             console.log(error);
         })
     }

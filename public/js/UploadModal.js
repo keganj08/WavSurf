@@ -36,6 +36,7 @@ export default function UploadModal(props) {
         .then(response => {
             if(!response.ok){
                 setLoading(false);
+                props.toggleMessage("error", "Server refused upload");
                 throw new Error(`HTTP error: ${response.status}`)
             }
             return response.json();
@@ -56,7 +57,7 @@ export default function UploadModal(props) {
         })
         .catch(error => {
             setLoading(false);
-            console.log("Response error: ");
+            props.toggleMessage("error", "Error while trying to contact server");
             console.log(error);
             props.close();
         })
