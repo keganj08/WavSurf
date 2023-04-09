@@ -27,7 +27,7 @@ width: 100%;
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     box-sizing: border-box;
     transition: width 0.1s linear, color 0.1s linear, background-color 0,1s linear, height 0.1s linear;
 }
@@ -42,7 +42,6 @@ html, body {
 } 
 
 /* GENERAL */
-
 
 .loadingWrapper {
     margin-top: 1rem;
@@ -90,7 +89,11 @@ a:hover, a:active {
     font-weight: 400;
     font-size: 1.2rem;
     z-index: 10;
-    /*box-shadow: 0 0rem 0.25rem 0.25rem rgba(0,0,0,0.25);*/
+    /*box-shadow: 0 0rem 0.175rem 0.175rem rgba(0,0,0,0.25);*/
+}
+
+.shadowUnderlined {
+    box-shadow: 0 0rem 0.2rem 0.2rem rgba(0,0,0,0.25);
 }
 
 #navContainer {
@@ -128,12 +131,31 @@ a:hover, a:active {
     align-items: center;
 }
 
+#logoutBtnUsername {
+    margin-left: 0.3rem;
+    font-weight: normal;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
 .pageHeader nav {
     margin-left: auto;
 }
 
-.pageHeader nav * {
-    margin-left: 1rem;
+.navButton {
+    transition: all 0.2s linear;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: fit-content;
+}
+
+#landingNav .navButton {
+    padding: 1rem 1rem;
 }
 
 .mobileNavButton {
@@ -174,7 +196,7 @@ a:hover, a:active {
     cursor: pointer;
 }
 
-.pageHeader nav .navButton, .pageHeader nav .navButton:visited, .navButton, .navButton a:link, .navButton a:visited {
+.navButton, .navButton:visited, .navButton, .navButton a:link, .navButton a:visited {
     font-size: 1.2rem;
     text-decoration: none;
     border: none;
@@ -183,19 +205,27 @@ a:hover, a:active {
     border-radius: 1.5rem;
     font-weight: bold;
     padding: 0.5rem 1rem;
-    height: 3rem;
-    max-height: 75%;
+    height: 2.5rem;
     transition: all 0.1s linear;
 }
 
+.outlineButton, .outlineButton:visited {
+    background: none;
+    color: white;
+    border: 0.1rem solid white;
+}
 
-.pageHeader nav .transparentButton, .pageHeader nav .transparentButton:visited {
+.outlineButton:hover {
+    border-color: var(--color-sizzleRed);
+}
+
+.transparentButton, .transparentButton:visited {
     background-color: transparent;
-    backdrop-filter: brightness(90%);
+    backdrop-filter: brightness(88%);
     color: var(--color-mintCream);
 }
 
-.pageHeader nav .navButton:hover, .centeredBox form input[type="submit"]:hover {
+.navButton:hover, .centeredBox form input[type="submit"]:hover {
     background-color: var(--color-sizzleRed);
     color: var(--color-mintCream);
     cursor: pointer;
@@ -243,6 +273,10 @@ a:hover, a:active {
     color: var(--color-mintCream);
 }
 
+#landingLogoBox h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
 /* CONTENT ITEMS */
 
 .container {
@@ -255,6 +289,7 @@ a:hover, a:active {
     position: relative;
     background: none;
     padding: 0.5rem 1rem;
+    gap: 1.5rem;
 }
 
 .stack {
@@ -285,6 +320,29 @@ a:hover, a:active {
     background: none;
 }
 
+.infoBox {
+    background-color: lightgray;
+    border-radius: 1.5rem;
+    padding: 1rem;
+    width: 15%;
+    aspect-ratio: 1/1;
+    text-align: center;
+}
+
+#userHeaderContainer {
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+#userHeaderContainer h1 {
+    margin: 0;
+}
+
+#userHeaderContainer .userIcon {
+    height: 2rem;
+}
+
 /* LANDING PAGE */
 
 #landingBanner {
@@ -307,7 +365,7 @@ a:hover, a:active {
 
 #dropbox {
     height: 16rem;
-    border: 0.3rem dotted var(--color-mintCream);
+    border: 0.35rem dotted var(--color-mintCream);
     background-color: var(--color-mintCream);
     background: none;
     color: var(--color-gunmetal);
@@ -326,7 +384,7 @@ a:hover, a:active {
 
 #dropbox:hover, #dropbox.highlighted {
     /*background-color: rgba(243, 247, 240, 0.2);*/
-    border: 0.3rem dotted var(--color-sizzleRed);
+    border-color: var(--color-sizzleRed);
     color: var(--color-sizzleRed);
 }
 
@@ -365,6 +423,7 @@ a:hover, a:active {
     background-color: var(--color-mintCream);
     color: var(--color-gunmetal);
     flex-grow: 0;
+    gap: 0.75rem;
 }
 
 .formGrid input, .formGrid Label {
@@ -431,10 +490,6 @@ a:hover, a:active {
     margin-bottom: 0.75rem;
 }
 
-.centeredBox h1 {
-    margin-bottom: 2rem;
-}
-
 /* BROWSE PAGE */
 
 .audioCardGrid {
@@ -479,7 +534,7 @@ a:hover, a:active {
 
 .searchBar:focus-within {  
     outline: none;
-    box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.2);
+    /*box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.2);*/
 }
 
 .searchBar input {
@@ -585,12 +640,13 @@ a:hover, a:active {
     margin-left: 0.2rem;
 }
 
+/*
 .audioCard:focus-within {
-    /*border-color: var(--color-lightGunmetal);
-    */
+
     box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
     z-index: 3;
 }
+*/
 
 
 /* Font Icons */
@@ -606,44 +662,63 @@ a:hover, a:active {
 }
 
 .iconButton:hover {
-    color: var(--color-sizzleRed);
     cursor: pointer;
+}
+
+.iconButton.emphasizable:hover {
+    color: var(--color-sizzleRed);
 }
 
 /* RANGE INPUT */
 
 input[type="range"] {
+    background: none;
+    height: 0.3rem;
+    border-radius: 0.5rem;
+    background: var(--color-darkMintCream);
     -webkit-appearance: none;
     appearance: none;
-    background: transparent;
     cursor: pointer;
     width: 100%;
+    height: 7px;
 }
 
 /* Accounting for most browsers, including Firefox */
 
 /* Most browsers */
+/*
 input[type="range"]::-webkit-slider-runnable-track {
     background: var(--color-darkMintCream);
     height: 0.3rem;
     border-radius: 0.5rem;
+    background: none;
 }
+*/
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 1rem;
     width: 1rem;
     background-color: var(--color-gunmetal);
-    margin-top: -0.35rem;
     border-radius: 50%;
 }
 
+
 /* Firefox */
+/*
 input[type="range"]::-moz-range-track {
     background: var(--color-darkMintCream);
     height: 0.3rem;
     border-radius: 0.5rem;
+    background: none;
 }
+*/
+
+/*
+input[type="range"]::-moz-range-progress {
+    background-color: var(--color-gunmetal);
+}
+*/
 
 input[type="range"]::-moz-range-thumb {
     border: none;
@@ -653,9 +728,16 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
 }
 
+/* IE */
+/*
+input[type="range"]::-ms-fill-lower {
+    background-color: var(--color-gunmetal);
+}
+*/
+
 .audioCard:nth-child(odd) input[type="range"]::-webkit-slider-runnable-track, .audioCard:nth-child(odd) input[type="range"]::-moz-range-track {
 
-    background: var(--color-burntMintCream);
+    /*background: var(--color-burntMintCream);*/
 }
 
 /* MODAL */
@@ -731,6 +813,14 @@ input[type="range"]::-moz-range-thumb {
     border-color: var(--color-confirmGreen); 
 }
 
+/* PROFILE */
+
+.profile {
+    background-color: var(--color-softGunmetal);
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
 /* MOBILE */
 
 @media (max-width: 699.98px) {
@@ -750,7 +840,10 @@ input[type="range"]::-moz-range-thumb {
     .pageHeader #logo {
         max-width: 100%;
     }
-    
+
+    #logoutBtnUsername {
+        display: none;
+    }
 
     #browseLink {
         display: none;
@@ -758,6 +851,12 @@ input[type="range"]::-moz-range-thumb {
 
     #landingBanner {
         flex-direction: column;
+    }
+
+
+    #landingLogoBox h1 {
+        text-align: center;
+        justify-content: center;
     }
 
     #mobileNavContainer {
@@ -824,9 +923,7 @@ input[type="range"]::-moz-range-thumb {
     #uploadIcon {
         height: 100%;
     }
-
-    #dropboxCaption {
-        display: none;
-    }
     */
+
+    
 }

@@ -4,25 +4,29 @@ import {
     Routes,
     Route,
     useLocation,
+    Navigate,
 } from "react-router-dom";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 
-import Landing from "./Landing.js";
-import Signup from "./Signup.js";
-import Login from "./Login.js";
-import Browse from "./Browse.js";
-import Header from "./Header.js";
-import Footer from "./Footer.js";
-import MessageModal from "./MessageModal.js";
+import Landing from "./pages/Landing.js";
+import Signup from "./pages/Signup.js";
+import Login from "./pages/Login.js";
+import Browse from "./pages/Browse.js";
+import Users from "./pages/Users.js";
+import Header from "./components/Header.js";
+import Footer from "./components/Footer.js";
+import MessageModal from "./components/MessageModal.js";
 
 import Cookies from "js-cookie";
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faCircleNotch, faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, 
-    faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons"
+    faCircleCheck, faCircleInfo, faUser } from "@fortawesome/free-solid-svg-icons"
+
+console.log(Users);
 
 library.add(faCircleNotch, faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, 
-    faCircleCheck, faCircleInfo);
+    faCircleCheck, faCircleInfo, faUser);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -104,13 +108,16 @@ function App() {
                 show = {route.pathname != "/" || scrollPosition > 200} 
                 isLoggedIn = {isLoggedIn} 
                 logout = {logout} 
-                toggleMessage={(type, content) => toggleMessage(type, content)}
+                toggleMessage = {(type, content) => toggleMessage(type, content)}
+                scrollPosition = {scrollPosition}
             />
             <Routes>
-                <Route path="/"      element={<Landing isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="signup" element={<Signup  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="login"  element={<Login   isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="browse" element={<Browse  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="/"                 element={<Landing isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="signup"            element={<Signup  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="login"             element={<Login   isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="browse"            element={<Browse  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="users/:username"   element={<Users  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="*"                 element={<Navigate to="/" replace />} />
             </Routes>
             <Footer />
             <MessageModal showing={showMsg} type={msgType} content={msgContent}></MessageModal>
