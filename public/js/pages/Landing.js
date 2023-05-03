@@ -36,20 +36,22 @@ export default function Landing(props) {
                 <div id="landingBanner" className="container">
                     <div id="landingLogoBox" className="contentBox">
                         <h1>Find Your Sound,<br/>Share Your Sound.</h1>
+                        {/*<p className="landingDescription">Share your sound files with others, browse our collection of content, and download freely.</p>
+                        */}
                         <nav id="landingNav">
                             <Link className="navButton" to="/browse">Browse Sounds</Link>
                             {!props.isLoggedIn && <Link id="singupLink" className="navButton outlineButton" to="/signup">Sign Up</Link>}
                         </nav>
 
                     </div>
-                    <div id="landingDropboxBox" className="contentBox">
-                        <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
+                    <div className="contentBox">
+                        <img id="graphic" src="res/cloudGraphic.svg"></img>
                     </div>
                     
                 </div>
             </section>
 
-            <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 1520 121">
+            <svg className="separator" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 1520 121">
                 <g>
                     <linearGradient id="linear-gradient" gradientUnits="userSpaceOnUse" x1="0%" y1="50%" x2="100%" y2="50%">
                         <stop offset="0" stopColor="#19323C" stopOpacity="1"/>
@@ -66,22 +68,15 @@ export default function Landing(props) {
             </svg>
                 
             <section className="contentArea">
-                <div className="container">
-                    <article className="contentBox infoBox">
-                        <h2>Upload your own sounds</h2>
+                <div className="container stack">
+                    <div className="contentBox">
+                        <h1>Upload Your Files</h1>
 
+                        <div id="landingDropboxBox">
+                            <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
+                        </div>
+                    </div> 
 
-                    </article>
-                    <article className="contentBox infoBox">
-                        <h2>Browse our library</h2>
-                        
-
-                    </article>
-                    <article className="contentBox infoBox">
-                        <h2>Download freely</h2>
-                        
-
-                    </article>
                 </div>
             </section>
         </main>

@@ -28,8 +28,8 @@ export default function Header(props) {
                     {!props.isLoggedIn && route != "/login" && route != "/signup" &&
                         <Link id="singupLink" className="navButton transparentButton" to="/login">Log In</Link>}
 
-                    {props.isLoggedIn && <button className="navButton transparentButton" onClick={props.logout}>Log Out <span id="logoutBtnUsername">({Cookies.get("sessionUsername")})</span></button>}
-                    
+                    {props.isLoggedIn && <button className="navButton transparentButton" onClick={props.logout}>Log Out </button>}
+                        {/* <span id="logoutBtnUsername">({Cookies.get("sessionUsername")})</span> */}
                 </nav>
             </div>
         </header>
