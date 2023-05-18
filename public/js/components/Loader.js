@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 export default function Loader(props) {
 
     return(
-    <div class="loadingWrapper">
+    <div className="loadingWrapper">
         <FontAwesomeIcon className="loadingSpinner" icon="fa-solid fa-circle-notch fa-spin" spin />
     </div>
     );

@@ -1,15 +1,7 @@
-/*
-How to achieve THOSE margins:
-
-max-width: ~ 1280px, or ~ 90rem;
-width: 100%;
-
-*/
-
 /* RESETS & VARIABLES */
 
 :root {
-    --color-mintCream: #F3F7F0;
+    --color-mintCream: #F5F5F5;
     --color-darkMintCream: #cbcfc8;
     --color-burntMintCream: #a9ada5;
     --color-gunmetal: #19323C;
@@ -77,6 +69,22 @@ a:hover, a:active {
     margin: auto;
 }
 
+.pageFooter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-mintCream);
+    color: var(--color-softGunmetal);
+}
+
+.pageFooter a {
+    color: var(--color-mintCream);
+}
+
+.pageFooter a:hover, .pageFooter a:active {
+    color: var(--color-sizzleRed);
+}
+
 .pageHeader {
     position: sticky;
     top: 0;
@@ -92,36 +100,28 @@ a:hover, a:active {
     /*box-shadow: 0 0rem 0.175rem 0.175rem rgba(0,0,0,0.25);*/
 }
 
+#logo {
+    max-height: 3rem;
+    max-width: 100%;
+}
+
 .shadowUnderlined {
-    box-shadow: 0 0rem 0.2rem 0.2rem rgba(0,0,0,0.25);
+    box-shadow: 0 0rem 0.2rem 0rem rgba(0,0,0,0.5);
 }
 
 #navContainer {
     height: var(--pageHeaderHeight);
+    flex-wrap: nowrap;
 }
 
-#mobileNavContainer {
-    display: none;    
-    overflow: hidden;
-    background-color: var(--color-gunmetal);
-    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal));
-    padding: 0;
-    padding-bottom: 0.2rem;
-    width: 100%;
-    transition: max-height 0.2s linear;
+#logoLink {
+    flex-shrink: 1;
+    min-width: 10rem;
 }
 
-.expanded, .collapsed {
-    transition: transform 0.2s linear;
-}
-
-.expanded {
-    transform: scaleY(1);
-}
-
-.collapsed {
-    transform: scaleY(0);
-    overflow: hidden;
+.headerNav {
+    flex-shrink: 2;
+    min-width: 0;
 }
 
 .pageHeader * {
@@ -149,6 +149,9 @@ nav {
 .navButton {
     transition: all 0.2s linear;
     display: flex;
+    flex-direction: row;
+    text-overflow: clip("...");
+    gap: 0.5rem;
     justify-content: center;
     align-items: center;
     max-width: fit-content;
@@ -164,42 +167,104 @@ nav {
     max-width: 45%;
 }
 
-.mobileNavButton {
-    display: none;
+#dropdownButton {
+    max-width: 100%;
+    overflow: clip;
 }
 
-#mobileNavMenu {
+#dropdownButtonIcon {
+    flex-shrink: 0;
+}
+
+#dropdownButtonText {
+    flex-shrink: 1;
+    text-overflow: ellipsis;
+    min-width: 0;
+    overflow: hidden;
+    justify-self: flex-start;
+    align-self: flex-start;
+    text-align: left;
+}
+
+#dropdownContainer {
+    position: absolute;
+    top: var(--pageHeaderHeight);
+    align-items: flex-end;
+    height: fit-content;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#dropdownContainer, #dropdownContainer ul{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: auto;
-    padding: 0.5rem 1rem;
-    background-color: var(--color-darkMintCream);
-    /*
-    background-color: var(--color-gunmetal);
-    background-image: linear-gradient(to right, var(--color-gunmetal), var(--color-lightGunmetal));
-    */
 }
 
-#mobileNavMenu Link, #mobileNavMenu a {
-    text-align: center;
+#dropdownContainer ul, #dropdownContainer ul li {
     width: 100%;
-    display: block;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 0.5rem 0.2rem;
-    margin: 0.2rem 0;
-    color: var(--color-lightGunmetal);
-    background-color: var(--color-mintCream);
-    border-radius: 0.5rem;
 }
 
-#mobileNavMenu Link:hover, #mobileNavMenu a:hover {
+#dropdownContainer ul {
+    width: 20rem;
+    max-width: 90%;
+    background-color: white;
+    box-shadow: 0 0rem 0.2rem 0rem rgba(0,0,0,0.5);
+    justify-content: flex-end;
+    border-radius: 1rem;
+    clip-path: inset(0px -1rem -1rem -1rem);
+}
+
+#dropdownContainer ul li {
+    justify-content: flex-start;
+    border-bottom: 0.1rem solid var(--color-gunmetal);
+}
+
+#dropdownContainer ul li:last-child {
+    border-bottom: none;
+}
+
+#dropdownContainer ul li:first-child .dropdownItem {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+#dropdownContainer ul li:last-child .dropdownItem {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.dropdownItem:hover {
     background-color: var(--color-sizzleRed);
-    color: var(--color-mintCream);
+    color: white;
     cursor: pointer;
+}
+
+.dropdownItem {
+    padding: 1rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    font-size: 1rem;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-start;
+    transition: all 0.1s linear;
+    color: var(--color-gunmetal);
+    font-weight: bold;
+    border-radius: 0;
+}
+
+button.dropdownItem {
+    border: none;
+    background: none;
+}
+
+a.dropdownItem {
+    text-decoration: none;
+    color: var(--color-gunmetal);
+}
+
+#logoutBtnUsername {
+    font-weight: normal;
 }
 
 .navButton, .navButton:visited, .navButton, .navButton a:link, .navButton a:visited {
@@ -227,7 +292,7 @@ nav {
 
 .transparentButton, .transparentButton:visited {
     background-color: transparent;
-    backdrop-filter: brightness(88%);
+    backdrop-filter: brightness(125%);
     color: var(--color-mintCream);
 }
 
@@ -247,7 +312,7 @@ nav {
 /* MAIN AREA */
 
 .main {
-    background-color: white;
+    background-color: var(--color-mintCream);
     min-height: calc(100vh - 2*var(--pageHeaderHeight));
     width: 100%;
     color: var(--color-gunmetal);
@@ -255,23 +320,15 @@ nav {
     flex-direction: column;
 }
 
-.contentArea {
+.sectionWrapper {
     height: 100%;
     width: 100%;
-    padding: 0;
+    padding: 1rem 0;
     display: flex;
     flex-direction: column;
 }
 
-.main .contentArea {
-    padding: 1rem 0;
-}
-
-.contentArea:first-of-type {
-    padding-top: 2rem;
-} 
-
-.contentArea:last-of-type {
+.sectionWrapper:last-of-type {
     padding-bottom: 2rem;
 }
    
@@ -283,7 +340,7 @@ nav {
     color: var(--color-mintCream);
 }
 
-#landingLogoBox h1 {
+#bigHeader {
     font-size: clamp(2rem, 5vw, 3.2rem);
 }
 
@@ -301,18 +358,24 @@ nav {
     padding: 0.5rem 1rem;
     gap: 1.5rem;
     flex-wrap: wrap;
-
-}
-
-.container h1 {
-
-}
-
-.wrapping {
 }
 
 .stack {
     flex-direction: column;
+}
+
+.contentRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contentCard {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0 0.2rem var(--color-darkMintCream);
+    padding: 1.2rem 1.5rem;
 }
 
 .doubleHeader {
@@ -336,12 +399,11 @@ nav {
     justify-content: center;
     height: auto;
     position: relative;
-    background: none;
+    gap: 0.75rem;
 }
 
 .infoBox {
     flex-grow: 1;
-
     background-color: lightgray;
     border-radius: 1.5rem;
     padding: 0.5rem;
@@ -355,20 +417,6 @@ nav {
     border-radius: 1.5rem;
     width: 100%;
     height: 100%;
-}
-
-#userHeaderContainer {
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-#userHeaderContainer h1 {
-    margin: 0;
-}
-
-#userHeaderContainer .userIcon {
-    height: 2rem;
 }
 
 /* LANDING PAGE */
@@ -385,55 +433,39 @@ nav {
     gap: 1rem;
 }
 
-#landingBanner .contentBox {
-}
-
-#bigLogo {
-    max-width: 32rem;
-}
-
-#bigLogo, #dropbox {
-    width: 100%;
-}
-
 #dropbox {
     height: 16rem;
-    /*max-width: 50rem;*/
+    width: 100%;
     margin: 0 auto;
     border: 0.35rem dotted var(--color-lightGunmetal);
-    background-color: var(--color-gunmetal);
-    background: none;
     color: var(--color-gunmetal);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 1.1rem;
-    transition: background-color 0.1s linear, border-color 0.1s linear;
     transition: all 0.1s linear;
     z-index: 3;
-    border-radius: 1rem;
-    padding: 1rem;
-    background-color: rgb(240,240,240);
-    
+    padding: 1rem; 
 }
 
 #dropbox:hover, #dropbox.highlighted {
-    /*background-color: rgba(243, 247, 240, 0.2);*/
+    background-color: rgba(243, 247, 240, 0.2);
+    background-color: var(--color-softGunmetal);
     border-color: var(--color-sizzleRed);
     color: var(--color-sizzleRed);
 }
 
 
 #dropbox.highlighted {
-    box-shadow: 0 0 0 3000px rgba(0,0,0,0.5);
+    /*(box-shadow: 0 0 0 3000px rgba(0,0,0,0.5);*/
     border: 0.3rem dotted var(--color-sizzleRed) !important;
 }
 
 #dropbox:hover {
     cursor: pointer;    
     transition: background-color 0.1s linear border-color 0.1s linear;
-    box-shadow: inset 0 0 2rem rgba(0,0,0,0.5);
+    /*box-shadow: inset 0 0 2rem rgba(0,0,0,0.5);*/
 }
 
 #dropbox * {
@@ -449,14 +481,12 @@ nav {
 /* FORMS */
 
 .centeredBox {
-    border-radius: 1rem;
     min-width: fit-content;
     width: 25rem;
     margin: auto;
     padding: 3rem 5rem;
     align-items: center;
     box-shadow: 0 0 1rem 1rem rgba(0,0,0,0.1);
-    background-color: var(--color-mintCream);
     color: var(--color-gunmetal);
     flex-grow: 0;
     gap: 0.75rem;
@@ -521,9 +551,9 @@ nav {
     grid-column: 1/3;
 }
 
-.contentBox h1 {
+h1 {
     font-size: 2.25rem;
-    margin-bottom: 0.75rem;
+    margin: 0 0 0 0;
 }
 
 /* BROWSE PAGE */
@@ -552,7 +582,7 @@ nav {
     display: flex;
     flex-direction: column;
     padding: 0.5rem 1rem;
-    margin: 0 0 1rem 0;
+    margin: 0 0 0 0;
     transition: all 0.1s linear;
     display: flex;
     flex-direction: row;
@@ -564,7 +594,7 @@ nav {
     height: 100%;
 }
 
-.searchBar:hover, .searchBar:focus-within {
+.searchBar:focus-within {
     border-color: var(--color-gunmetal);
 }
 
@@ -595,10 +625,7 @@ nav {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    /*background-color: white;
-    box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.05);
-    border-radius: 1rem;*/
+    gap: 0.75rem;
 }
 
 .audioCard {    
@@ -612,14 +639,13 @@ nav {
     grid-template-areas:    "title title author author"
                             "playBtn timeBar timeText downloadBtn";
     row-gap: 0.5rem;
-    border-radius: 1rem;
     margin-bottom: 0rem;
-
 }
 
 .audioCard:nth-child(odd) {
-    /*background-color: var(--color-softGunmetal);*/
-    background-color: rgb(240,240,240);
+    /*background-color: var(--color-softGunmetal);
+    background-color: rgb(240,240,240);*/
+
 }
 
 .audioCard:nth-child(even) {
@@ -642,6 +668,7 @@ nav {
     grid-area: title;
     text-align: center;
     align-items: start;
+    text-overflow: ellipsis;
 }
 
 .soundPlayBox {
@@ -663,7 +690,7 @@ nav {
     padding: 0 1rem;
 }
 
-.soundAuthor, .soundAuthor * {
+.soundAuthor, .soundAuthor *, .soundDeleter, .soundDeleter * {
     grid-area: author;
     justify-content: right;
     align-items: start;
@@ -677,6 +704,9 @@ nav {
     margin-left: 0.2rem;
 }
 
+a.soundDeleteLink {
+    color: var(--color-sizzleRed);
+}
 /*
 .audioCard:focus-within {
 
@@ -712,7 +742,7 @@ input[type="range"] {
     background: none;
     height: 0.3rem;
     border-radius: 0.5rem;
-    background: var(--color-darkMintCream);
+    background-color: var(--color-mintCream);
     -webkit-appearance: none;
     appearance: none;
     cursor: pointer;
@@ -793,6 +823,7 @@ input[type="range"]::-ms-fill-lower {
     z-index: 6;
 }
 
+/*
 .modalContent {
     position: relative;
     width: 50%;
@@ -804,7 +835,7 @@ input[type="range"]::-ms-fill-lower {
     box-shadow: 0 0 1rem rgba(0,0,0,0.1);
 
 }
-
+*/
 
 .msgModal {
     display: flex;
@@ -852,10 +883,24 @@ input[type="range"]::-ms-fill-lower {
 
 /* PROFILE */
 
-.profile {
-    background-color: var(--color-softGunmetal);
-    border-radius: 1.5rem;
-    padding: 1rem;
+#profile {
+    /*padding: 1.5rem;*/
+}
+
+.userIcon {
+    height: 2rem;
+}
+
+#deleteAccountButton {
+    border: 0.1rem solid var(--color-sizzleRed);
+    color: var(--color-sizzleRed);
+    justify-self: flex-end;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+#deleteAccountButton:hover {
+    color: var(--color-mintCream);
 }
 
 /* MOBILE */
@@ -869,18 +914,13 @@ input[type="range"]::-ms-fill-lower {
 
     /* HEADER */
 
+    /*
     .pageHeader #logoLink {
         display: inline-block;
         max-width: 50%;
+        min-width: 12rem;
     }
-
-    .pageHeader #logo {
-        max-width: 100%;
-    }
-
-    #logoutBtnUsername {
-        display: none;
-    }
+    */
 
     #browseLink {
         display: none;
@@ -892,7 +932,6 @@ input[type="range"]::-ms-fill-lower {
 
     #graphic {
         height: 6rem;
-        margin-top: 1rem;
         order: 1;
     }
 
@@ -900,39 +939,21 @@ input[type="range"]::-ms-fill-lower {
         order: 2;
     }
 
-    #landingLogoBox h1 {
+    #bigHeader {
         text-align: center;
         justify-content: center;
     }
 
-    #mobileNavContainer {
-        display: block;
-    }
-
-    .mobileNavButton {
-        display: inline-block;
-        color: white;
-        background: none;
-        border: none;
-        transition: all 0.1s linear;
-    }
-
-    .mobileNavButton:hover, .mobileNavButton:active {
-        cursor: pointer;
-        color: var(--color-sizzleRed);
-    }
-
-
-    .doubleHeader {
-        flex-direction: column;
-    }
-
-    .doubleHeader:last-child {
+    #dropdownContainer ul {
         width: 100%;
+        max-width: 100%;
     }
 
-    .doubleHeader h1 {
-        width: 100%;
+    .contentRow {
+    }
+
+    .dropdownItem {
+        padding: 1.5rem 1rem;
     }
 
     /* CONTENT */
@@ -942,13 +963,17 @@ input[type="range"]::-ms-fill-lower {
         /*min-width: fit-content;*/
     }
 
-    .contentArea {
+    .sectionWrapper {
         padding: 1rem 0;
     }
 
     .contentBox {
         align-items: center;
         transition: align-items 1s linear;
+    }
+
+    .msgModal {
+        
     }
 
     /*

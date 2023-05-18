@@ -21,18 +21,15 @@ import Cookies from "js-cookie";
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faCircleNotch, faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, 
-    faCircleCheck, faCircleInfo, faUser } from "@fortawesome/free-solid-svg-icons"
-
-console.log(Users);
+    faCircleCheck, faCircleInfo, faUser, faAngleDown } from "@fortawesome/free-solid-svg-icons"
 
 library.add(faCircleNotch, faUpload, faDownload, faPlay, faPause, faBars, faMagnifyingGlass, faCircleExclamation, 
-    faCircleCheck, faCircleInfo, faUser);
+    faCircleCheck, faCircleInfo, faUser, faAngleDown);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 function App() {
     const [scrollPosition, setScrollPosition] = useState(0);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const route = useLocation();
 
     const [showMsg, setShowMsg] = useState(false);
@@ -41,35 +38,12 @@ function App() {
 
     let msgTimeoutId = undefined;
 
+    // Go to top of page on route change
     useLayoutEffect(() => {
         window.scrollTo(0, 0)
     }, [route]);
 
-    useEffect(() => {
-        console.log({username : Cookies.get("sessionUsername"), accessToken : Cookies.get("accessToken")});
-        fetch("/validateUser", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({username : Cookies.get("sessionUsername"), accessToken : Cookies.get("accessToken")})
-        })
-        .then(response => {
-            if(!response.ok){
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data && data == true) {
-                setIsLoggedIn(true);
-            } else {
-                setIsLoggedIn(false);
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }, [route]);
-
+    // Keep track of current scroll position
     useEffect(() => {
         window.addEventListener("scroll", handleScroll, { passive: true });
 
@@ -82,12 +56,31 @@ function App() {
         setScrollPosition(window.scrollY)
     };
 
+    // Request that the server delete the current session
     async function logout() {
-        Cookies.remove("sessionUsername");
-        Cookies.remove("accessToken");
-        setIsLoggedIn(false, toggleMessage("info", "You have been logged out"));
+        toggleMessage("info", "Logging you out...");
+        if(Cookies.get("sessionUsername")) {
+            fetch(`/sessions/${Cookies.get("sessionUsername")}`, {
+                method: "DELETE",
+            })
+            .then(response => {
+                if(response.ok) {
+                    console.log(`HTTP Success: ${response.status}`);
+                    window.location.reload();
+                } else {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+            })
+            .then(data => {
+                // Currently unused
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
     }
 
+    // Toggle the information modal
     function toggleMessage(type, content, length=5000) {
         
         setShowMsg(true);
@@ -106,17 +99,16 @@ function App() {
         <React.Fragment>
             <Header 
                 show = {route.pathname != "/" || scrollPosition > 200} 
-                isLoggedIn = {isLoggedIn} 
                 logout = {logout} 
                 toggleMessage = {(type, content) => toggleMessage(type, content)}
                 scrollPosition = {scrollPosition}
             />
             <Routes>
-                <Route path="/"                 element={<Landing isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="signup"            element={<Signup  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="login"             element={<Login   isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="browse"            element={<Browse  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
-                <Route path="users/:username"   element={<Users  isLoggedIn={isLoggedIn} toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="/"                 element={<Landing   toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="signup"            element={<Signup    toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="login"             element={<Login     toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="browse"            element={<Browse    toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
+                <Route path="users/:username"   element={<Users     toggleMessage={(type, content, length) => toggleMessage(type, content, length)}/>} />
                 <Route path="*"                 element={<Navigate to="/" replace />} />
             </Routes>
             <Footer />

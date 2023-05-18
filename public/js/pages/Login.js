@@ -6,57 +6,54 @@ import Cookies from "js-cookie";
 
 // LOGIN: Main content of "/login" route; Contains form to log in to an existing account
     // toggleMessage: A callback function to use MessageModal
-export default function LoginContent(props) {
+export default function Login(props) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     function attemptLogin(values) {
         setLoading(true);
-        const enteredUsername = values.username;
-        const enteredPassword = values.password;
 
-        const uploadData = {"username" : String(enteredUsername), "password" : String(enteredPassword)};
+        if(values.username != undefined && values.password != undefined) {
+            console.log("Attempting POST /sessions");
 
-        console.log("Client attempting /login POST");
-        fetch("/login", {
-            headers: { "Content-Type": "application/json" },
-            method: "POST",
-            body: JSON.stringify(uploadData)
-        })
-        .then(response => {
-            if(!response.ok){
-                props.toggleMessage("error", "Server error, please try again");
+            const userData = JSON.stringify({"username" : String(values.username), "password" : String(values.password)});
+            fetch("/sessions", {
+                headers: { "Content-Type": "application/json" },
+                method: "POST",
+                body: userData
+            })
+            .then(response => {
                 setLoading(false);
-                throw new Error(`HTTP error: ${response.status}`)
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data.loginSuccess) {
-                Cookies.remove("accessToken");
-                Cookies.remove("sessionUsername");
-                Cookies.set("accessToken", data.accessToken, {sameSite: "none", secure: true});
-                Cookies.set("sessionUsername", values.username, {sameSite: "none", secure: true});
-                navigate("/");
-                props.toggleMessage("confirm", "You have been successfully logged in");
-                console.log(Cookies.get("accessToken") + ", " + Cookies.get("sessionUsername"));
-            } else {
-                props.toggleMessage("error", "Incorrect username or password");
-            }
-            setLoading(false);
 
-        })
-        .catch(error => {
-            props.toggleMessage("error", "Error while trying to contact server");
+                if(response.ok) {
+                    console.log(`HTTP Success: ${response.status}`);
+                    navigate("/");
+                    props.toggleMessage("confirm", "You have been successfully logged in");
+                } else {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+            })
+            .then(data => {
+                // Currently unused; Data is not returned on success
+            })
+            .catch(error => {
+                setLoading(false);
+                props.toggleMessage("error", "Error while trying to contact server");
+                console.log(error);
+            });
+
+        } else {
             setLoading(false);
-            console.log(error);
-        })
+            props.toggleMessage("error", "Please enter a username and password"); 
+        }
+
+
     }
 
     return (
         <main className="main dark">
-            <div className="contentArea">
-                <section className="contentBox centeredBox" id="contentWrapper_Login">
+            <div className="sectionWrapper">
+                <section className="contentBox centeredBox contentCard" id="contentWrapper_Login">
                     <h1>Log In</h1>
                     <EntryForm 
                         fields = {[

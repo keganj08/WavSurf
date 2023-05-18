@@ -27,9 +27,15 @@ export function server_deleteSound(title, author) {
   }
 }
 
-// Returns the server's sound array
-export function server_getSounds() {
-  return allSounds;
+// Returns the server's sound array, filtering by author and/or title if provided
+export function server_getSounds(author=undefined, title=undefined) {
+  if(author || title) {
+    return allSounds.filter(sound => {
+      if( (!author || sound.author == author) && (!title || sound.title == title) ) return sound; 
+    });
+  } else {
+    return allSounds;
+  }
 }
 
 // Makes an expensive S3 List Request to retrieve all sounds stored in the site bucket and update the server's array

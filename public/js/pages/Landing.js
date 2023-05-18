@@ -3,7 +3,7 @@ import AudioCard from "../components/AudioCard.js";
 import UploadModal from "../components/UploadModal.js";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import Cookies from "js-cookie";
 
 // LANDING: Main content of "/" route; Contains upload dropbox and example sound files
     // toggleMessage: A callback function to use MessageModal
@@ -27,20 +27,19 @@ export default function Landing(props) {
                 showing={showUploadModal} 
                 file={uploadData.file} 
                 title={uploadData.title}
-                isLoggedIn={props.isLoggedIn}
                 close={() => setShowUploadModal(false)}
                 toggleMessage={props.toggleMessage}
             />
 
-            <section className="contentArea dark">
+            <section className="sectionWrapper dark">
                 <div id="landingBanner" className="container">
                     <div id="landingLogoBox" className="contentBox">
-                        <h1>Find Your Sound,<br/>Share Your Sound.</h1>
+                        <h1 id="bigHeader">Find Your Sound,<br/>Share Your Sound.</h1>
                         {/*<p className="landingDescription">Share your sound files with others, browse our collection of content, and download freely.</p>
                         */}
                         <nav id="landingNav">
                             <Link className="navButton" to="/browse">Browse Sounds</Link>
-                            {!props.isLoggedIn && <Link id="singupLink" className="navButton outlineButton" to="/signup">Sign Up</Link>}
+                            {!Cookies.get("sessionUsername") && <Link id="singupLink" className="navButton outlineButton" to="/signup">Sign Up</Link>}
                         </nav>
 
                     </div>
@@ -67,16 +66,12 @@ export default function Landing(props) {
                 </g>
             </svg>
                 
-            <section className="contentArea">
-                <div className="container stack">
+            <section className="sectionWrapper">
+                <div className="container">
                     <div className="contentBox">
                         <h1>Upload Your Files</h1>
-
-                        <div id="landingDropboxBox">
-                            <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
-                        </div>
+                        <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
                     </div> 
-
                 </div>
             </section>
         </main>

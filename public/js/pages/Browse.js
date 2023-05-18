@@ -14,52 +14,35 @@ export default function Browse(props) {
 
     // On initial mount, retrieve all sounds
     useEffect(() => {
-        console.log("Client attempting /listSounds for Browse page");
-        fetch("/listSounds", {
+        console.log("Attempting GET /soundFiles");
+
+        fetch("/soundFiles", {
             method: "GET"
         })
         .then(response => {
-            if(!response.ok){
-                setLoading(false);
-                props.toggleMessage("error", "Couldn't reach server");
-                throw new Error(`HTTP error: ${response.status}`)
+            if(response.ok){
+                console.log(`HTTP Success: ${response.status}`);
+            } else {
+                props.toggleMessage("error", "Server error");
+                throw new Error(`HTTP error: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            // Get the titles and authors of each sound file
-            
-            let soundFiles = data;
-            console.log(data);
-            /*
             let soundFiles = [];
-
-            for(var i=0; i<data.Contents.length; i++) {
-                if(data.Contents[i].Key.indexOf("sounds/") != -1) {
-                    let authorPath = data.Contents[i].Key.split("sounds/")[1];
-                    if(authorPath.indexOf("/") !=  -1) {
-                        let title = authorPath.split("/")[1];
-                        let author = authorPath.split("/")[0];
-                        soundFiles.push({title, author});
-                    }
-                }
-            }
-            */
-
+            if(data.soundFiles) { soundFiles = data.soundFiles; }
             setAllSounds(soundFiles);
             setLoading(false);
         })
         .catch(error => {
-            console.log(error);
             setLoading(false);
             props.toggleMessage("error", "Error while trying to contact server");
-            return null;
+            console.log(error);
         })
     }, []);
 
     // When the sounds are first retrieved, and when the user changes their search, update displayedSounds
     useEffect(() => {
-        console.log("Filter: " + filterValue);
         if(filterValue.length >= 2) {
             setDisplayedSounds(
                 allSounds.filter((sound) => sound.title.includes(filterValue)).concat(
@@ -73,7 +56,6 @@ export default function Browse(props) {
 
     // When displayedSounds changes, update the audio cards
     useEffect(() => {
-        console.log(displayedSounds);
         loadAudioCards(displayedSounds);
     }, [displayedSounds]);
 
@@ -97,10 +79,10 @@ export default function Browse(props) {
 
     return (
         <main className="main">
-            <div className="contentArea">
+            <section className="sectionWrapper">
                 <div className="container stack">
                     <section className="contentBox">
-                        <div className="container doubleHeader">
+                        <div className="contentRow doubleHeader">
                             <h1>Browse Sounds</h1>
                             <div id="soundSearchBar" className="searchBar" type="text">
                                 <FontAwesomeIcon className="icon" icon="fa-solid fa-magnifying-glass" />
@@ -109,14 +91,13 @@ export default function Browse(props) {
                         </div>
 
                         <div className="audioCardWrapper" id="sounds">
-
                             {audioCards}
-                            {!loading && displayedSounds.length == 0 && <span>Hmm, didn't find anything.</span>}
+                            {loading && <Loader />}
+                            {!loading && displayedSounds.length == 0 && <span>Hmm, didn't find any sounds.</span>}
                         </div>
                     </section>
                 </div>
-            </div>
-            {loading && <Loader />}
+            </section>
         </main>
     )
 }

@@ -45,7 +45,7 @@ export default function DropBox(props) {
     }
 
     return (
-        <div className="dropbox" id="dropbox" onClick={clickHandler} onDrop={dropHandler} onDragOver={dragOverHandler} onDragLeave={dragLeaveHandler}>
+        <div className="dropbox contentCard" id="dropbox" onClick={clickHandler} onDrop={dropHandler} onDragOver={dragOverHandler} onDragLeave={dragLeaveHandler}>
             <FontAwesomeIcon id="uploadIcon" className="icon" icon="fa-solid fa-upload" />
             <p id="dropboxCaption">Drop .wav files here or click to browse</p>
         </div>

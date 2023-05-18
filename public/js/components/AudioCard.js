@@ -10,10 +10,15 @@ export default function AudioCard(props) {
     const [currentTime, setCurrentTime] = useState(0);
     const [currentTimeText, setCurrentTimeText] = useState("0:00");
     const [durationText, setDurationText] = useState("0:00");
+    const [deletable, setDeletable] = useState(false);
     const audio = useRef(new Audio("https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title));
     const interval = useRef(0);
     const isReady = useRef(false);
     const sliderRef = useRef(null);
+
+    useEffect(() => {
+        if(props.deletable) { setDeletable(true); }
+    }, []);
 
     // Pause and clean up on unmount
     useEffect(() => {
@@ -106,7 +111,7 @@ export default function AudioCard(props) {
     }        
 
     return (
-        <article id={props.id} className="audioCard">
+        <article id={props.id} className="audioCard contentCard">
             
             <h2 className="soundTitle">{props.title.split(".wav")[0]}</h2>
             <span className="soundPlayBox">
@@ -130,9 +135,12 @@ export default function AudioCard(props) {
             <span className="soundTimeText">
                 {currentTimeText}/{durationText}
             </span>
-            <span className="soundAuthor">by 
+            {!deletable && <span className="soundAuthor">by 
                 <Link className="authorLink" to={"/users/" + props.author}>{props.author}</Link>
-            </span>
+            </span>}
+            {deletable && <span className="soundDeleter">
+                <a href="/" className="soundDeleteLink">Delete</a>
+            </span>}
             <span className="soundDownloadBox">
                 <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title}>
                     <FontAwesomeIcon className="iconButton" icon="fa-solid fa-download" />
