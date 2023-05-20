@@ -6,43 +6,42 @@ import * as fs from "fs";
 const run = async (reqParams) => {
     try {
         const data = await s3Client.send(new PutObjectCommand(reqParams));
-        //console.log("S3 success:", data);
-        return true;
+        return 1; // Success
     } catch (err) {
-        //console.log("S3 error:", err);
-        return false;
+        console.log("S3 error", err);
+        return -3; // S3 error
     }
 };
 
-export default function uploadFile(filePath, destFolder, subFolder) {
-    var fileBody = null;
-    var fileType = path.basename(filePath).split(".")[1]; // Get file's extension to know how to send its contents to S3
-    if(fileType.toLowerCase() == "txt") {
-        fileBody = fs.readFileSync(filePath, "utf8", function(err, data){
-            if(err) {
-                console.log("Error:", err);
-            }
-        });
-    } else if(fileType.toLowerCase() == "wav") {
-        fileBody = fs.createReadStream(filePath);
+export default function uploadFile(filePath, destPath) {
+    const destPathPattern = /^([a-zA-Z0-9!\-_.*'()]{1,50}\/)+[a-zA-Z0-9!\-_.*'()]{1,50}$/;
+
+    if(destPathPattern.test(destPath)) {
+        let fileBody = null;
+        let fileType = path.basename(filePath).split(".")[1]; // Get file's extension to know how to send its contents to S3
+        switch(fileType.toLowerCase()) {
+            case("txt"):
+                fileBody = fs.readFileSync(filePath, "utf8", function(err, data){
+                    if(err) console.log("Error:", err);
+                });
+                console.log("S3: Got txt file.");
+                break;
+            case("wav"):
+                fileBody = fs.createReadStream(filePath);
+                console.log("S3: Got wav file.");
+                break;
+            default:
+                return -1; // Invalid file path
+        }
+    
+        const reqParams = {
+            Bucket: "wavsurf-files",
+            Key: `${destPath}/${path.basename(filePath)}`,
+            Body: fileBody,
+        };
+
+        return run(reqParams);
     } else {
-        console.log(`Error: Attempted to upload file with invalid extension ".${fileType}" to S3`);
+        return -2; // Invalid destination path
     }
-
-    //console.log("S3: Uploading " + filePath + " into " + destFolder + "/" + subFolder + "/");
-
-    let dest;
-    if(subFolder) {
-        dest = destFolder + '/' + subFolder + '/' + path.basename(filePath);
-    } else {
-        dest = destFolder + '/' + path.basename(filePath);
-    }
-
-    const reqParams = {
-        Bucket: "wavsurf-files",
-        Key: dest,
-        Body: fileBody,
-    };
-
-    return run(reqParams);
 }

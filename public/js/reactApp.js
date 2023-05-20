@@ -32,11 +32,10 @@ function App() {
     const [scrollPosition, setScrollPosition] = useState(0);
     const route = useLocation();
 
-    const [showMsg, setShowMsg] = useState(false);
+    const [showingMsg, setShowingMsg] = useState(false);
+    const [msgTimer, setMsgTimer] = useState("");
     const [msgType, setMsgType] = useState("confirm");
     const [msgContent, setMsgContent] = useState("Foo bar");
-
-    let msgTimeoutId = undefined;
 
     // Go to top of page on route change
     useLayoutEffect(() => {
@@ -58,41 +57,57 @@ function App() {
 
     // Request that the server delete the current session
     async function logout() {
-        toggleMessage("info", "Logging you out...");
         if(Cookies.get("sessionUsername")) {
             fetch(`/sessions/${Cookies.get("sessionUsername")}`, {
                 method: "DELETE",
             })
             .then(response => {
-                if(response.ok) {
-                    console.log(`HTTP Success: ${response.status}`);
-                    window.location.reload();
-                } else {
-                    throw new Error(`HTTP Error: ${response.status}`);
+                if(!response.ok) {
+                    return response.json()
+                        .then(data => {
+                            // Valid response with error 
+                            if(data.info) {
+                                props.toggleMessage("error", data.info);
+                            } else {
+                                props.toggleMessage("error", "Unknown error");
+                            }
+                        })
+                        .catch(error => {
+                            // Unexpected or unreadable response
+                            props.toggleMessage("error", "Error while trying to contact server");
+                            throw new Error(response.status);
+                        });
                 }
-            })
-            .then(data => {
-                // Currently unused
-            })
-            .catch(error => {
-                console.log(error);
+                // Successfully logged out
+                console.log(`HTTP Success: ${response.status}`);
+                window.location.reload();
+                //toggleMessage("info", "You have been logged out");
             });
         }
     }
 
     // Toggle the information modal
     function toggleMessage(type, content, length=5000) {
-        
-        setShowMsg(true);
-        setMsgType(type);
-        setMsgContent(content);
+        let delayTime = 0;
 
-        if(length >= 0) {
-            msgTimeoutId = setTimeout(() => {
-                setShowMsg(false);
-                msgTimeoutId = undefined;
-            }, length);
+        if(showingMsg) {
+            clearTimeout(msgTimer);
+            setShowingMsg(false);
+            setMsgTimer("");
+            delayTime = 250;
         }
+
+        setTimeout(() => {
+            setShowingMsg(true);
+            setMsgType(type);
+            setMsgContent(content);
+    
+            if(length >= 0) {
+                setMsgTimer(setTimeout(() => {
+                    setShowingMsg(false);
+                }, length));
+            }
+        }, delayTime);
     }
 
     return (
@@ -112,7 +127,7 @@ function App() {
                 <Route path="*"                 element={<Navigate to="/" replace />} />
             </Routes>
             <Footer />
-            <MessageModal showing={showMsg} type={msgType} content={msgContent}></MessageModal>
+            <MessageModal showing={showingMsg} type={msgType} content={msgContent}></MessageModal>
         </React.Fragment>
     )        
 }

@@ -24,22 +24,26 @@ export default function Login(props) {
             })
             .then(response => {
                 setLoading(false);
-
-                if(response.ok) {
-                    console.log(`HTTP Success: ${response.status}`);
-                    navigate("/");
-                    props.toggleMessage("confirm", "You have been successfully logged in");
-                } else {
-                    throw new Error(`HTTP error: ${response.status}`);
+                if(!response.ok) {
+                    return response.json()
+                        .then(data => {
+                            // Valid response with error 
+                            if(data.info) {
+                                props.toggleMessage("error", data.info);
+                            } else {
+                                props.toggleMessage("error", "Unknown error");
+                            }
+                        })
+                        .catch(error => {
+                            // Unexpected or unreadable response
+                            props.toggleMessage("error", "Error while trying to contact server");
+                            throw new Error(response.status);
+                        });
                 }
-            })
-            .then(data => {
-                // Currently unused; Data is not returned on success
-            })
-            .catch(error => {
-                setLoading(false);
-                props.toggleMessage("error", "Error while trying to contact server");
-                console.log(error);
+                // Login session created successfuly
+                console.log(`HTTP Success: ${response.status}`);
+                navigate("/");
+                props.toggleMessage("confirm", "You have been successfully logged in");
             });
 
         } else {

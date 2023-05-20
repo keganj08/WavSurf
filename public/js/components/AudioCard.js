@@ -139,7 +139,7 @@ export default function AudioCard(props) {
                 <Link className="authorLink" to={"/users/" + props.author}>{props.author}</Link>
             </span>}
             {deletable && <span className="soundDeleter">
-                <a href="/" className="soundDeleteLink">Delete</a>
+                <button className="soundDeleteButton" onClick={() => props.deleteSoundFile(props.author, props.title)}>Delete</button>
             </span>}
             <span className="soundDownloadBox">
                 <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title}>

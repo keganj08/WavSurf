@@ -20,25 +20,32 @@ export default function Browse(props) {
             method: "GET"
         })
         .then(response => {
-            if(response.ok){
-                console.log(`HTTP Success: ${response.status}`);
-            } else {
-                props.toggleMessage("error", "Server error");
-                throw new Error(`HTTP error: ${response.status}`);
+            setLoading(false);
+            if(!response.ok) {
+                return response.json()
+                    .then(data => {
+                        // Valid response with error
+                        if(data.info) {
+                            props.toggleMessage("error", data.info);
+                        } else {
+                            props.toggleMessage("error", "Unknown error");
+                        }
+                    })
+                    .catch(error => {
+                        // Unexpected or unreadable response
+                        props.toggleMessage("error", "Error while trying to contact server");
+                        throw new Error(response.status);
+                    });
             }
-            return response.json();
-        })
-        .then(data => {
-            let soundFiles = [];
-            if(data.soundFiles) { soundFiles = data.soundFiles; }
-            setAllSounds(soundFiles);
-            setLoading(false);
-        })
-        .catch(error => {
-            setLoading(false);
-            props.toggleMessage("error", "Error while trying to contact server");
-            console.log(error);
-        })
+            // Sound files retrieved successfully
+            console.log(`HTTP Success: ${response.status}`);
+            return response.json()
+                .then(data => {
+                    let soundFiles = [];
+                    if(data.soundFiles) { soundFiles = data.soundFiles; }
+                    setAllSounds(soundFiles);
+                });
+        });
     }, []);
 
     // When the sounds are first retrieved, and when the user changes their search, update displayedSounds

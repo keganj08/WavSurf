@@ -169,7 +169,6 @@ nav {
 
 #dropdownButton {
     max-width: 100%;
-    overflow: clip;
 }
 
 #dropdownButtonIcon {
@@ -216,7 +215,7 @@ nav {
 
 #dropdownContainer ul li {
     justify-content: flex-start;
-    border-bottom: 0.1rem solid var(--color-gunmetal);
+    border-bottom: 0.05rem solid var(--color-gunmetal);
 }
 
 #dropdownContainer ul li:last-child {
@@ -450,8 +449,10 @@ a.dropdownItem {
 }
 
 #dropbox:hover, #dropbox.highlighted {
+    /*
     background-color: rgba(243, 247, 240, 0.2);
     background-color: var(--color-softGunmetal);
+    */
     border-color: var(--color-sizzleRed);
     color: var(--color-sizzleRed);
 }
@@ -704,9 +705,23 @@ h1 {
     margin-left: 0.2rem;
 }
 
-a.soundDeleteLink {
-    color: var(--color-sizzleRed);
+.soundDeleteButton {
+    border: none;
+    background: none;
+    border: 0.1rem solid var(--color-dreamRed);
+    color: var(--color-dreamRed);
+    transition: all 0.1s linear;
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
 }
+
+.soundDeleteButton:hover {
+    background-color: var(--color-sizzleRed);
+    border-color: var(--color-sizzleRed);
+    color: white;
+    cursor: pointer;
+}
+
 /*
 .audioCard:focus-within {
 
@@ -840,7 +855,6 @@ input[type="range"]::-ms-fill-lower {
 .msgModal {
     display: flex;
     gap: 0.5rem;
-    position: relative;
     visibility: visible;
     align-items: center;
     position: fixed;
@@ -848,8 +862,8 @@ input[type="range"]::-ms-fill-lower {
     bottom: 3rem;
     left: 50%;
     transform: translateX(-50%);
-    min-width: 15rem;
-    height: 4rem;
+    max-width: 85%;
+    height: auto;
     padding: 0.75rem;
     background-color: white;
     font-weight: bold;
@@ -866,9 +880,14 @@ input[type="range"]::-ms-fill-lower {
     transition: visibility 0.2s, bottom 0.1s ease-in;
 }
 
-.msgModal .msgIcon {
-    height: 100%;
+.msgIcon {
+    font-size: 2rem;
+}
 
+.msgModal p {
+    font-size: 1rem;
+    width: fit-content;
+    text-overflow: wrap;
 }
 
 .msgError {
@@ -892,14 +911,16 @@ input[type="range"]::-ms-fill-lower {
 }
 
 #deleteAccountButton {
-    border: 0.1rem solid var(--color-sizzleRed);
-    color: var(--color-sizzleRed);
+    border: 0.1rem solid var(--color-dreamRed);
+    color: var(--color-dreamRed);
     justify-self: flex-end;
     align-self: flex-end;
     margin-left: auto;
 }
 
 #deleteAccountButton:hover {
+    background-color: var(--color-sizzleRed);
+    border-color: var(--color-sizzleRed);
     color: var(--color-mintCream);
 }
 
@@ -974,6 +995,18 @@ input[type="range"]::-ms-fill-lower {
 
     .msgModal {
         
+    }
+
+    /* USER PAGE */
+
+
+    .audioCard {
+        row-gap: 1rem;
+        column-gap: 0.5rem;
+    }
+
+    .soundDeleteButton {
+        padding: 0.25rem 0.5rem;
     }
 
     /*

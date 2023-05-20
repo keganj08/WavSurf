@@ -23,23 +23,28 @@ export default function Signup(props) {
             })
             .then(response => {
                 setLoading(false);
-
-                if(response.ok) {
-                    console.log(`HTTP Success: ${response.status}`);
-                    navigate("/login");
-                    props.toggleMessage("confirm", "Account created. You may now log in");
-                } else {
-                    throw new Error("HTTP error: " + response.status);
+                if(!response.ok) {
+                    return response.json()
+                        .then(data => {
+                            // Valid response with error 
+                            if(data.info) {
+                                props.toggleMessage("error", data.info);
+                            } else {
+                                props.toggleMessage("error", "Unknown error");
+                            }
+                        })
+                        .catch(error => {
+                            // Unexpected or unreadable response
+                            props.toggleMessage("error", "Error while trying to contact server");
+                            throw new Error(response.status);
+                        });
                 }
-            })
-            .then(data => {
-                // Currently unused
-            })
-            .catch(error => {
-                setLoading(false);
-                props.toggleMessage("error", "Error while trying to contact server");
-                console.log(error);
+                // User account created successfully
+                console.log(`HTTP Success: ${response.status}`);
+                navigate("/login");
+                props.toggleMessage("confirm", "Account created. You may now log in");
             });
+
         } else {
             setLoading(false);
             props.toggleMessage("error", "Please enter a username and password");

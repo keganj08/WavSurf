@@ -35,7 +35,7 @@ export default function Header(props) {
                 <nav className="headerNav">
                     <button 
                         id="dropdownButton" 
-                        className="navButton transparentButton" 
+                        className={"navButton transparentButton "}  
                         onClick={() => toggleDropdown()}
                     >
                         <span id="dropdownButtonText">{Cookies.get("sessionUsername") ? Cookies.get("sessionUsername") : "Log In"}</span> 
@@ -52,7 +52,7 @@ export default function Header(props) {
                     {!Cookies.get("sessionUsername") && route != "/signup" &&
                         <li><Link id="signupLink" className="dropdownItem" to="/signup">Sign Up</Link></li>
                     }
-                    {Cookies.get("sessionUsername") &&
+                    {Cookies.get("sessionUsername") && route != `/users/${Cookies.get("sessionUsername")}` &&
                        <li><Link id="profileLink" className="dropdownItem" to={`/users/${Cookies.get("sessionUsername")}`}>Profile</Link></li>}
                     {Cookies.get("sessionUsername") && 
                         <li>

@@ -35,8 +35,6 @@ export default function Landing(props) {
                 <div id="landingBanner" className="container">
                     <div id="landingLogoBox" className="contentBox">
                         <h1 id="bigHeader">Find Your Sound,<br/>Share Your Sound.</h1>
-                        {/*<p className="landingDescription">Share your sound files with others, browse our collection of content, and download freely.</p>
-                        */}
                         <nav id="landingNav">
                             <Link className="navButton" to="/browse">Browse Sounds</Link>
                             {!Cookies.get("sessionUsername") && <Link id="singupLink" className="navButton outlineButton" to="/signup">Sign Up</Link>}
@@ -77,17 +75,3 @@ export default function Landing(props) {
         </main>
     )
 }
-
-/*
-
-                <div id="landingBanner" className="container">
-                    <div id="landingLogoBox" className="contentBox">
-                        <img id="bigLogo" src="res/logo.svg"></img>
-                        <h2>Find your sound, share your sound.</h2>
-                    </div>
-                    <div id="landingDropboxBox" className="contentBox">
-                        <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
-                    </div>
-                    
-                </div>
-*/

@@ -28,29 +28,37 @@ export default function Users(props) {
         })
         .then(response => {
             console.log(response.status);
-            if(response.ok){
-                console.log(`HTTP Success: ${response.status}`);
-            } else {
-                props.toggleMessage("error", "Server error");
-                throw new Error(`HTTP error: ${response.status}`);
+            setLoading(false);
+            if(!response.ok) {
+                return response.json()
+                    .then(data => {
+                        // Valid response with error 
+                        if(data.info) {
+                            props.toggleMessage("error", data.info);
+                        } else {
+                            props.toggleMessage("error", "Unknown error");
+                        }
+                    })
+                    .catch(error => {
+                        // Unexpected or unreadable response
+                        props.toggleMessage("error", "Error while contacting server");
+                        throw new Error(response.status);
+                    });
             }
-            return response.json();
-        })
-        .then(data => {
-            let soundFiles = [];
-            if(data.soundFiles) { soundFiles = data.soundFiles; }
-            setAllSounds(soundFiles);
-            setLoading(false);
-        })
-        .catch(error => {
-            console.log(error);
-            setLoading(false);
-            props.toggleMessage("error", "Error while trying to contact server");
-        })
+            // Sound files retrieved successfully
+            console.log(`HTTP Success: ${response.status}`);
+            return response.json()
+                .then(data => {
+                    let soundFiles = [];
+                    if(data.soundFiles) { soundFiles = data.soundFiles; }
+                    setAllSounds(soundFiles);
+                });
+        });
     }, []);
 
     // When the sounds are retrieved update displayedSounds
     useEffect(() => {
+        console.log(allSounds);
         setDisplayedSounds(allSounds);
     }, [allSounds]);
 
@@ -68,31 +76,67 @@ export default function Users(props) {
                 id={"audioCard-" + index} 
                 key={"audioCard-" + index} 
                 deletable={editable}
+                deleteSoundFile={(author, title) => deleteSoundFile(author, title)}
             />
         ));
     }
 
     // Send an account deletion request
     function deleteAccount() {
-        fetch(`/users/${username}`, { // Validate uesr's JWT
+        fetch(`/users/${username}`, {
             headers: { "Cookie": "name=value" },
             method: "DELETE",
         })
         .then(response => {
-            if(response.ok) {
-                console.log(`HTTP Success: ${response.status}`);
-                navigate("/");
-                props.toggleMessage("info", "Your account has been deleted");
-            } else {
-                throw new Error(`HTTP Error: ${response.status}`);
+            if(!response.ok) {
+                return response.json()
+                    .then(data => {
+                        // Valid response with error
+                        if(data.info) {
+                            props.toggleMessage("error", data.info);
+                        } else {
+                            props.toggleMessage("error", "Unknown error");
+                        }
+                    })
+                    .catch(error => {
+                        // Unexpected or unreadable response
+                        props.toggleMessage("error", "Error while trying to contact server");
+                        throw new Error(response.status);
+                    });
             }
-            //return response.json();
+            // Account successfully deleted
+            console.log(`HTTP Success: ${response.status}`);
+            navigate("/");
+            props.toggleMessage("confirm", "Your account has been deleted");
+        });
+    }
+
+    function deleteSoundFile(author, title) {
+        fetch(`/soundFiles/${author}/${title}`, {
+            headers: { "Cookie": "name=value" },
+            method: "DELETE",
         })
-        .then(data => {
-            // Currently unused
-        })
-        .catch(error => {
-            console.log(err);
+        .then(response => {
+            if(!response.ok) {
+                return response.json()
+                    .then(data => {
+                        // Valid response with error
+                        if(data.info) {
+                            props.toggleMessage("error", data.info);
+                        } else {
+                            props.toggleMessage("error", "Unknown error");
+                        }
+                    })
+                    .catch(error => {
+                        // Unexpected or unreadable response
+                        props.toggleMessage("error", "Error while trying to contact server");
+                        throw new Error(response.status);
+                    });
+            }
+            // Sound file successfully deleted
+            console.log(`HTTP Success: ${response.status}`);
+            setAllSounds(allSounds.filter(sound => sound.title != title));
+            props.toggleMessage("confirm", "Sound file deleted");
         });
     }
 
