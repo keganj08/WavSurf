@@ -171,18 +171,24 @@ nav {
     max-width: 100%;
 }
 
+#dropdownButton * {
+    color: var(--color-mintCream);
+}
+
 #dropdownButtonIcon {
     flex-shrink: 0;
 }
 
 #dropdownButtonText {
-    flex-shrink: 1;
     text-overflow: ellipsis;
     min-width: 0;
-    text-align: left;
     display: inline;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
+    /*
+    overflow-y: visible;
+    */
     text-align: left;
     text-overflow: ellipsis;
 }
@@ -976,6 +982,7 @@ input[type="range"]::-ms-fill-lower {
     }
 
     .contentRow {
+        width: 100%;
     }
 
     .dropdownItem {

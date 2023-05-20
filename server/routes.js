@@ -6,10 +6,11 @@ import s3_upload from './s3_putobject.js';
 import s3_delete from './s3_deleteobject.js';
 import * as argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import { usernamePattern, passwordPattern } from "./accessTokens.js";
 import { server_addSound, server_deleteSound, server_getSounds } from "./sounds.js";
 import { pool as pgPool, secretKey } from "./authorizations.js";
 
+export const usernamePattern = /^[a-zA-Z][A-Za-z0-9_-]{4,24}$/;
+export const passwordPattern = /^\S.{4,48}\S$/;
 const fsPromises = fs.promises;
 const router = express.Router();
 
