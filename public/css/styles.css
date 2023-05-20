@@ -179,10 +179,12 @@ nav {
     flex-shrink: 1;
     text-overflow: ellipsis;
     min-width: 0;
-    overflow: hidden;
-    justify-self: flex-start;
-    align-self: flex-start;
     text-align: left;
+    display: inline;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
 }
 
 #dropdownContainer {
@@ -370,19 +372,16 @@ a.dropdownItem {
     gap: 1rem;
 }
 
+.contentRow h1 {
+    flex-grow: 3;
+    flex-shrink: 0;
+}
+
 .contentCard {
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 0 0.2rem var(--color-darkMintCream);
     padding: 1.2rem 1.5rem;
-}
-
-.doubleHeader {
-    padding: 0;
-}
-
-.doubleHeader h1 {
-    flex-grow: 1;
 }
 
 .centered {
@@ -577,18 +576,20 @@ h1 {
 }
 
 .searchBar {
-    border: 0.1rem solid var(--color-darkMintCream);
-    border-radius: 1.5rem;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem 1rem;
-    margin: 0 0 0 0;
-    transition: all 0.1s linear;
     display: flex;
     flex-direction: row;
+    min-width: 0;
+    border: 0.1rem solid var(--color-darkMintCream);
+    border-radius: 1.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0;
     align-items: center;
     height: 2.5rem;
+    flex-grow: 1;
+    flex-shrink: 2;
+    max-width: 20rem;
+    transition: all 0.1s linear;
+
 }
 
 .searchBar .icon { 
@@ -601,7 +602,6 @@ h1 {
 
 .searchBar:focus-within {  
     outline: none;
-    /*box-shadow: 0 0 0.1rem 0.1rem rgba(0,0,0,0.2);*/
 }
 
 .searchBar input {
@@ -666,10 +666,15 @@ h1 {
 }
 
 .soundTitle {
-    grid-area: title;
-    text-align: center;
-    align-items: start;
+    display: inline;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
     text-overflow: ellipsis;
+}
+
+.soundTitle {
+    grid-area: title;
 }
 
 .soundPlayBox {

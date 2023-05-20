@@ -89,7 +89,7 @@ export default function Browse(props) {
             <section className="sectionWrapper">
                 <div className="container stack">
                     <section className="contentBox">
-                        <div className="contentRow doubleHeader">
+                        <div className="contentRow">
                             <h1>Browse Sounds</h1>
                             <div id="soundSearchBar" className="searchBar" type="text">
                                 <FontAwesomeIcon className="icon" icon="fa-solid fa-magnifying-glass" />

@@ -14,7 +14,7 @@ const run = async (reqParams) => {
 };
 
 export default function uploadFile(filePath, destPath) {
-    const destPathPattern = /^([a-zA-Z0-9!\-_.*'()]{1,50}\/)+[a-zA-Z0-9!\-_.*'()]{1,50}$/;
+    const destPathPattern = /^([a-zA-Z0-9!\-_.*'() ]{1,50}\/)+[a-zA-Z0-9!\-_.*'() ]{1,50}$/;
 
     if(destPathPattern.test(destPath)) {
         let fileBody = null;

@@ -12,7 +12,7 @@ const run = async (reqParams) => {
 };
 
 export default function deleteObject(keyPath) {
-    const keyPathPattern = /^([a-zA-Z0-9!\-_.*'()]{1,50}\/)+[a-zA-Z0-9!\-_.*'()]{1,50}$/;
+    const keyPathPattern = /^([a-zA-Z0-9!\-_.*'() ]{1,50}\/)+[a-zA-Z0-9!\-_.*'() ]{1,50}$/;
 
     if(keyPathPattern.test(keyPath)){
         const reqParams = {
