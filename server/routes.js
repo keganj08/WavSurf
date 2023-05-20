@@ -8,8 +8,7 @@ import * as argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { usernamePattern, passwordPattern } from "./accessTokens.js";
 import { server_addSound, server_deleteSound, server_getSounds } from "./sounds.js";
-import { generateToken, deleteToken, validateToken } from "./accessTokens.js";
-import { pool as pgPool, secretKey } from "./postgresql.js";
+import { pool as pgPool, secretKey } from "./authorizations.js";
 
 const fsPromises = fs.promises;
 const router = express.Router();
@@ -265,42 +264,5 @@ router.get("/*", function(req, res) {
         }
      })
 });
-
-/*
-router.post('/updateAccount', async function(req, res) {
-    var response = {
-        uploadStatus: false
-    };
-    console.log(req.body.username, req.body.password);
-    
-    let inputValid = req.body.username.length > usernameMinLength && req.body.password.length > passwordMinLength;
-    if(inputValid) {
-        // Write the account info file to be uploaded to server
-        let filePath = `./server/uploads/${req.body.username}.txt`;
-
-        await fsPromises.writeFile(filePath, `${req.body.password}`, err => {
-            if (err) { 
-                console.error(err);
-            }
-        });
-    
-        var uploadStatus = await s3_upload(filePath, 'users'); // Attempt to push file to S3
-        if(uploadStatus) console.log('got account uploadStatus in routes.js');
-        fs.unlinkSync(filePath); // Delete local copy of file
-    
-        response.uploadStatus = uploadStatus;
-    } else {
-        response.uploadStatus = false;
-    }
-
-    res.send(response);
-});
-
-// Confirm the user's accessToken authentication
-router.post("/validateSession", function(req, res) { 
-    console.log(`POST: /validateSession request for ${req.body.username}`)
-    res.send( {"sessionValid": validateToken(req.body.username, req.body.accessToken)} );
-});
-*/
 
 export default router;
