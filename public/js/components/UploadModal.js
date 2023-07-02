@@ -49,33 +49,27 @@ export default function UploadModal(props) {
             .then(response => {
                 setLoading(false);
 
-                if(response.ok){
-                    console.log(`HTTP Success: ${response.status}`);
-                    props.toggleMessage("confirm", "Sound successfully uploaded!");
-                    props.close();
-
-                } else {
-                    if(response.status == 401) {
-                        props.toggleMessage("info", "Log in to upload your sounds");
-                        navigate("/login");
-                    } else {
-                        props.toggleMessage("error", "Server upload failed, please try again");
-                    }
-                    props.close();
-                    throw new Error(`HTTP error: ${response.status}`)
+                if(!response.ok) {
+                    return response.json()
+                    .then(data => {
+                        // Valid response with error
+                        if(data.info) {
+                            props.toggleMessage("error", data.info);
+                        } else {
+                            props.toggleMessage("error", "Unknown error");
+                        }
+                    })
+                    .catch(error => {
+                        // Unexpected or unreadable response
+                        props.toggleMessage("error", "Error while trying to contact server");
+                        throw new Error(response.status);
+                    });
                 }
-                //return response.json();
-            })
-            .then(data => {
-                // Currently unused
-            })
-            .catch(error => {
-                setLoading(false);
-                console.log(error);
-                props.close();
 
-                //props.toggleMessage("error", "Error while trying to contact server");
-            })
+                console.log(`HTTP Success: ${response.status}`);
+                props.toggleMessage("confirm", "Sound successfully uploaded!");
+                props.close();
+            });
 
         }
     }

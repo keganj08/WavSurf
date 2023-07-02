@@ -77,6 +77,10 @@ a:hover, a:active {
     color: var(--color-softGunmetal);
 }
 
+p {
+    text-align: center;
+}
+
 .pageFooter a {
     color: var(--color-mintCream);
 }
@@ -103,6 +107,7 @@ a:hover, a:active {
 #logo {
     max-height: 3rem;
     max-width: 100%;
+    transition: all 0.1s linear;
 }
 
 .shadowUnderlined {
@@ -154,7 +159,8 @@ nav {
     gap: 0.5rem;
     justify-content: center;
     align-items: center;
-    max-width: fit-content;
+    flex-shrink: 2;
+    max-width: 20rem;
 }
 
 #landingNav .navButton {
@@ -196,19 +202,21 @@ nav {
 #dropdownContainer {
     position: absolute;
     top: var(--pageHeaderHeight);
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
     align-items: flex-end;
     height: fit-content;
+    min-height: 5rem;
     padding-top: 0;
     padding-bottom: 0;
+    border: 2px solid red;
 }
 
 #dropdownContainer, #dropdownContainer ul{
     display: flex;
     flex-direction: column;
-}
-
-#dropdownContainer ul, #dropdownContainer ul li {
-    width: 100%;
 }
 
 #dropdownContainer ul {
@@ -222,6 +230,7 @@ nav {
 }
 
 #dropdownContainer ul li {
+    width: 100%;
     justify-content: flex-start;
     border-bottom: 0.05rem solid var(--color-gunmetal);
 }
@@ -298,8 +307,7 @@ a.dropdownItem {
 }
 
 .transparentButton, .transparentButton:visited {
-    background-color: transparent;
-    backdrop-filter: brightness(125%);
+    background-color: rgba(255,255,255,0.1);
     color: var(--color-mintCream);
 }
 
@@ -357,7 +365,7 @@ a.dropdownItem {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    max-width: 80rem;
+    max-width: 70rem;
     width: 100%;
     margin: auto;
     position: relative;
@@ -447,8 +455,9 @@ a.dropdownItem {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     font-size: 1.1rem;
-    transition: all 0.1s linear;
+    transition: all 0.1s linear; 
     z-index: 3;
     padding: 1rem; 
 }
@@ -487,7 +496,6 @@ a.dropdownItem {
 /* FORMS */
 
 .centeredBox {
-    min-width: fit-content;
     width: 25rem;
     margin: auto;
     padding: 3rem 5rem;
@@ -496,6 +504,7 @@ a.dropdownItem {
     color: var(--color-gunmetal);
     flex-grow: 0;
     gap: 0.75rem;
+    max-width: 100%;
 }
 
 .formGrid input, .formGrid Label {
@@ -560,6 +569,7 @@ a.dropdownItem {
 h1 {
     font-size: 2.25rem;
     margin: 0 0 0 0;
+    transition: font-size 0.1s linear;
 }
 
 /* BROWSE PAGE */
@@ -927,7 +937,13 @@ input[type="range"]::-ms-fill-lower {
     justify-self: flex-end;
     align-self: flex-end;
     margin-left: auto;
+
+    flex-shrink: 3 !important;
+    text-overflow: hidden;
+    white-space: nowrap;
 }
+
+#deleteAccountButton
 
 #deleteAccountButton:hover {
     background-color: var(--color-sizzleRed);
@@ -947,12 +963,20 @@ input[type="range"]::-ms-fill-lower {
     /* HEADER */
 
     /*
-    .pageHeader #logoLink {
+    .pageHeader #`Link {
         display: inline-block;
         max-width: 50%;
         min-width: 12rem;
     }
     */
+
+    #logo {
+        max-height: 2rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
 
     #browseLink {
         display: none;
@@ -983,6 +1007,12 @@ input[type="range"]::-ms-fill-lower {
 
     .contentRow {
         width: 100%;
+        flex-direction: column;
+    }
+
+    .searchBar {
+        max-width: 100%;
+        width: 100%;
     }
 
     .dropdownItem {
@@ -1007,6 +1037,12 @@ input[type="range"]::-ms-fill-lower {
 
     .msgModal {
         
+    }
+
+    /* FORMS */
+
+    .centeredBox {
+        padding: 3rem 1.5rem;
     }
 
     /* USER PAGE */

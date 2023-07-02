@@ -54,8 +54,8 @@ export default function AudioCard(props) {
         const max = sliderRef.current.max;
         const breakPoint = ((currentTime - min)*100 / (max-min));
         const colorLightGunmetal = "#27646e";
-        const colorBurntCream = "#cbcfc8";
-        sliderRef.current.style.background = `linear-gradient(to right, ${colorLightGunmetal} ${breakPoint}%, ${colorBurntCream} ${breakPoint}%)`
+        const colorMintCream = "#F5F5F5";
+        sliderRef.current.style.background = `linear-gradient(to right, ${colorLightGunmetal} ${breakPoint}%, ${colorMintCream} ${breakPoint}%)`
     }, [currentTime]);
 
 

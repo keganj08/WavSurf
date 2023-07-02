@@ -7,10 +7,11 @@ import s3_delete from './s3_deleteobject.js';
 import * as argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { server_addSound, server_deleteSound, server_getSounds } from "./sounds.js";
-import { pool as pgPool, secretKey } from "./authorizations.js";
+import { pool as pgPool, jwtSecretKey } from "./creds.js";
 
 export const usernamePattern = /^[a-zA-Z][A-Za-z0-9_-]{4,24}$/;
 export const passwordPattern = /^\S.{4,48}\S$/;
+export const titlePattern = /^[a-zA-Z][A-Za-z0-9_\- ]{3,30}$/;
 const fsPromises = fs.promises;
 const router = express.Router();
 
@@ -26,6 +27,21 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
+/***** HELPER FUNCTIONS *****/
+
+// Takes a request and returns an object literal containing the cookies from its header
+function getCookies(req) {
+    const cookies = {};
+    const cookieHeader = req.headers.cookie;
+    if (!cookieHeader) return cookies;
+    cookieHeader.split(";").forEach((cookie) => {
+        let [key, value] = cookie.split("=");
+        if(!key || !value) return;
+        cookies[key.trim()] = value.trim();
+    });
+    return cookies;
+}
+
 /***** SOUNDFILES *****/
 
 // Upload a new audio file to S3
@@ -35,38 +51,63 @@ router.post("/soundFiles", upload.single('audioFile'), async function(req, res) 
     const jwtInput = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionToken"))[0].split("=")[1];
     const username = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionUsername"))[0].split("=")[1];
 
-    try {
-        let decoded = jwt.verify(jwtInput, secretKey);
-        if(decoded.username == username) {
-            console.log(`User valid. Going to attempt upload. Path: "sounds/${req.body.author}/${path.basename(req.file.path)}"`);
-            const result = await s3_upload(req.file.path, `sounds/${req.body.author}`);
-            console.log(`S3 upload result code: ${result}`);
-            switch(result) {
-                case(1): // Upload succeeded
-                    if(!server_addSound(path.basename(req.file.path), req.body.author)){ // Add the sound to the server's array
-                        console.log("Error: Failed to add sound to server's array");
-                    }
-                    res.status(201).end();
-                    break;
-                case(-1): // File path invalid; Upload failed
-                    res.status(500).end();
-                    break;
-
-                case(-2): // Destination path invalid; Upload failed
-                    res.status(500).end();
-                    break;
-                
-                case(-3): // Server failed to connect to S3 for upload
-                    res.status(500).end();
-                    break;
+    if(titlePattern.test(path.basename(req.file.path).split('.')[0])) {
+        try {
+            let decoded = jwt.verify(jwtInput, jwtSecretKey);
+            if(decoded.username == username) {
+                console.log(`User valid. Going to attempt upload. Path: "sounds/${req.body.author}/${path.basename(req.file.path)}"`);
+                const result = await s3_upload(req.file.path, `sounds/${req.body.author}`);
+                console.log(`S3 upload result code: ${result}`);
+                switch(result) {
+                    case(1): // Upload succeeded
+                        console.log(`PostgreSQL command: "INSERT INTO sounds (title, author) VALUES ('${path.basename(req.file.path)}', '${req.body.author}');"`);
+                        pgPool.query(`INSERT INTO sounds (title, author) VALUES ('${path.basename(req.file.path)}', '${req.body.author}');`, async (err, queryRes) => {
+                            if(err) {
+                                console.log(`PostgreSQL error: ${err.code}`);
+                                /*
+                                switch(err.code) {
+                                    case("23505"):
+                                        // Account already exists
+                                        res.status(409).send({"info": "That username is already taken"});
+                                        break;  
+                                    default: 
+                                        res.status(500).send({"info": "Server error while contacting database"});
+                                        break;
+                                }
+                                */
+                            } else {
+                                console.log(`PostgreSQL success`);
+                            }
+                        });
+                        if(!server_addSound(path.basename(req.file.path), req.body.author)){ // Add the sound to the server's array
+                            console.log("Error: Failed to add sound to server's array");
+                        }
+                        res.status(201).end();
+                        break;
+                    case(-1): // File path invalid; Upload failed
+                        res.status(500).end();
+                        break;
+    
+                    case(-2): // Destination path invalid; Upload failed
+                        res.status(500).end();
+                        break;
+                    
+                    case(-3): // Server failed to connect to S3 for upload
+                        res.status(500).end();
+                        break;
+                }
+            } else {
+                res.status(401).end();
             }
-        } else {
-            res.status(401).end();
+        } catch(err) {
+            console.log(err);
+            res.status(500).end();
         }
-    } catch(err) {
-        console.log(err);
-        res.status(500).end();
+    } else {
+        res.status(400).send({"info": "Invalid sound title"});
     }
+
+
 
     fs.unlinkSync('./server/uploads/' + req.file.originalname); // Delete server's temporary copy of file
 });
@@ -80,16 +121,20 @@ router.put("/soundFiles", upload.single("audioFile"), async function(req, res) {
 router.delete("/soundFiles/:author/:title", async function(req, res) {
     console.log(`DELETE "/soundFiles/${req.params.author}/${req.params.title } request`);
 
-    const jwtInput = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionToken"))[0].split("=")[1];
-    const username = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionUsername"))[0].split("=")[1];
+    const cookies = getCookies(req);
+    console.log(cookies);
 
     try {
-        let decoded = jwt.verify(jwtInput, secretKey);
-        if(decoded.username == username && decoded.username == req.params.author) { 
+        let decoded = jwt.verify(cookies.sessionToken, jwtSecretKey);
+        if(decoded.username == cookies.sessionUsername && decoded.username == req.params.author) { 
             // User is authorized to delete file
             const result = await s3_delete(`sounds/${req.params.author}/${req.params.title}`);
+            console.log(result);
             switch(result) {
                 case(1): // Deletion succeeded
+                    pgPool.query(`DELETE FROM sounds WHERE author = '${req.params.author}' AND title = '${req.params.title}';`, async (err, queryRes) => {
+                        console.log("QueryRes: ", queryRes);
+                    });
                     if(!server_deleteSound(req.params.title, req.params.author)){ // Remove the sound from the server's array
                         console.log("Error: Failed to delete sound from server's array");
                     }
@@ -114,7 +159,7 @@ router.delete("/soundFiles/:author/:title", async function(req, res) {
 
 });
 
-// Get a list of all sound files on S3
+// Get a list of all sound files
 router.get("/soundFiles", function(req, res) {
     console.log(`GET "/soundFiles" request`);
     const soundFiles = server_getSounds();
@@ -122,7 +167,7 @@ router.get("/soundFiles", function(req, res) {
     else res.status(500).send({"info": "Server error"});
 });
 
-// Get a list of all sound files on S3 uploaded by a spcified user
+// Get a list of all sound files uploaded by a spcified user
 router.get("/soundFiles/:user", function(req, res) {
     console.log(`GET "/soundFiles/${req.params.user}" request`);
     const soundFiles = server_getSounds(req.params.user);
@@ -176,13 +221,16 @@ router.delete("/users/:user", async function(req, res) {
     const jwtInput = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionToken"))[0].split("=")[1];
 
     try {
-        let decoded = jwt.verify(jwtInput, secretKey);
+        let decoded = jwt.verify(jwtInput, jwtSecretKey);
         if(decoded.username == req.params.user) {
             pgPool.query(`DELETE FROM users WHERE username = '${req.params.user}';`, async (err, queryRes) => {
                 if(err) {
                     console.log(err);
                     res.status(500).send({"info": "Server failed to delete user from database"});
                 } else {
+                    // Delete the user's associated sounds
+
+
                     res.clearCookie("sessionToken");
                     res.clearCookie("sessionUsername");
                     res.status(202).end();
@@ -217,7 +265,7 @@ router.post("/sessions", async function(req, res){
                             // User authenticated, send JWT token
                             const token = jwt.sign({
                                 username: req.body.username
-                            }, secretKey, { expiresIn: '2d'});
+                            }, jwtSecretKey, { expiresIn: '2d'});
 
                             let expDate = new Date();
                             expDate.setHours(expDate.getHours() + 6);

@@ -12,7 +12,7 @@ export default function Signup(props) {
     function createUser(values) {
         setLoading(true);
 
-        if(values.username != undefined && values.password != undefined) {
+        if(values.username && values.password) {
             console.log("Attempting POST /users");
     
             const userData = JSON.stringify({"username" : String(values.username), "password" : String(values.password)});
@@ -54,32 +54,33 @@ export default function Signup(props) {
 
     return (
         <main className="main dark">
-
             <div className="sectionWrapper">
-                <section className="contentBox centeredBox contentCard" id="contentWrapper_Signup">
-                    <h1>Sign Up</h1>
-                    <EntryForm 
-                        fields = {[
-                            {
-                                "title": "username", 
-                                "type": "text",
-                                "showLabel": false,
-                                "readOnly": false
-                            },
+                <div className="container">
+                    <section className="contentBox centeredBox contentCard" id="contentWrapper_Signup">
+                        <h1>Sign Up</h1>
+                        <EntryForm 
+                            fields = {[
+                                {
+                                    "title": "username", 
+                                    "type": "text",
+                                    "showLabel": false,
+                                    "readOnly": false
+                                },
 
-                            {
-                                "title": "password", 
-                                "type": "password",
-                                "showLabel": false,
-                                "readOnly": false
-                            },
-                        ]}
-                        submitText = "Sign Up"
-                        submitFunction = {(values) => createUser(values)}
-                    />
-                    <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
-                    {loading && <Loader />}
-                </section>
+                                {
+                                    "title": "password", 
+                                    "type": "password",
+                                    "showLabel": false,
+                                    "readOnly": false
+                                },
+                            ]}
+                            submitText = "Sign Up"
+                            submitFunction = {(values) => createUser(values)}
+                        />
+                        <p>Already have an account? <Link to="/login" className="textLink">Log in.</Link></p>
+                        {loading && <Loader />}
+                    </section>
+                </div>
             </div>
 
         </main>

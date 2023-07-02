@@ -39,7 +39,7 @@ export default function Header(props) {
                         onClick={() => toggleDropdown()}
                     >
                         <span id="dropdownButtonText">{Cookies.get("sessionUsername") ? Cookies.get("sessionUsername") : "Log In"}</span> 
-                        <FontAwesomeIcon id="dropdownButtonIcon" className="iconButton" icon="fa-solid fa-angle-down"/>
+                        <FontAwesomeIcon id="dropdownButtonIcon" className="icon iconButton" icon="fa-solid fa-angle-down"/>
                     </button>
                 </nav>
             </div>

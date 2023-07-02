@@ -147,7 +147,7 @@ export default function Users(props) {
                     <article id="profile" className="contentBox">
                         <div className="contentRow" id="userHeaderContainer">
                             <FontAwesomeIcon className="userIcon" icon="fa-solid fa-user" />
-                            <h1>{username}</h1>
+                            <h1 id="username" className="shrinkable">{username}</h1>
                             {editable && <button id="deleteAccountButton" className="navButton" onClick={() => deleteAccount()}>Delete Account </button>}
                         </div>
                     </article>

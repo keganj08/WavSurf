@@ -13,7 +13,7 @@ export default function Login(props) {
     function attemptLogin(values) {
         setLoading(true);
 
-        if(values.username != undefined && values.password != undefined) {
+        if(values.username && values.password) {
             console.log("Attempting POST /sessions");
 
             const userData = JSON.stringify({"username" : String(values.username), "password" : String(values.password)});
@@ -56,31 +56,33 @@ export default function Login(props) {
 
     return (
         <main className="main dark">
-            <div className="sectionWrapper">
-                <section className="contentBox centeredBox contentCard" id="contentWrapper_Login">
-                    <h1>Log In</h1>
-                    <EntryForm 
-                        fields = {[
-                            {
-                                "title": "username", 
-                                "type": "text",
-                                "showLabel": false,
-                                "readOnly": false
-                            },
+            <div className="container">
+                <div className="sectionWrapper">
+                    <section className="contentBox centeredBox contentCard" id="contentWrapper_Login">
+                        <h1>Log In</h1>
+                        <EntryForm 
+                            fields = {[
+                                {
+                                    "title": "username", 
+                                    "type": "text",
+                                    "showLabel": false,
+                                    "readOnly": false
+                                },
 
-                            {
-                                "title": "password", 
-                                "type": "password",
-                                "showLabel": false,
-                                "readOnly": false
-                            },
-                        ]}
-                        submitText = "Log In"
-                        submitFunction = {(values) => attemptLogin(values)}
-                    />
-                    <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>
-                    {loading && <Loader />}
-                </section>
+                                {
+                                    "title": "password", 
+                                    "type": "password",
+                                    "showLabel": false,
+                                    "readOnly": false
+                                },
+                            ]}
+                            submitText = "Log In"
+                            submitFunction = {(values) => attemptLogin(values)}
+                        />
+                        <p>Don't have an account? <Link to="/signup" className="textLink">Sign up!</Link></p>
+                        {loading && <Loader />}
+                    </section>
+                </div>
             </div>
 
         </main>
