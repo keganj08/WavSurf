@@ -57,7 +57,7 @@ export default function Signup(props) {
             <div className="sectionWrapper">
                 <div className="container">
                     <section className="contentBox centeredBox contentCard" id="contentWrapper_Signup">
-                        <h1>Sign Up</h1>
+                        <h2>Sign Up</h2>
                         <EntryForm 
                             fields = {[
                                 {

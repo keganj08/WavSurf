@@ -44,6 +44,8 @@ export default function Login(props) {
                 console.log(`HTTP Success: ${response.status}`);
                 navigate("/");
                 props.toggleMessage("confirm", "You have been successfully logged in");
+
+                
             });
 
         } else {
@@ -59,7 +61,7 @@ export default function Login(props) {
             <div className="container">
                 <div className="sectionWrapper">
                     <section className="contentBox centeredBox contentCard" id="contentWrapper_Login">
-                        <h1>Log In</h1>
+                        <h2>Log In</h2>
                         <EntryForm 
                             fields = {[
                                 {

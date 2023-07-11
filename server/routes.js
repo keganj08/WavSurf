@@ -42,6 +42,14 @@ function getCookies(req) {
     return cookies;
 }
 
+function validateRequester(req) {
+    const cookies = getCookies(req);
+    let decoded = jwt.verify(cookies.sessionUsername);
+    if(decoded.username == cookies.sessionUsername) {
+
+    }
+}
+
 /***** SOUNDFILES *****/
 
 // Upload a new audio file to S3
@@ -115,6 +123,10 @@ router.post("/soundFiles", upload.single('audioFile'), async function(req, res) 
 // Update an existing audio file on S3
 router.put("/soundFiles", upload.single("audioFile"), async function(req, res) {
     console.log(`PUT "/soundFiles" request for file: ${req.file.path} by author: "${req.body.author}"`);
+
+    const jwtInput = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionToken"))[0].split("=")[1];
+    const username = req.headers["cookie"].split("; ").filter(cookie => cookie.includes("sessionUsername"))[0].split("=")[1];
+
 });
 
 // Delete an audio file from S3
@@ -162,9 +174,53 @@ router.delete("/soundFiles/:author/:title", async function(req, res) {
 // Get a list of all sound files
 router.get("/soundFiles", function(req, res) {
     console.log(`GET "/soundFiles" request`);
-    const soundFiles = server_getSounds();
-    if(soundFiles) res.status(200).send({"soundFiles": soundFiles});
-    else res.status(500).send({"info": "Server error"});
+
+    var soundFiles = [];
+    pgPool.query(`SELECT * FROM sounds;`, (err, queryRes) => {
+        if(err) {
+            console.log(`PostgreSQL error: ${err.code}`);
+            res.status(500).send({"info": "Server error"});
+        } else {
+            console.table(queryRes.rows);
+            for(var i=0; i<queryRes.rows.length; i++) {
+                soundFiles.push({
+                    "sid": queryRes.rows[i].sid, 
+                    "title": queryRes.rows[i].title, 
+                    "author": queryRes.rows[i].author,
+                    "likes": queryRes.rows[i].likes
+                });
+            }
+            res.status(200).send({"soundFiles": soundFiles});
+        }
+    });
+});
+
+// Get a list of the top n most liked sound files
+router.get("/soundFiles/top/:n", function(req, res) {
+    console.log(`GET top ${req.params.n} "/soundFiles" request`);
+
+    var soundFiles = [];
+    pgPool.query(
+        `SELECT * FROM sounds
+        ORDER BY likes DESC
+        LIMIT ${req.params.n};`,
+    (err, queryRes) => {
+        if(err) {
+            console.log(`PostgreSQL error: ${err.code}`);
+            res.status(500).send({"info": "Server error"});
+        } else {
+            console.table(queryRes.rows);
+            for(var i=0; i<queryRes.rows.length; i++) {
+                soundFiles.push({
+                    "sid": queryRes.rows[i].sid, 
+                    "title": queryRes.rows[i].title, 
+                    "author": queryRes.rows[i].author,
+                    "likes": queryRes.rows[i].likes
+                });
+            }
+            res.status(200).send({"soundFiles": soundFiles});
+        }
+    });
 });
 
 // Get a list of all sound files uploaded by a spcified user
@@ -173,6 +229,181 @@ router.get("/soundFiles/:user", function(req, res) {
     const soundFiles = server_getSounds(req.params.user);
     if(soundFiles) res.status(200).send({"soundFiles": soundFiles});
     else res.status(500).send({"info": "Server error"});
+});
+
+/***** SOUND FILE LIKES *****/
+
+// Return a boolean indicating whether a given sound has been liked by a given user
+router.get("/likes/:sid/:user", function(req, res) {
+    console.log(`Checking whether sid ${req.params.sid} has been liked by ${req.params.user}`);
+    pgPool.query(
+        `SELECT EXISTS ( 
+            SELECT 1 FROM user_likes 
+            WHERE 
+                sid = ${req.params.sid} 
+                AND username = '${req.params.user}'
+        );`,
+    (err, queryRes) => {
+        if(err) {
+            console.log(`PostgreSQL error: ${err.code}`);
+        } else {
+            console.log(queryRes.rows[0].exists);
+            res.status(200).send({"isLiked": queryRes.rows[0].exists});
+        }
+    });
+});
+
+// Return a list of the sound files a user has liked
+router.get("/users/:username/likes", function(req, res) {
+    const cookies = getCookies(req);
+
+    if(cookies.sessionToken) {
+        try {
+            let decoded = jwt.verify(cookies.sessionToken, jwtSecretKey);
+            if(decoded.username == req.params.username) {
+                pgPool.query(
+                    `SELECT * 
+                    FROM user_likes JOIN
+                        sounds ON user_likes.sid = sounds.sid
+                    WHERE
+                        user_likes.username = '${req.params.username}';`,
+                (err, queryRes) => {
+                    if(err) {
+                        console.log(`PostgreSQL error: ${err.code}`);
+                    } else {
+                        let likedSounds = [];
+                        for(var i=0; i<queryRes.rows.length; i++) {
+                            likedSounds.push(queryRes.rows[i].sid);
+                        }
+                        res.status(200).send({"likedSounds": likedSounds});
+                    }
+                });
+            } else {
+                console.log("Denied: Wrong username");
+                res.status(401).end();
+            }
+        } catch (err) {
+            console.log("Denied: JWT decode failed");
+            res.status(401).end();
+        }
+    } else {
+        console.log("Denied: Bad JWT");
+        res.status(401).send({"info": "Log in to like sounds"});
+    }
+});
+
+router.put("/soundFiles/:author/:title/likes/:username", function(req, res) {
+    const cookies = getCookies(req);
+
+    if(cookies.sessionToken) {
+        try {
+            let decoded = jwt.verify(cookies.sessionToken, jwtSecretKey);
+            if(decoded.username == req.params.username) {
+                // Get the sound and its like from this user if applicable
+                pgPool.query(
+                    `SELECT 
+                        sounds.sid,
+                        sounds.likes,
+                        user_likes.lid,
+                        user_likes.username
+                    FROM 
+                        sounds LEFT JOIN user_likes 
+                            ON sounds.sid = user_likes.sid AND user_likes.username = '${req.params.username}'
+                    WHERE
+                        author = '${req.params.author}'
+                        AND title = '${req.params.title}';`,
+                (err, queryRes) => {
+                    if(err) {
+                        res.status(500);
+                        console.log(`PostgreSQL error: ${err.code}`);
+                        res.send({"info": "Database error"});
+                    } else {
+                        console.log("Got here");
+                        if(queryRes.rows[0]) {
+                            // Sound was found in database
+                            console.table(queryRes.rows);
+                            if(queryRes.rows[0].lid) {
+                                // User has already liked the sound; Delete this like
+                                pgPool.query(
+                                    `DELETE FROM user_likes
+                                    WHERE lid = '${queryRes.rows[0].lid}';`,
+                                (err, queryRes) => {
+                                    if(err) {
+                                        res.status(500);
+                                        console.log(`PostgreSQL error: ${err.code}`);
+                                        res.send({"info": "Database error"});
+                                    } else {
+                                        console.log("Removed like from user_likes");
+                                    }
+                                });
+                                console.log(1);
+                                // Decrement likes by 1
+                                pgPool.query(
+                                    `UPDATE sounds
+                                    SET likes = ${queryRes.rows[0].likes - 1}
+                                    WHERE sid = ${queryRes.rows[0].sid};`,
+                                (err, queryRes) => {
+                                    if(err) {
+                                        res.status(500);
+                                        console.log(`PostgreSQL error: ${err.code}`);
+                                        res.send({"info": "Database error"});
+                                    } else {
+                                        console.log("Decremented likes by 1");
+                                        res.status(200).end();
+                                    }
+                                });
+                                console.log(2);
+
+                            } else {
+                                // User has not liked the sound; Create a like
+                                pgPool.query(
+                                    `INSERT INTO user_likes (username, sid)
+                                    VALUES ('${req.params.username}', ${queryRes.rows[0].sid});`,
+                                (err, queryRes) => {
+                                    if(err) {
+                                        res.status(500);
+                                        console.log(`PostgreSQL error: ${err.code}`);
+                                        res.send({"info": "Database error"});
+                                    } else {
+                                        console.log("Added like to user_likes");
+                                    }
+                                });
+                                console.log(1);
+                                // Increment likes by 1
+                                pgPool.query(
+                                    `UPDATE sounds
+                                    SET likes = ${queryRes.rows[0].likes + 1}
+                                    WHERE sid = ${queryRes.rows[0].sid};`,
+                                (err, queryRes) => {
+                                    if(err) {
+                                        res.status(500);
+                                        console.log(`PostgreSQL error: ${err.code}`);
+                                        res.send({"info": "Database error"});
+                                    } else {
+                                        console.log("Incremented likes by 1");
+                                        res.status(200).end();
+                                    }
+                                });
+                                console.log(2);
+                            }
+                        } else {
+                            console.log("Couldn't find sound in database");
+                        }
+                    }
+                });
+            } else {
+                console.log("Denied: Wrong username");
+                res.status(401).end();
+            }
+        } catch (err) {
+            console.log("Denied: JWT decode failed");
+            res.status(401).end();
+        }
+    } else {
+        console.log("Denied: Bad JWT");
+        res.status(401).send({"info": "Log in to like sounds"});
+    }
+
 });
 
 
@@ -256,6 +487,7 @@ router.post("/sessions", async function(req, res){
         pgPool.query(`SELECT passhash FROM users WHERE username = '${req.body.username}';`, async (err, queryRes) => {
             if(err) {
                 res.status(500);
+                console.log(`PostgreSQL error: ${err.code}`);
                 res.send({"info": "Database error"});
             } else {
                 if(queryRes.rows[0]) {

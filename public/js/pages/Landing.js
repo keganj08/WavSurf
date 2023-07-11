@@ -1,7 +1,8 @@
 import DropBox from "../components/Dropbox.js";
-import AudioCard from "../components/AudioCard.js";
+import AudioCards from "../components/AudioCards.js";
 import UploadModal from "../components/UploadModal.js";
-import React, { useState } from "react";
+import Loader from "../components/Loader.js";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -67,9 +68,25 @@ export default function Landing(props) {
             <section className="sectionWrapper">
                 <div className="container">
                     <div className="contentBox">
-                        <h1>Upload Your Files</h1>
+                        <h2>Upload Your Files</h2>
                         <DropBox returnFile = {(newFile, newAuthor) => triggerUploadModal(newFile, newAuthor)}/>
                     </div> 
+                </div>
+            </section>
+
+            <section className="sectionWrapper">
+                <div className="container">
+                    <div className="contentBox">
+                        <h2>Popular Sounds</h2>
+                        <AudioCards 
+                            constraintType = "top"
+                            constraintValue = {5}
+                            filterValue = "" 
+                            toggleMessage = {(type, content, length) => props.toggleMessage(type, content, length)}
+                            likedSounds = {props.likedSounds}
+                            updateLikedSounds = {() => props.updateLikedSounds()}
+                        />
+                    </div>
                 </div>
             </section>
         </main>

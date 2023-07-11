@@ -1,6 +1,6 @@
 # WavSurf
 
-WavSurf is a sound file-sharing app which allows users to upload, browse, and download sound files. The frontend is built in React, while the backend is built with Node and utilizes PostgreSQL and AWS S3 for cloud storage.
+WavSurf is a sound file sharing app which allows users to upload, browse, and download sound files. The frontend is built in React, while the backend is built with Node and utilizes PostgreSQL and AWS S3 for cloud storage.
 
 ## Using the site
 

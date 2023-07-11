@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+
 
 // AUDIOCARD: An interactive element for displaying, playing, and downloading a sound file
     // title: Audio file title- Must be the same as the file's title on S3
@@ -10,14 +12,17 @@ export default function AudioCard(props) {
     const [currentTime, setCurrentTime] = useState(0);
     const [currentTimeText, setCurrentTimeText] = useState("0:00");
     const [durationText, setDurationText] = useState("0:00");
-    const [deletable, setDeletable] = useState(false);
+    const [isDeletable, setIsDeletable] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
     const audio = useRef(new Audio("https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title));
     const interval = useRef(0);
     const isReady = useRef(false);
     const sliderRef = useRef(null);
 
     useEffect(() => {
-        if(props.deletable) { setDeletable(true); }
+        if(props.isDeletable) { setIsDeletable(true); }
+
+        updateIsLiked();
     }, []);
 
     // Pause and clean up on unmount
@@ -64,6 +69,42 @@ export default function AudioCard(props) {
         setDurationText(formatTime(audio.current.duration));
     });
 
+    function updateIsLiked() {
+        // Check if the logged-in user has liked this sound
+        if(props.currentUser) {
+            fetch(`/likes/${props.sid}/${props.currentUser}`, {
+                method: "GET"
+            })
+            .then(response => {
+                if(!response.ok) {
+                    return response.json()
+                    .then(data => {
+                        // Valid response with error 
+                        if(data.info) {
+                            props.toggleMessage("error", data.info);
+                        } else {
+                            props.toggleMessage("error", "Unknown error");
+                        }
+                    })
+                    .catch(error => {
+                        // Unexpected or unreadable response
+                        props.toggleMessage("error", "Error while trying to contact server");
+                        throw new Error(response.status);
+                    });
+                } else {
+                    // Retrieved data successfully
+                    console.log(`HTTP Success: ${response.status}`);
+                    return response.json()
+                    .then(data => {
+                        if(data.isLiked != undefined) {
+                            setIsLiked(data.isLiked);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     function formatTime(rawTime) {
         let minutes = (String)(Math.floor(rawTime / 60)).padStart(1, "0");
         let seconds = (String)((rawTime % 60).toFixed(0)).padStart(2, "0");
@@ -94,6 +135,35 @@ export default function AudioCard(props) {
         setCurrentTime(audio.current.currentTime);
         setCurrentTimeText(formatTime(audio.current.currentTime));
     }
+
+
+    function handleLikeClick() {
+        console.log("Attempting like...");
+        fetch(`/soundFiles/${props.author}/${props.title}/likes/${Cookies.get("sessionUsername")}`, {
+            method: "PUT",
+        })
+        .then(response => {
+            if(!response.ok) {
+                return response.json()
+                .then(data => {
+                    // Valid response with error
+                    if(data.info) {
+                        props.toggleMessage("error", data.info);
+                    } else {
+                        props.toggleMessage("error", "Unknown error");
+                    }
+                })
+                .catch(error => {
+                    // Unexpected or unreadable response
+                    props.toggleMessage("error", "Error while trying to contact server");
+                    throw new Error(response.status);
+                })
+            } else {
+                console.log(`Like HTTP Success: ${response.status}`);
+                updateIsLiked();
+            }
+        })
+    }
     
     const onScrubEnd = () => {
         // If not already playing, start
@@ -108,12 +178,22 @@ export default function AudioCard(props) {
         playIcon = <FontAwesomeIcon icon="fa-solid fa-play" />
     } else {
         playIcon = <FontAwesomeIcon icon="fa-solid fa-pause" />
-    }        
+    }
+
+    let likeIcon;
+    if(isLiked) {
+        likeIcon = <FontAwesomeIcon className="likeIconSolid" icon="fa-solid fa-heart" />
+    } else {
+        likeIcon = <FontAwesomeIcon className="likeIconReg" icon="fa-regular fa-heart" />
+    }
 
     return (
         <article id={props.id} className="audioCard contentCard">
             
             <h2 className="soundTitle">{props.title.split(".wav")[0]}</h2>
+            {!isDeletable && <span className="soundAuthor"> 
+                (<Link className="authorLink" to={"/users/" + props.author}>{props.author}</Link>)
+            </span>}
             <span className="soundPlayBox">
                 <button className="iconButton" onClick={handlePlayClick}>{playIcon}</button>
             </span>
@@ -135,10 +215,12 @@ export default function AudioCard(props) {
             <span className="soundTimeText">
                 {currentTimeText}/{durationText}
             </span>
-            {!deletable && <span className="soundAuthor">by 
-                <Link className="authorLink" to={"/users/" + props.author}>{props.author}</Link>
+            {!isDeletable && <span className="soundLikeBtn">
+                <button className="likeBtn iconButton" onClick={() => handleLikeClick(props.author, props.title)}>
+                    {likeIcon}
+                </button>
             </span>}
-            {deletable && <span className="soundDeleter">
+            {isDeletable && <span className="soundDeleter">
                 <button className="soundDeleteButton" onClick={() => props.deleteSoundFile(props.author, props.title)}>Delete</button>
             </span>}
             <span className="soundDownloadBox">

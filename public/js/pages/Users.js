@@ -73,9 +73,9 @@ export default function Users(props) {
             <AudioCard 
                 title={fileData.title} 
                 author={fileData.author} 
-                id={"audioCard-" + index} 
-                key={"audioCard-" + index} 
-                deletable={editable}
+                id={`audioCard-${fileData.title}-${fileData.author}`} 
+                key={`audioCard-${fileData.title}-${fileData.author}`}
+                isDeletable={editable}
                 deleteSoundFile={(author, title) => deleteSoundFile(author, title)}
             />
         ));
@@ -147,7 +147,7 @@ export default function Users(props) {
                     <article id="profile" className="contentBox">
                         <div className="contentRow" id="userHeaderContainer">
                             <FontAwesomeIcon className="userIcon" icon="fa-solid fa-user" />
-                            <h1 id="username" className="shrinkable">{username}</h1>
+                            <h2 id="username" className="shrinkable">{username}</h2>
                             {editable && <button id="deleteAccountButton" className="navButton" onClick={() => deleteAccount()}>Delete Account </button>}
                         </div>
                     </article>
