@@ -37,7 +37,6 @@ function App() {
     const [msgTimer, setMsgTimer] = useState("");
     const [msgType, setMsgType] = useState("confirm");
     const [msgContent, setMsgContent] = useState("Foo bar");
-    const [likedSounds, setLikedSounds] = useState([]);
 
     // Go to top of page on route change
     useLayoutEffect(() => {
@@ -56,47 +55,6 @@ function App() {
     function handleScroll() { 
         setScrollPosition(window.scrollY)
     };
-
-    // Returns 1 if successful,-1 if not
-    function updateLikedSounds() {
-        const username = Cookies.get("sessionUsername");
-        if(username) {
-            fetch(`/users/${username}/likes`, {
-                method: "GET"
-            })
-            .then(response => {
-                if(!response.ok) {
-                    return response.json()
-                    .then(data => {
-                        // Valid response with error 
-                        if(data.info) {
-                            props.toggleMessage("error", data.info);
-                        } else {
-                            props.toggleMessage("error", "Unknown error");
-                        }
-                    })
-                    .catch(error => {
-                        // Unexpected or unreadable response
-                        props.toggleMessage("error", "Error while trying to contact server");
-                        throw new Error(response.status);
-                    });
-                } else {
-                    // Likes retrieved successfully
-                    console.log(`HTTP Success: ${response.status}`);
-                    return response.json()
-                    .then(data => {
-                        setLikedSounds(data.likedSounds);
-                        alert("Updated liked sounds!");
-                    });
-                }
-            });
-        }
-        return -1;
-    }
-
-    useEffect(() => {
-        console.log(likedSounds);
-    }, [likedSounds]);
 
     // Request that the server delete the current session
     async function logout() {
@@ -165,8 +123,6 @@ function App() {
                 <Route path="/" element={
                     <Landing   
                         toggleMessage={(type, content, length) => toggleMessage(type, content, length)}
-                        likedSounds={likedSounds}
-                        updateLikedSounds={() => updateLikedSounds()}
                     />
                 }/>
                 <Route path="signup" element={
@@ -182,8 +138,6 @@ function App() {
                 <Route path="browse" element={
                     <Browse
                         toggleMessage={(type, content, length) => toggleMessage(type, content, length)}
-                        likedSounds={likedSounds}
-                        updateLikedSounds={() => updateLikedSounds()}
                     />
                 }/>
                 <Route path="users/:username" element={

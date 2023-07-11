@@ -226,9 +226,27 @@ router.get("/soundFiles/top/:n", function(req, res) {
 // Get a list of all sound files uploaded by a spcified user
 router.get("/soundFiles/:user", function(req, res) {
     console.log(`GET "/soundFiles/${req.params.user}" request`);
-    const soundFiles = server_getSounds(req.params.user);
-    if(soundFiles) res.status(200).send({"soundFiles": soundFiles});
-    else res.status(500).send({"info": "Server error"});
+    var soundFiles = [];
+    pgPool.query(
+        `SELECT * FROM sounds
+        WHERE author = '${req.params.user}'`,
+    (err, queryRes) => {
+        if(err) {
+            console.log(`PostgreSQL error: ${err.code}`);
+            res.status(500).send({"info": "Server error"});
+        } else {
+            console.table(queryRes.rows);
+            for(var i=0; i<queryRes.rows.length; i++) {
+                soundFiles.push({
+                    "sid": queryRes.rows[i].sid, 
+                    "title": queryRes.rows[i].title, 
+                    "author": queryRes.rows[i].author,
+                    "likes": queryRes.rows[i].likes
+                });
+            }
+            res.status(200).send({"soundFiles": soundFiles});
+        }
+    });
 });
 
 /***** SOUND FILE LIKES *****/

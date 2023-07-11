@@ -138,7 +138,6 @@ export default function AudioCard(props) {
 
 
     function handleLikeClick() {
-        console.log("Attempting like...");
         fetch(`/soundFiles/${props.author}/${props.title}/likes/${Cookies.get("sessionUsername")}`, {
             method: "PUT",
         })

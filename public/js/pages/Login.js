@@ -2,7 +2,6 @@ import Loader from "../components/Loader.js";
 import EntryForm from "../components/EntryForm.js";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 
 // LOGIN: Main content of "/login" route; Contains form to log in to an existing account
     // toggleMessage: A callback function to use MessageModal

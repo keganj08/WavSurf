@@ -1,6 +1,5 @@
-import Loader from "../components/Loader.js";
 import AudioCards from "../components/AudioCards.js";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // BROWSE: Main content of "/browse" route; Displays uploaded sound files 
@@ -29,8 +28,6 @@ export default function Browse(props) {
                         <AudioCards 
                             filterValue = {filterValue} 
                             toggleMessage = {(type, content, length) => props.toggleMessage(type, content, length)}
-                            likedSounds = {props.likedSounds}
-                            updateLikedSounds = {() => props.updateLikedSounds()}
                         />
                     </section>
                 </div>

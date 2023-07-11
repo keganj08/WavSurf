@@ -66,17 +66,8 @@ export default function AudioCards(props) {
 
     // When displayedSounds changes, update the audio cards
     useEffect(() => {
-        console.log(displayedSounds);
-        /*
-        console.log(sound7.sid, props.likedSounds);
-        console.log(sound7.sid, props.likedSounds[0]);
-        console.log(props.likedSounds.includes(sound7.sid));
-        */
         loadAudioCards(displayedSounds);
     }, [displayedSounds]);
-
-    console.log("ACs: ", props.likedSounds);
-    console.log(    )
 
     function loadAudioCards(soundFiles) {
         setAudioCards(
@@ -88,8 +79,6 @@ export default function AudioCards(props) {
                 id={`audioCard-${fileData.sid}`} 
                 key={`audioCard-${fileData.sid}`} 
                 toggleMessage={(type, content, length) => props.toggleMessage(type, content, length)}
-                updateLikedSounds = {() => props.updateLikedSounds()}
-                isLiked = {props.likedSounds.includes(parseInt(fileData.sid))}
                 currentUser = {Cookies.get("sessionUsername")}
             />
         ));
