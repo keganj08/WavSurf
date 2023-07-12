@@ -26,6 +26,7 @@ export default function Browse(props) {
                         </div>
 
                         <AudioCards 
+                            constraints = {null}    
                             filterValue = {filterValue} 
                             toggleMessage = {(type, content, length) => props.toggleMessage(type, content, length)}
                         />

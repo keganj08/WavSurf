@@ -78,8 +78,7 @@ export default function Landing(props) {
                     <div className="contentBox">
                         <h2>Popular Sounds</h2>
                         <AudioCards 
-                            constraintType = "top"
-                            constraintValue = {5}
+                            constraints = {{"limitTopN": 5}}
                             filterValue = "" 
                             toggleMessage = {(type, content, length) => props.toggleMessage(type, content, length)}
                         />

@@ -1,4 +1,5 @@
 # Note files
 /notes
 /sample_sounds
+/server/creds.js
 /server/authorizations.js

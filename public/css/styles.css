@@ -209,7 +209,7 @@ nav {
     margin-left: auto;
     margin-right: auto;
     align-items: flex-end;
-    height: fit-content;
+    height: max-content;
     padding-top: 0;
     padding-bottom: 0;
 
@@ -236,6 +236,8 @@ nav {
     width: 100%;
     justify-content: flex-start;
     border-bottom: 0.05rem solid var(--color-gunmetal);
+    height: max-content;
+    min-height: 3.35rem;
 }
 
 #dropdownContainer ul li:last-child {

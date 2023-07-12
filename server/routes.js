@@ -171,66 +171,22 @@ router.delete("/soundFiles/:author/:title", async function(req, res) {
 
 });
 
-// Get a list of all sound files
+// Get a list of sound files constrained by optional parameters
 router.get("/soundFiles", function(req, res) {
     console.log(`GET "/soundFiles" request`);
 
-    var soundFiles = [];
-    pgPool.query(`SELECT * FROM sounds;`, (err, queryRes) => {
-        if(err) {
-            console.log(`PostgreSQL error: ${err.code}`);
-            res.status(500).send({"info": "Server error"});
-        } else {
-            console.table(queryRes.rows);
-            for(var i=0; i<queryRes.rows.length; i++) {
-                soundFiles.push({
-                    "sid": queryRes.rows[i].sid, 
-                    "title": queryRes.rows[i].title, 
-                    "author": queryRes.rows[i].author,
-                    "likes": queryRes.rows[i].likes
-                });
-            }
-            res.status(200).send({"soundFiles": soundFiles});
-        }
-    });
-});
-
-// Get a list of the top n most liked sound files
-router.get("/soundFiles/top/:n", function(req, res) {
-    console.log(`GET top ${req.params.n} "/soundFiles" request`);
+    const limit = req.query.limitTopN;
+    const author = req.query.author;
+    const authorQueryString = author ? `WHERE author = '${author}'` : "";
+    const limitQueryString = limit ? `ORDER BY likes DESC LIMIT ${limit}` : "";
 
     var soundFiles = [];
     pgPool.query(
         `SELECT * FROM sounds
-        ORDER BY likes DESC
-        LIMIT ${req.params.n};`,
-    (err, queryRes) => {
-        if(err) {
-            console.log(`PostgreSQL error: ${err.code}`);
-            res.status(500).send({"info": "Server error"});
-        } else {
-            console.table(queryRes.rows);
-            for(var i=0; i<queryRes.rows.length; i++) {
-                soundFiles.push({
-                    "sid": queryRes.rows[i].sid, 
-                    "title": queryRes.rows[i].title, 
-                    "author": queryRes.rows[i].author,
-                    "likes": queryRes.rows[i].likes
-                });
-            }
-            res.status(200).send({"soundFiles": soundFiles});
-        }
-    });
-});
-
-// Get a list of all sound files uploaded by a spcified user
-router.get("/soundFiles/:user", function(req, res) {
-    console.log(`GET "/soundFiles/${req.params.user}" request`);
-    var soundFiles = [];
-    pgPool.query(
-        `SELECT * FROM sounds
-        WHERE author = '${req.params.user}'`,
-    (err, queryRes) => {
+        ${authorQueryString}
+        ${limitQueryString}
+        ;`
+    , (err, queryRes) => {
         if(err) {
             console.log(`PostgreSQL error: ${err.code}`);
             res.status(500).send({"info": "Server error"});

@@ -16,12 +16,16 @@ export default function AudioCards(props) {
     useEffect(() => {
         console.log("Attempting GET /soundFiles");
 
-        let fetchUrl = "/soundFiles";
-        if(props.constraintType && props.constraintValue) {
-            fetchUrl = `/soundFiles/${props.constraintType}/${props.constraintValue}`;
+        let queryString = "/soundFiles";
+        if(props.constraints && Object.keys(props.constraints).length >= 1) {
+            queryString += "?";
+            for(const [constraint, value] of Object.entries(props.constraints)) {
+                queryString += `${constraint}=${value}&`;
+            }
+            queryString = queryString.slice(0, -1);
         }
 
-        fetch(fetchUrl, {
+        fetch(queryString, {
             method: "GET"
         })
         .then(response => {
@@ -64,6 +68,11 @@ export default function AudioCards(props) {
         }
     }, [props.filterValue, allSounds]);
 
+    function deleteSound(author, title) {
+        props.deleteSoundFile(author, title);
+        setAllSounds(allSounds.filter(sound => !(sound.author == author && sound.title == title)));
+    }
+
     // When displayedSounds changes, update the audio cards
     useEffect(() => {
         loadAudioCards(displayedSounds);
@@ -80,6 +89,8 @@ export default function AudioCards(props) {
                 key={`audioCard-${fileData.sid}`} 
                 toggleMessage={(type, content, length) => props.toggleMessage(type, content, length)}
                 currentUser = {Cookies.get("sessionUsername")}
+                isDeletable = {props.isDeletable}
+                deleteSoundFile = {(author, title) => deleteSound(author, title)}
             />
         ));
     }
