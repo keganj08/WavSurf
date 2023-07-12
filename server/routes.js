@@ -428,17 +428,29 @@ router.delete("/users/:user", async function(req, res) {
     try {
         let decoded = jwt.verify(jwtInput, jwtSecretKey);
         if(decoded.username == req.params.user) {
-            pgPool.query(`DELETE FROM users WHERE username = '${req.params.user}';`, async (err, queryRes) => {
+            pgPool.query(`DELETE FROM users WHERE username = '${req.params.user}';`, (err, queryRes) => {
                 if(err) {
                     console.log(err);
                     res.status(500).send({"info": "Server failed to delete user from database"});
                 } else {
-                    // Delete the user's associated sounds
-
-
                     res.clearCookie("sessionToken");
                     res.clearCookie("sessionUsername");
-                    res.status(202).end();
+                    // Delete the user's associated sounds
+                    pgPool.query(`DELETE FROM sounds WHERE author = '${req.params.user}';`, (err, queryRes) => {
+                        if(err) {
+                            console.log(err);
+                            res.status(200).send({"info": "Server failed to delete user's sounds from database"});
+                        } else {
+                            pgPool.query(`DELETE FROM user_likes WHERE username = '${req.params.user}';`, (err, queryRes) => {
+                                if(err) {
+                                    console.log(err);
+                                    res.status(200).send({"info": "Server failed to delete user's likes from database"});
+                                } else {
+                                    res.status(202).end();
+                                }
+                            });
+                        }
+                    });
                 }
             });
         } else {
