@@ -188,45 +188,55 @@ export default function AudioCard(props) {
 
     return (
         <article id={props.id} className="audioCard contentCard">
-            
-            <h2 className="soundTitle">{props.title.split(".wav")[0]}</h2>
-            {!isDeletable && <span className="soundAuthor"> 
-                (<Link className="authorLink" to={"/users/" + props.author}>{props.author}</Link>)
-            </span>}
-            <span className="soundPlayBox">
-                <button className="iconButton" onClick={handlePlayClick}>{playIcon}</button>
-            </span>
-            <span className="soundSliderBox">
-                <input 
-                    type="range" 
-                    className="soundSlider" 
-                    onChange={(e) => onScrub(e.target.value)}
-                    onPointerUp={onScrubEnd}
-                    onTouchEnd={onScrubEnd}
-                    onKeyUp={onScrubEnd}
-                    value={currentTime} 
-                    step={audio.current.duration ? audio.current.duration/2500.0 : 1}
-                    min="0"
-                    max={audio.current.duration ? audio.current.duration : `${durationText}`}
-                    ref={sliderRef}
-                />
-            </span>
-            <span className="soundTimeText">
-                {currentTimeText}/{durationText}
-            </span>
-            {!isDeletable && <span className="soundLikeBtn">
-                <button className="likeBtn iconButton" onClick={() => handleLikeClick(props.author, props.title)}>
-                    {likeIcon}
-                </button>
-            </span>}
-            {isDeletable && <span className="soundDeleter">
-                <button className="soundDeleteButton" onClick={() => props.deleteSoundFile(props.author, props.title)}>Delete</button>
-            </span>}
-            <span className="soundDownloadBox">
-                <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title}>
-                    <FontAwesomeIcon className="iconButton" icon="fa-solid fa-download" />
-                </a>
-            </span>
+            <div className="topRowGrid">
+                <h2 className="soundTitle">{props.title.split(".wav")[0]}</h2>
+
+                {!isDeletable && <span className="soundAuthor"> 
+                    (<Link className="authorLink" to={"/users/" + props.author}>{props.author}</Link>)
+                </span>}
+
+                {!isDeletable && <span className="soundLikeBtn">
+                    <button className="likeBtn iconButton" onClick={() => handleLikeClick(props.author, props.title)}>
+                        {likeIcon}
+                    </button>
+                </span>}
+
+                {isDeletable && <span className="soundDeleter">
+                    <button className="soundDeleteButton" onClick={() => props.deleteSoundFile(props.author, props.title)}>Delete</button>
+                </span>}
+            </div>
+
+            <div className="bottomRowGrid">
+                <span className="soundPlayBox">
+                    <button className="iconButton" onClick={handlePlayClick}>{playIcon}</button>
+                </span>
+
+                <span className="soundSliderBox">
+                    <input 
+                        type="range" 
+                        className="soundSlider" 
+                        onChange={(e) => onScrub(e.target.value)}
+                        onPointerUp={onScrubEnd}
+                        onTouchEnd={onScrubEnd}
+                        onKeyUp={onScrubEnd}
+                        value={currentTime} 
+                        step={audio.current.duration ? audio.current.duration/2500.0 : 1}
+                        min="0"
+                        max={audio.current.duration ? audio.current.duration : `${durationText}`}
+                        ref={sliderRef}
+                    />
+                </span>
+
+                <span className="soundTimeText">
+                    {currentTimeText}/{durationText}
+                </span>
+
+                <span className="soundDownloadBox">
+                    <a href={"https://d30lofdjjrvqbo.cloudfront.net/sounds/" + props.author + "/" + props.title}>
+                        <FontAwesomeIcon className="iconButton" icon="fa-solid fa-download" />
+                    </a>
+                </span>
+            </div>
         </article>
     );
 }

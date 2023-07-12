@@ -415,6 +415,7 @@ a.dropdownItem {
     height: auto;
     position: relative;
     gap: 0.75rem;
+    max-width: 100%;
 }
 
 .infoBox {
@@ -477,7 +478,7 @@ a.dropdownItem {
 
 #dropbox.highlighted {
     /*(box-shadow: 0 0 0 3000px rgba(0,0,0,0.5);*/
-    border: 0.3rem dotted var(--color-sizzleRed) !important;
+    border-color: var(--color-sizzleRed);
 }
 
 #dropbox:hover {
@@ -507,7 +508,7 @@ a.dropdownItem {
     flex-grow: 0;
     gap: 0.75rem;
     width: 25rem;
-    max-width: 25rem;
+    max-width: 100%;
     text-align: center;
 }
 
@@ -653,16 +654,31 @@ h2 {
 .audioCard {    
     overflow: hidden;
     height: auto;
+    width: 100%;
     padding: 1.2rem 1.5rem;
     color: var(--color-gunmetal);
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: [playBtn-start] max-content [timeBar-start] max-content [timeBar2-start] 1fr [timeText-start] auto [downloadBtn-start] auto;
-    grid-template-areas:    "title    title    author   likeBtn   likeBtn"
-                            "playBtn  timeBar  timeBar  timeText  downloadBtn";
+    display: flex;
+    flex-direction: column;
     row-gap: 0.5rem;
-    column-gap: 0.25rem;
     margin-bottom: 0rem;
+}
+
+.audioCard .topRowGrid, .audioCard .bottomRowGrid {
+    display: grid;
+    grid-template-rows: 100%;
+    column-gap: 0.25rem;
+}
+
+.audioCard .topRowGrid {
+    grid-template-columns: max-content max-content 1fr max-content;
+    grid-template-areas:
+        "title author . likeBtn";
+}
+
+.audioCard .bottomRowGrid {
+    grid-template-columns: max-content 1fr max-content max-content;
+    grid-template-areas: 
+        "playBtn timeBar timeText downloadBtn";
 }
 
 .audioCard:nth-child(odd) {
